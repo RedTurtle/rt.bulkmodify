@@ -1,0 +1,12 @@
+/*
+ * Bulk Modify - Styles
+ */
+
+.matchText .mark {
+	font-weight: bold;
+	color: red;
+}
+
+.flag {
+	padding: 0em 0.5em;
+}

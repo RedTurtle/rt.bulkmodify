@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:omit-tag=""
+      metal:define-macro="controlpanel"
+      i18n:domain="rt.bulkmodify">
+
+<metal:block use-macro="context/prefs_main_template/macros/master">
+
+<body>
+
+<div metal:fill-slot="prefs_configlet_main">
+
+        <div id="bulkModify">
+        
+			<script type="text/template" id="model">
+				<tr><td><input type="checkbox" name="textMatch" value="" /></td>
+				<td class="matchDocument"></td>
+				<td class="matchText"></td></tr>
+			</script>
+		
+		    <script type="text/javascript" src="++resource++rt.bulkmodify.resources/bulk-modify.js"></script>
+		    <link rel="stylesheet" type="text/css" media="screen"  href="++resource++rt.bulkmodify.resources/bulk-modify.css" />
+
+			<h1 class="documentFirstHeading">
+				Bulk modify contents
+			</h1>
+		
+			<form id="bulkSearchForm" method="post" action=""
+			      tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event')"
+			      tal:attributes="action string:${context/absolute_url}/@@batchSearch">
+				<fieldset>
+					<legend>Bulk modify</legend>
+					
+					<div class="field">
+						<label for="types">Content types</label>
+						<div class="formHelp">
+							Select the set of contents to be inspected
+						</div>
+						
+						<select multiple="multiple" id="types" name="types:list">
+							<option tal:repeat="t view/type_vocabulary"
+							        tal:attributes="value t/value;
+									                selected python:t.value in DEFAULT_TYPES and True or False"
+									tal:content="t/title">Page</option>
+						</select>
+					</div>
+
+					<div class="field">
+						<strong>Regex flags</strong>
+						<div class="formHelp">
+							Regex options
+						</div>
+						<span class="flag">
+						<input type="checkbox" id="re-I" name="re-I" value="2" checked="checked" /> <label for="re-I">Ignore case</label>
+						</span> 
+						<span class="flag">
+						<input type="checkbox" id="re-M" name="re-M" value="8" checked="checked" /> <label for="re-M">Multiline</label>
+						</span> 
+						<span class="flag">
+						<input type="checkbox" id="re-S" name="re-S" value="16" /> <label for="re-S">Dot all</label>
+						</span> 
+						<span class="flag">
+						<input type="checkbox" id="re-X" name="re-X" value="64" /> <label for="re-X">Verbose</label>
+						</span> 
+
+					</div>
+
+					<div class="field">
+						<label for="searchQuery">Search regex</label>
+						<div class="formHelp">
+							Type a regular expression for performing the search.
+						</div>
+						<textarea cols="80" rows="5" name="searchQuery" id="searchQuery"></textarea>
+					</div>
+
+					<div class="field">
+						<label for="replaceQuery">Replace regex</label>
+						<div class="formHelp">
+							Type a replace query for performing mass changes in contents found.
+						</div>
+						<textarea cols="80" rows="5" name="replaceQuery" id="replaceQuery"></textarea>
+					</div>
+					
+					<input type="submit" class="allowMultiSubmit" id="searchButton" name="Search" value="Search" />
+				</fieldset>
+			
+			</form>
+
+			<div id="results" style="display:none">
+				<form id="bulkModifyForm" method="post" action=""
+			          tal:attributes="action string:${context/absolute_url}/@@bulk-modify">
+					<fieldset>
+						<legend>Bulk replace</legend>
+					<table class="listing">
+						<tr><th></th><th>Document</th><th>Text found</th></tr>
+					</table>
+					</fieldset>
+				</form>
+			</div>
+
+		</div>
+</div>
+</body>
+
+</metal:block>
+</html>
