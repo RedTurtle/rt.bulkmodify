@@ -10,3 +10,25 @@
 .flag {
 	padding: 0em 0.5em;
 }
+
+#loading {
+	text-align: center;
+}
+
+#content #bulkModifyForm .matchText{
+	font-size: 70%;
+}
+
+#bulkModifyForm table {
+	width: 90%
+}
+
+#cellCommands {
+	width: 5%;
+}
+#cellDocumentInfo {
+	width: 35%;
+}
+#cellText {
+	width: 60%;
+}

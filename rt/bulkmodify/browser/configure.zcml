@@ -15,6 +15,7 @@
         class=".view.BulkModifyView">
            <browser:page name="bulk-modify" template="bulk-modify.pt" />
            <browser:page name="batchSearch" attribute="batchSearch" />
+           <browser:page name="batchReplace" attribute="batchReplace" />
 	</browser:pages>
 
 </configure>

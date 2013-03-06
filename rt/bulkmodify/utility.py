@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
+import difflib
+
+from pyquery import PyQuery
 
 def de_html(txt):
     return txt.replace('<', '&lt;').replace('>', '&gt;')
@@ -29,8 +32,20 @@ def text_search(text, regex, flags=0):
     return results
 
 
+def _getDiffOnly(html_diff):
+    pq = PyQuery(html_diff)
+    diffs = pq("a:contains('t'):even,a:contains('n'):even").closest('tr').find('td[nowrap]')
+    results = []
+    for d in diffs:
+        results.append(d.text_content())
+    return results
+
+
 def text_replace(text, regex, repl, flags=0):
     pattern = re.compile(regex, flags)
     replaced = pattern.sub(repl, text)
-    return replaced
-
+    
+    diff = difflib.HtmlDiff(tabsize=4 ).make_file(text.splitlines(), replaced.splitlines())
+    minimal_diff = _getDiffOnly(diff)
+    result = {'diff': minimal_diff}
+    return result

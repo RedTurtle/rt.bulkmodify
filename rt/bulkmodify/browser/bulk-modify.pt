@@ -84,6 +84,7 @@
 					</div>
 					
 					<input type="submit" class="allowMultiSubmit" id="searchButton" name="Search" value="Search" />
+					<input style="display:none" type="button" class="allowMultiSubmit" id="pauseButton" name="Pause" value="Pause" />
 				</fieldset>
 			
 			</form>
@@ -94,7 +95,7 @@
 					<fieldset>
 						<legend>Bulk replace</legend>
 					<table class="listing">
-						<tr><th></th><th>Document</th><th>Text found</th></tr>
+						<tr><th id="cellCommands"></th><th id="cellDocumentInfo">Document</th><th id="cellText">Text found</th></tr>
 					</table>
 					</fieldset>
 				</form>
