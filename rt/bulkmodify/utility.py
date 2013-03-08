@@ -3,12 +3,11 @@
 import re
 import difflib
 
-from pyquery import PyQuery
-
 def de_html(txt):
     return txt.replace('<', '&lt;').replace('>', '&gt;')
 
-def text_search(text, regex, flags=0):
+
+def text_search(text, regex, flags=0, preview=False):
     results = []
     pattern = re.compile(regex, flags)
     t_length = len(text)
@@ -19,33 +18,30 @@ def text_search(text, regex, flags=0):
         start = result['start'] = match.start()
         end = result['end'] = match.end()
         pos = end
-        estart = start-7 if start-10>=0 else 0
-        eend = end+7 if end+10<t_length else t_length
-        result['text'] = '...' + de_html(text[estart:start]) \
-                    + '<span class="mark">' \
-                    + de_html(text[start:end]) \
-                    + '</span>' \
-                    + de_html(text[end:eend]) \
-                    + '...'
+        if preview:
+            estart = start-7 if start-10>=0 else 0
+            eend = end+7 if end+10<t_length else t_length
+            result['text'] = '...' + de_html(text[estart:start]) \
+                        + '<span class="mark">' \
+                        + de_html(text[start:end]) \
+                        + '</span>' \
+                        + de_html(text[end:eend]) \
+                        + '...'
+        else:
+            result['text'] = text[start:end]
         results.append(result)
         match = pattern.search(text, pos)
     return results
 
-
-def _getDiffOnly(html_diff):
-    pq = PyQuery(html_diff)
-    diffs = pq("a:contains('t'):even,a:contains('n'):even").closest('tr').find('td[nowrap]')
-    results = []
-    for d in diffs:
-        results.append(d.text_content())
-    return results
-
-
 def text_replace(text, regex, repl, flags=0):
+    found = text_search(text, regex, flags=flags)
     pattern = re.compile(regex, flags)
-    replaced = pattern.sub(repl, text)
-    
-    diff = difflib.HtmlDiff(tabsize=4 ).make_file(text.splitlines(), replaced.splitlines())
-    minimal_diff = _getDiffOnly(diff)
-    result = {'diff': minimal_diff}
-    return result
+    results = []
+    for f in found:
+        old = f['text']
+        replaced = pattern.sub(repl, old)
+        result = {'old': old, 'new': replaced}
+        result['start'] = f['start']
+        result['end'] = f['end']
+        results.append(result)
+    return results

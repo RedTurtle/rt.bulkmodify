@@ -5,25 +5,117 @@
 (function($){
     $(document).ready(function() {
 
-        var $searchQuery = $('#searchQuery');
-		var $replaceQuery = $('#replaceQuery');
+		// Areas
 		var $form = $('#bulkSearchForm');
 		var $results = $('#results');
+
+		// Data
+        var $searchQuery = $('#searchQuery');
+		var $replaceQuery = $('#replaceQuery');
+
+		// Buttons
+		var commandSearchButton = $('#searchButton');
+		var commandPauseButton = $('#pauseButton');
+
 		var $model = $($('#model').text());
 		var flags = 0;
 		var b_size = 20;
 		var emptyResults = $results.clone();
+		
+		// Temp vars
 		var running = false;
+		var lastSearchQuery, lastReplacequery, lastFlags;
+
+		var markDone = function(element, info) {
+			element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>Done!</strong></td>');
+		}
+		var markError = function(element, info) {
+			element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>Error: ' + info.message +  '</strong></td>');
+		}
+
+		var submitSelected = function(event) {
+			event.preventDefault();
+			var allCheckbox = $('.selectCommand:checked');
+			var submittedCount = 0;
+
+			if (allCheckbox.length>0) {
+				var callServerSideChange = function() {
+					var ids = [];
+					var checkbox = $(allCheckbox.get(submittedCount));
+					var sameContentCheckBox = $('.selectCommand:checked[data-uid=' + checkbox.data('uid') + ']');
+
+					// now grouping changes to the same content in the same request
+					if (sameContentCheckBox.length>1) {
+						sameContentCheckBox.each(function () {
+							ids.push($(this).val());
+						});
+						// skipping other check for the same content
+						submittedCount = submittedCount+sameContentCheckBox.length-1;
+					} else {
+						ids = [checkbox.val()];
+					}
+					
+		            $.ajax({
+						dataType: "json",
+						type: 'POST',
+						url: portal_url + '/@@replaceText',
+						traditional: true,
+						data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags},
+						success: function(data) {
+							
+							for (var j=0; j<data.length; j++) {
+								var serverMessage = data[j];
+								if (serverMessage.status && serverMessage.status==='OK') {
+									markDone($(sameContentCheckBox[j]).closest('tr'), serverMessage);
+								} else {
+									markError($(sameContentCheckBox[j]).closest('tr'), serverMessage);
+								}								
+							}
+
+							submittedCount++;
+							if (submittedCount<allCheckbox.length) {
+								callServerSideChange();
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							sameContentCheckBox.each(function() {
+								markError($(this).closest('tr'), textStatus)
+							});
+							submittedCount++;
+							if (submittedCount<allCheckbox.length) {
+								callServerSideChange();
+							}
+						}
+					});				
+				}
+				callServerSideChange();
+			}
+		};
+
+		// select/unselect all
+		var selectAllCommand = $('<input type="checkbox" id="bulkmodifySelectAll">/');
+		selectAllCommand.click(function(event) {
+			if ($(this).is(':checked')) {
+				$('.selectCommand', $results).attr('checked', 'checked');
+			} else {
+				$('.selectCommand', $results).removeAttr('checked');
+			}
+		});
 
 		var showResults = function(data) {
 			var lastId = 0;
 			var lastElement = null;
+
 			for (var i=0;i<data.length;i++) {
 				var element = data[i];
+
 				if (lastElement===element.id) {
 					lastId = lastId+1;
+				} else {
+					lastElement = element.id;
+					lastId = 0;
 				}
-				lastElement = element.id;
+				
 				var newRes = $model.clone();
 				if (i % 2 === 0) {
 					newRes.addClass('even')
@@ -32,7 +124,7 @@
 				}
 				if ($replaceQuery.val()) {
 					// match id for server side changes (is uid-xxx)
-					$(':checkbox', newRes).attr('value', element.id+'-'+lastId);
+					$(':checkbox', newRes).attr('value', element.id+'-'+lastId).attr("data-uid", element.uid);
 				} else {
 					$(':checkbox', newRes).remove();
 				}
@@ -40,10 +132,10 @@
 				$('.matchDocument', newRes).html('<strong>' + element.title + '</strong><br />');
 				$('.matchDocument', newRes).append($('<a href="' + element.url + '" rel="external">' + element.url + '</a>'));
 				// text!
-				if (element.diff) {
-					$('.matchText', newRes).html('<div class="pre"></div> <div class="post"></div>');
-					$('.matchText .pre', newRes).text(element.diff[lastId*2]);
-					$('.matchText .post', newRes).text(element.diff[lastId*2+1]);
+				if (element['new']) {
+					$('.matchText', newRes).html('<div class="pre"></div><div class="post"></div>');
+					$('.matchText .pre', newRes).text(element.old);
+					$('.matchText .post', newRes).text(element['new']);
 				} else {
 					$('.matchText', newRes).html(element.text);
 				}
@@ -55,6 +147,13 @@
 		var batchSearch = function (params) {
 			params = $.extend( {b_start: 0,
 								view: '/@@batchSearch'}, params);
+
+			if (params.view==='/@@batchSearch') {
+				$('#cellCommands').empty();
+			} else {
+				$('#cellCommands').append(selectAllCommand);
+			}
+
 			formData = $form.serializeArray();
 			formData.push({
 				name: 'b_start:int',
@@ -77,6 +176,8 @@
 					if (data===null) {
 						// we have finished
 						$('#loading').remove();
+						commandPauseButton.hide();
+						commandSearchButton.show();
 					} else {
 						showResults(data);
 						$results.show();
@@ -88,36 +189,43 @@
 			});
         }
 
-        $('#searchButton').click(function(event) {
+        commandSearchButton.click(function(event) {
             event.preventDefault();
             var counter = 0;
 			var formData = null;
 			var params = {};
-			$('#pauseButton').show();
-			$('#searchButton').hide();
-			running = true;
+
             if ($searchQuery.val()) {
+				commandPauseButton.show();
+				commandSearchButton.hide();
+				running = true;
+
+				lastSearchQuery = $searchQuery.val();
 				$results.html(emptyResults.html());
 				$results.prepend('<div id="loading"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></div>');
+
 				// loading flags
 				flags = 0;
 				$.each($('.flag :checkbox:checked'), function() {
 					flags = flags | $(this).val();
+					lastFlags = flags;
 				});
 				
 				if ($replaceQuery.val()) {
-					
+					lastReplaceQuery = $replaceQuery.val();
 					params.view = '/@@batchReplace';
+					$results.find('table').before($($('#modelModifySelectedButton').text()));
+					$('#modifySelected').click(submitSelected);
 				}
 				batchSearch(params);
 			}
         });
 
-        $('#pauseButton').click(function(event) {
+        commandPauseButton.click(function(event) {
 			event.preventDefault();
 			running = false;
-			$('#pauseButton').hide();
-			$('#searchButton').show();
+			commandPauseButton.hide();
+			commandSearchButton.show();
 			$('#loading').remove();
 		});
 

@@ -16,6 +16,7 @@
            <browser:page name="bulk-modify" template="bulk-modify.pt" />
            <browser:page name="batchSearch" attribute="batchSearch" />
            <browser:page name="batchReplace" attribute="batchReplace" />
+           <browser:page name="replaceText" attribute="replaceText" />
 	</browser:pages>
 
 </configure>

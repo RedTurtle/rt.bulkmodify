@@ -15,10 +15,13 @@
         <div id="bulkModify">
         
 			<script type="text/template" id="model">
-				<tr><td><input type="checkbox" name="textMatch" value="" /></td>
+				<tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
 				<td class="matchDocument"></td>
 				<td class="matchText"></td></tr>
 			</script>
+			<script type="text/template" id="modelModifySelectedButton">
+				<input type="submit" class="allowMultiSubmit" id="modifySelected" name="modifySelected" value="Modify selected" />
+			</script>			
 		
 		    <script type="text/javascript" src="++resource++rt.bulkmodify.resources/bulk-modify.js"></script>
 		    <link rel="stylesheet" type="text/css" media="screen"  href="++resource++rt.bulkmodify.resources/bulk-modify.css" />

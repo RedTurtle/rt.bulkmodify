@@ -29,7 +29,6 @@ setup(name='rt.bulkmodify',
       extras_require=dict(test=tests_require),
       install_requires=[
           'setuptools',
-          'pyquery',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]

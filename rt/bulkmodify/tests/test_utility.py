@@ -23,16 +23,22 @@ Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
 </p>
 """
 
+
 class TestUtility(unittest.TestCase):
 
     def setUp(self):
         pass
 
     def test_search(self):
-        self.assertEqual(len(text_search(HTML,
-                                     r'(?P<link><a.*?href="(?P<url>http://.*?/(?P<filename>.*?)/at_download/file/?.*?)".*?>)',
-                                     flags=re.DOTALL)),
-                         2)
+        search = text_search(HTML,
+                             r'(?P<link><a.*?href="(?P<url>http://.*?/(?P<filename>.*?)/at_download/file/?.*?)".*?>)',
+                             flags=re.DOTALL)
+        self.assertEqual(len(search), 2)
+        self.assertEqual(search,
+                         [{'start': 793, 'end': 872,
+                           'text': '...lorem.\n<span class="mark">&lt;a class="internal-link"\n'
+                                   '   href="http://foo.org/aaa/bar.exe/at_download/file"&gt;</span>BAR fil...'},
+                          {'start': 1243, 'end': 1330, 'text': '...p&gt;\n    <span class="mark">&lt;a href="http://foo.org/aaa/foo.pdf/at_download/file/@@someview" class="internal-link"&gt;</span>FOO\nfil...'}])
 
     
     def test_replace(self):

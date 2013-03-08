@@ -32,3 +32,15 @@
 #cellText {
 	width: 60%;
 }
+
+.substitutionMsg {
+	text-align: center;
+	vertical-align: middle;
+	font-size: 140%;
+}
+.substitutionDone {
+	color: green;	
+}
+.substitutionError {
+	color: red;
+}
