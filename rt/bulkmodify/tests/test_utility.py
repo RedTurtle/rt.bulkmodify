@@ -30,8 +30,10 @@ class TestUtility(unittest.TestCase):
         pass
 
     def test_search(self):
+        regexp = r'(?P<link><a.*?href="(?P<url>http://.*?/(?P<filename>.*?)/at_download/file/?.*?)".*?>)'
         search = text_search(HTML,
-                             r'(?P<link><a.*?href="(?P<url>http://.*?/(?P<filename>.*?)/at_download/file/?.*?)".*?>)',
+                             regexp,
+                             preview=True,
                              flags=re.DOTALL)
         self.assertEqual(len(search), 2)
         self.assertEqual(search,
@@ -39,6 +41,15 @@ class TestUtility(unittest.TestCase):
                            'text': '...lorem.\n<span class="mark">&lt;a class="internal-link"\n'
                                    '   href="http://foo.org/aaa/bar.exe/at_download/file"&gt;</span>BAR fil...'},
                           {'start': 1243, 'end': 1330, 'text': '...p&gt;\n    <span class="mark">&lt;a href="http://foo.org/aaa/foo.pdf/at_download/file/@@someview" class="internal-link"&gt;</span>FOO\nfil...'}])
+        search = text_search(HTML,
+                             regexp,
+                             flags=re.DOTALL)
+        self.assertEqual(len(search), 2)
+        self.assertEqual(search,
+                         [{'start': 793, 'end': 872,
+                           'text': '<a class="internal-link"\n'
+                                   '   href="http://foo.org/aaa/bar.exe/at_download/file">'},
+                          {'start': 1243, 'end': 1330, 'text': '<a href="http://foo.org/aaa/foo.pdf/at_download/file/@@someview" class="internal-link">'}])
 
     
     def test_replace(self):
