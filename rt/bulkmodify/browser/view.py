@@ -23,7 +23,13 @@ class IBulkModify(Interface):
     """View for bulk modify"""
     
     def batchSearch():
-        """Search for a subset of results"""
+        """Search for a subset of results and preview matches"""
+
+    def batchReplace():
+        """Search for a subset of result, and preview mach changes"""
+
+    def replaceText():
+        """Apply a regex replacement to documents"""
 
 
 class BulkModifyView(BrowserView):
@@ -41,10 +47,14 @@ class BulkModifyView(BrowserView):
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
         flags = request.get('flags', 0)
-        portal_type = request.get('types', [])
+        portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
         
         results = []
+
+        if not portal_type or not search_query:
+            return json.dumps(results)
+        
         brains = catalog(portal_type=portal_type)[b_start:b_start+b_size]
         if not brains:
             # stop client side queries
@@ -80,10 +90,14 @@ class BulkModifyView(BrowserView):
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
         flags = request.get('flags', 0)
-        portal_type = request.get('types', [])
+        portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
         
         results = []
+        
+        if not portal_type or not search_query or not replace_query:
+            return json.dumps(results)
+        
         brains = catalog(portal_type=portal_type)[b_start:b_start+b_size]
         if not brains:
             # stop client side queries

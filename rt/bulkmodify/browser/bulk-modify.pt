@@ -37,12 +37,12 @@
 					<legend>Bulk modify</legend>
 					
 					<div class="field">
-						<label for="types">Content types</label>
+						<label for="content_type">Content types</label>
 						<div class="formHelp">
 							Select the set of contents to be inspected
 						</div>
 						
-						<select multiple="multiple" id="types" name="types:list">
+						<select multiple="multiple" id="content_type" name="content_type:list">
 							<option tal:repeat="t view/type_vocabulary"
 							        tal:attributes="value t/value;
 									                selected python:t.value in DEFAULT_TYPES and True or False"
