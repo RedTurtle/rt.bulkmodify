@@ -124,12 +124,13 @@
 				}
 				if ($replaceQuery.val()) {
 					// match id for server side changes (is uid-xxx)
-					$(':checkbox', newRes).attr('value', element.id+'-'+lastId).attr("data-uid", element.uid);
+					$(':checkbox', newRes).attr('value', element.id+'-'+lastId).attr("data-uid", element.uid).attr("id", element.uid);
 				} else {
 					$(':checkbox', newRes).remove();
 				}
 				// document title and URL
-				$('.matchDocument', newRes).html('<strong>' + element.title + '</strong><br />');
+				$('.matchDocument', newRes).html('<label>' + element.title + '</label><br />');
+				newRes.find('label').attr('for', element.uid);
 				$('.matchDocument', newRes).append($('<a href="' + element.url + '" rel="external">' + element.url + '</a>'));
 				// text!
 				if (element['new']) {
@@ -147,13 +148,7 @@
 		var batchSearch = function (params) {
 			params = $.extend( {b_start: 0,
 								view: '/@@batchSearch'}, params);
-
-			if (params.view==='/@@batchSearch') {
-				$('#cellCommands').empty();
-			} else {
-				$('#cellCommands').append(selectAllCommand);
-			}
-
+	
 			formData = $form.serializeArray();
 			formData.push({
 				name: 'b_start:int',
@@ -212,10 +207,13 @@
 				});
 				
 				if ($replaceQuery.val()) {
+					$('#cellCommands').append(selectAllCommand.clone(true));
 					lastReplaceQuery = $replaceQuery.val();
 					params.view = '/@@batchReplace';
 					$results.find('table').before($($('#modelModifySelectedButton').text()));
 					$('#modifySelected').click(submitSelected);
+				} else {
+					$('#cellCommands').empty();
 				}
 				batchSearch(params);
 			}

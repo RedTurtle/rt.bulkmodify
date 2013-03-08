@@ -4,7 +4,6 @@ import logging
 
 from zope.i18nmessageid import MessageFactory
 
-
 messageFactory = MessageFactory('rt.bulkmodify')
 logger = logging.getLogger('rt.bulkmodify')
 

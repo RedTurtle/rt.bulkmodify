@@ -9,7 +9,6 @@
 <metal:block use-macro="context/prefs_main_template/macros/master">
 
 <body>
-
 <div metal:fill-slot="prefs_configlet_main">
 
         <div id="bulkModify">
@@ -26,10 +25,35 @@
 		    <script type="text/javascript" src="++resource++rt.bulkmodify.resources/bulk-modify.js"></script>
 		    <link rel="stylesheet" type="text/css" media="screen"  href="++resource++rt.bulkmodify.resources/bulk-modify.css" />
 
+            <a href=""
+               id="setup-link"
+               tal:attributes="href string:$portal_url/plone_control_panel"
+               i18n:domain="plone"
+               i18n:translate="">
+                Site Setup
+            </a> &rsaquo;
+
 			<h1 class="documentFirstHeading">
 				Bulk modify contents
 			</h1>
-		
+
+			<dl class="portalMessage warning">
+				<dt>Please note!</dt>
+				<dd>
+					Read carefully notes below.
+				</dd>
+			</dl>
+			
+			<p class="documentDescription">
+				From this page you can perform a regex search inside your site contents.
+				Every search you'll run will awake site contents, and this can be painfully slow, and
+				slow down your site.<br/>
+				Even worst: if you perform substitution using the &quot;Replace regex&quot; below you
+				will perform a database write for every document you are chaging.<br />
+				Be sure of what you are doing here.
+			</p>
+
+
 			<form id="bulkSearchForm" method="post" action=""
 			      tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event')"
 			      tal:attributes="action string:${context/absolute_url}/@@batchSearch">
@@ -105,6 +129,7 @@
 			</div>
 
 		</div>
+
 </div>
 </body>
 

@@ -132,3 +132,69 @@ class TestViewBatchReplace(BaseTestCase):
                          u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
 
 
+class TestViewReplaceText(BaseTestCase):
+
+    layer = BULK_MODIFY_INTEGRATION_TESTING
+    
+    def setUp(self):
+        BaseTestCase.setUp(self)
+        portal = self.layer['portal']
+        self.view = getMultiAdapter((self.layer['portal'],
+                                     self.layer['request']),
+                                     name=u"replaceText")
+        self.ids1 = ["%s-0" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
+                     "%s-1" % '/'.join(portal['page1'].getPhysicalPath()[2:])]
+        self.ids2 = ["%s-0" % '/'.join(portal['news1'].getPhysicalPath()[2:])]
+        self.ids3 = ["%s-0" % '/'.join(portal['page2'].getPhysicalPath()[2:]),
+                     "%s-1" % '/'.join(portal['page2'].getPhysicalPath()[2:])]
+        self.ids4 = ["%s-0" % '/'.join(portal['link1'].getPhysicalPath()[2:])]
+
+    def test_missing_parameters(self):
+        portal = self.layer['portal']
+        request = self.layer['request']
+        view = self.view
+        # no params
+        self.assertEqual(json.loads(view()), [])
+        # only ids
+        view.request.set('id', self.ids1)
+        self.assertEqual(json.loads(view()), [])
+
+    def test_single_subn(self):
+        portal = self.layer['portal']
+        request = self.layer['request']
+        view = self.view
+        view.request.set('id', self.ids1[1:])
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+        self.assertEqual(json.loads(view()), [{"status": "OK"}]) 
+        self.assertFalse('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+
+    def test_multiple_subn(self):
+        portal = self.layer['portal']
+        request = self.layer['request']
+        view = self.view
+        view.request.set('id', self.ids1)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+        self.assertEqual(json.loads(view()), [{"status": "OK"}, {"status": "OK"}]) 
+        self.assertFalse('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertFalse('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+
+    def test_unknow_type(self):
+        portal = self.layer['portal']
+        request = self.layer['request']
+        view = self.view
+        view.request.set('id', self.ids4)
+        view.request.set('searchQuery', 'foo')
+        view.request.set('replaceQuery', 'bar')
+        self.assertEqual(json.loads(view()),
+                         [{u'status': u'error', u'message': u"Don't know hot to handle http://nohost/plone/link1"}])
+

@@ -6,6 +6,7 @@ import json
 from zExceptions import NotFound
 
 from zope.component import getUtility
+from zope.component import queryAdapter
 from zope.interface import implements
 from zope.interface import Interface
 
@@ -16,6 +17,7 @@ from Products.CMFCore.utils import getToolByName
 
 from rt.bulkmodify import messageFactory as _
 from rt.bulkmodify import utility
+from rt.bulkmodify.interfaces import IBulkModifyContentChanger
 
 path_id_pattern = re.compile(r'^(.*)-(\d+)$')
 
@@ -61,25 +63,29 @@ class BulkModifyView(BrowserView):
             return json.dumps(None)
         for brain in brains:
             obj = brain.getObject()
-            text = obj.getField('text').get(obj)
-            inner_results = utility.text_search(text, search_query, flags=flags, preview=True)
-            for result in inner_results:
-                result['url'] = brain.getURL()
-                result['id'] = brain.getPath()
-                result['uid'] = brain.UID
-                result['title'] = brain.Title
-            results.extend(inner_results)
+            adapter = queryAdapter(obj, IBulkModifyContentChanger)
+            if adapter:
+                text = adapter.text
+                inner_results = utility.text_search(text, search_query, flags=flags, preview=True)
+                for result in inner_results:
+                    result['url'] = brain.getURL()
+                    result['id'] = brain.getPath()
+                    result['uid'] = brain.UID
+                    result['title'] = brain.Title
+                results.extend(inner_results)
         return json.dumps(results)
 
     def get_content_diff_info(self, obj, search_query, replace_query, flags=0):
-        text = obj.getField('text').get(obj)
-        inner_results = utility.text_replace(text, search_query, replace_query, flags=flags)
-        for result in inner_results:
-            result['url'] = obj.absolute_url()
-            result['id'] = '/'.join(obj.getPhysicalPath()[2:])
-            result['uid'] = obj.UID()
-            result['title'] = obj.Title()
-        return inner_results
+        adapter = queryAdapter(obj, IBulkModifyContentChanger)
+        if adapter:
+            text = adapter.text
+            inner_results = utility.text_replace(text, search_query, replace_query, flags=flags)
+            for result in inner_results:
+                result['url'] = obj.absolute_url()
+                result['id'] = '/'.join(obj.getPhysicalPath()[2:])
+                result['uid'] = obj.UID()
+                result['title'] = obj.Title()
+            return inner_results
 
     def batchReplace(self):
         context = self.context
@@ -109,9 +115,10 @@ class BulkModifyView(BrowserView):
         return json.dumps(results)
 
     def changeDocumentText(self, obj, diff):
-        text = obj.getField('text').get(obj)
-        obj.getField('text').set(obj, text[:diff['start']] + diff['new'] + text[diff['end']:])
-        obj.reindexObject(idxs=['SearchableText'])
+        adapter = queryAdapter(obj, IBulkModifyContentChanger)
+        if adapter:
+            text = adapter.text
+            adapter.text = text[:diff['start']] + diff['new'] + text[diff['end']:]
 
     def replaceText(self):
         context = self.context
@@ -126,7 +133,7 @@ class BulkModifyView(BrowserView):
         
         messages = []
         
-        if search_query and replace_query:
+        if ids and search_query and replace_query:
             for counter, id in enumerate(ids):
                 match = path_id_pattern.match(id)
                 path, id = match.groups()
@@ -134,10 +141,13 @@ class BulkModifyView(BrowserView):
                 id = int(id)
                 if obj:
                     diff_info = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
-                    diff = diff_info[id-counter]
-                    self.changeDocumentText(obj, diff)
-                    messages.append({'status': 'OK'})
+                    if diff_info:
+                        diff = diff_info[id-counter]
+                        self.changeDocumentText(obj, diff)
+                        messages.append({'status': 'OK'})
+                    else:
+                        messages.append({'status': 'error', 'message': "Don't know hot to handle %s" % obj.absolute_url()})
                 else:
-                    messages.append({'status': 'error', 'message': 'Document "%s" not found'})
+                    messages.append({'status': 'error', 'message': 'Document "%s" not found' % obj.absolute_url()})
         return json.dumps(messages)
 

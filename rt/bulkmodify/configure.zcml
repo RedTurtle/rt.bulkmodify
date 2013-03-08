@@ -13,6 +13,7 @@
      />
 
   <include package=".browser" />
+  <include package=".adapter" />
 
   <genericsetup:registerProfile
       name="default"

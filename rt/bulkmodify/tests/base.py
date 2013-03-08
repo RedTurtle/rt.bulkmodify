@@ -52,3 +52,5 @@ class BaseTestCase(unittest.TestCase):
                              text=HTML2)
         portal.invokeFactory('Document', 'page2', title="Page 2",
                              text=HTML3)
+        portal.invokeFactory('Link', 'link1', title="Link 1",
+                             remoteUrl='http://plone.org/')
