@@ -3,7 +3,6 @@
 from zope.interface import implements
 
 from ..interfaces import IBulkModifyContentChanger
-from rt.bulkmodify import messageFactory as _
 
 
 class TextContentAdapters(object):

@@ -33,6 +33,7 @@ def text_search(text, regex, flags=0, preview=False):
         match = pattern.search(text, pos)
     return results
 
+
 def text_replace(text, regex, repl, flags=0):
     found = text_search(text, regex, flags=flags)
     pattern = re.compile(regex, flags)

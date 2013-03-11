@@ -33,7 +33,7 @@ HTML3 = """<p>
 </p>
 """
 
-re_pattern = r'(?P<link><a target="_blank" href="(?P<url>.*?)">(?P<text>[^<]*.)</a>)'
+re_pattern = r'(?P<link><a target="_blank" href="(?P<url>.*?)">(?P<text>[^<]*)</a>)'
 re_subn_pattern = r'<a href="\g<url>" class="external-link">\g<text></a>'
 
 class BaseTestCase(unittest.TestCase):
@@ -43,7 +43,7 @@ class BaseTestCase(unittest.TestCase):
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
         self.generateContents()
-    
+
     def generateContents(self):
         portal = self.layer['portal']
         portal.invokeFactory('Document', 'page1', title="Page 1",

@@ -7,9 +7,9 @@ from zExceptions import NotFound
 
 from zope.component import getUtility
 from zope.component import queryAdapter
+from zope.component import getUtilitiesFor
 from zope.interface import implements
 from zope.interface import Interface
-
 from zope.schema.interfaces import IVocabularyFactory
 
 from Products.Five.browser import BrowserView
@@ -18,6 +18,7 @@ from Products.CMFCore.utils import getToolByName
 from rt.bulkmodify import messageFactory as _
 from rt.bulkmodify import utility
 from rt.bulkmodify.interfaces import IBulkModifyContentChanger
+from rt.bulkmodify.interfaces import IBulkModifyReplacementHandler
 
 path_id_pattern = re.compile(r'^(.*)-(\d+)$')
 
@@ -111,6 +112,9 @@ class BulkModifyView(BrowserView):
         if not brains:
             # stop client side queries
             return json.dumps(None)
+
+        utilities = getUtilitiesFor(IBulkModifyReplacementHandler)
+
         for brain in brains:
             obj = brain.getObject()
             inner_results = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)

@@ -26,9 +26,6 @@ Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
 
 class TestUtility(unittest.TestCase):
 
-    def setUp(self):
-        pass
-
     def test_search(self):
         regexp = r'(?P<link><a.*?href="(?P<url>http://.*?/(?P<filename>.*?)/at_download/file/?.*?)".*?>)'
         search = text_search(HTML,
