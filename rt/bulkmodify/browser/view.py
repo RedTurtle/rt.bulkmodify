@@ -72,6 +72,8 @@ class BulkModifyView(BrowserView):
                     result['id'] = brain.getPath()
                     result['uid'] = brain.UID
                     result['title'] = brain.Title
+                    result['icon'] = brain.getIcon
+                    result['normalized_portal_type'] = brain.portal_type.lower().replace(' ','-')
                 results.extend(inner_results)
         return json.dumps(results)
 
@@ -85,6 +87,7 @@ class BulkModifyView(BrowserView):
                 result['id'] = '/'.join(obj.getPhysicalPath()[2:])
                 result['uid'] = obj.UID()
                 result['title'] = obj.Title()
+                result['normalized_portal_type'] = obj.portal_type.lower().replace(' ','-')
             return inner_results
 
     def batchReplace(self):
@@ -111,6 +114,8 @@ class BulkModifyView(BrowserView):
         for brain in brains:
             obj = brain.getObject()
             inner_results = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
+            for ir in inner_results:
+                ir['icon'] = brain.getIcon
             results.extend(inner_results)
         return json.dumps(results)
 

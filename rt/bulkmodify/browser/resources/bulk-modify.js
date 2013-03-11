@@ -17,7 +17,10 @@
 		var commandSearchButton = $('#searchButton');
 		var commandPauseButton = $('#pauseButton');
 
-		var $model = $($('#model').text());
+		// Models
+		var $modelDataRow = $($('#modelDataRow').text());
+		var $modelDataRowNoResults = $($('#modelDataRowNoResults').text());
+		
 		var flags = 0;
 		var b_size = 20;
 		var emptyResults = $results.clone();
@@ -116,7 +119,7 @@
 					lastId = 0;
 				}
 				
-				var newRes = $model.clone();
+				var newRes = $modelDataRow.clone();
 				if (i % 2 === 0) {
 					newRes.addClass('even')
 				} else {
@@ -129,8 +132,16 @@
 					$(':checkbox', newRes).remove();
 				}
 				// document title and URL
-				$('.matchDocument', newRes).html('<label>' + element.title + '</label><br />');
+				var $label = $('<label>' + element.title + '</label>');
+				$('.matchDocument', newRes).append($label);
 				newRes.find('label').attr('for', element.uid);
+				// icon
+				if (element.icon) {
+					$label.before('<img alt="" src="' + portal_url + '/' + element.icon + '" />&nbsp;')
+				} else {
+					$label.addClass('contenttype-' + element.normalized_portal_type);
+				}
+				$label.after($('<br />'));
 				$('.matchDocument', newRes).append($('<a href="' + element.url + '" rel="external">' + element.url + '</a>'));
 				// text!
 				if (element['new']) {
@@ -173,6 +184,10 @@
 						$('#loading').remove();
 						commandPauseButton.hide();
 						commandSearchButton.show();
+						// check if no result found
+						if ($("#results").find('td').length===0) {
+							$("#results").find('table').append($modelDataRowNoResults.clone());
+						}
 					} else {
 						showResults(data);
 						$results.show();

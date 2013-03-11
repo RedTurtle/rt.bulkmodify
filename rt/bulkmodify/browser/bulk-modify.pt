@@ -13,14 +13,17 @@
 
         <div id="bulkModify">
         
-			<script type="text/template" id="model">
+			<script type="text/template" id="modelDataRow">
 				<tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
 				<td class="matchDocument"></td>
 				<td class="matchText"></td></tr>
 			</script>
+			<script type="text/template" id="modelDataRowNoResults">
+				<tr><td colspan="3" class="noResults">No results found</td></tr>
+			</script>
 			<script type="text/template" id="modelModifySelectedButton">
 				<input type="submit" class="allowMultiSubmit" id="modifySelected" name="modifySelected" value="Modify selected" />
-			</script>			
+			</script>
 		
 		    <script type="text/javascript" src="++resource++rt.bulkmodify.resources/bulk-modify.js"></script>
 		    <link rel="stylesheet" type="text/css" media="screen"  href="++resource++rt.bulkmodify.resources/bulk-modify.css" />
@@ -55,7 +58,7 @@
 
 
 			<form id="bulkSearchForm" method="post" action=""
-			      tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event')"
+			      tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event', 'Topic', 'Collection')"
 			      tal:attributes="action string:${context/absolute_url}/@@batchSearch">
 				<fieldset>
 					<legend>Bulk modify</legend>
@@ -63,15 +66,19 @@
 					<div class="field">
 						<label for="content_type">Content types</label>
 						<div class="formHelp">
-							Select the set of contents to be inspected
+							Select the set of content types to be inspected
 						</div>
 						
-						<select multiple="multiple" id="content_type" name="content_type:list">
-							<option tal:repeat="t view/type_vocabulary"
-							        tal:attributes="value t/value;
-									                selected python:t.value in DEFAULT_TYPES and True or False"
-									tal:content="t/title">Page</option>
-						</select>
+						<tal:types repeat="t view/type_vocabulary">
+							<input type="checkbox" name="content_type:list" id="" value=""
+							       tal:attributes="id string:type-${repeat/t/number};
+								                   value t/value;
+												   checked python:t.value in DEFAULT_TYPES and True or False;
+												   "/>
+							<label class="possibleContentType" for=""
+							       tal:content="t/title"
+								   tal:attributes="for string:type-${repeat/t/number};">Page</label>
+						</tal:types>
 					</div>
 
 					<div class="field">

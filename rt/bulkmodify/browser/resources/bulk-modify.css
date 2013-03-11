@@ -45,6 +45,16 @@
 	color: red;
 }
 
+.noResults {
+	font-size: 120%;
+	text-align: center;
+	font-weight: bold;
+}
+
+.possibleContentType {
+	margin-right: 1em;
+}
+
 .matchText .pre {
 	padding:0.5em;
 	background-color: red;
