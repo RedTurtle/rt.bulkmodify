@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import difflib
 
 def de_html(txt):
     return txt.replace('<', '&lt;').replace('>', '&gt;')

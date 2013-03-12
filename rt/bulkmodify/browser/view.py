@@ -3,8 +3,6 @@
 import re
 import json
 
-from zExceptions import NotFound
-
 from zope.component import getUtility
 from zope.component import queryAdapter
 from zope.component import getUtilitiesFor
@@ -15,7 +13,6 @@ from zope.schema.interfaces import IVocabularyFactory
 from Products.Five.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
 
-from rt.bulkmodify import messageFactory as _
 from rt.bulkmodify import utility
 from rt.bulkmodify.interfaces import IBulkModifyContentChanger
 from rt.bulkmodify.interfaces import IBulkModifyReplacementHandler

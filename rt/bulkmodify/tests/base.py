@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import json
-
-from zope import interface
-from zope.component import queryUtility
 
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
-from plone.app.testing import logout
 
 HTML1 = """<p>
     <ul>   

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import unittest
 import json
 
 from zope.component import getMultiAdapter
@@ -22,8 +21,6 @@ class TestViewBatchSearch(BaseTestCase):
                                      name=u"batchSearch")
 
     def test_missing_parameters(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         # no params
         self.assertEqual(json.loads(view()), [])
@@ -44,8 +41,6 @@ class TestViewBatchSearch(BaseTestCase):
         self.assertEqual(json.loads(view()), [])
 
     def test_simple_search(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
@@ -60,8 +55,6 @@ class TestViewBatchSearch(BaseTestCase):
                          u'...ongue. <span class="mark">&lt;a target="_blank" href="http://loripsum.net/"&gt;Duis ac augue diam&lt;/a&gt;</span>, digni...')
 
     def test_batching(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
@@ -84,8 +77,6 @@ class TestViewBatchReplace(BaseTestCase):
                                      name=u"batchReplace")
 
     def test_missing_parameters(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         # no params
         self.assertEqual(json.loads(view()), [])
@@ -111,8 +102,6 @@ class TestViewBatchReplace(BaseTestCase):
         view.request.set('replaceQuery', '')
 
     def test_simple_replace(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
@@ -150,8 +139,6 @@ class TestViewReplaceText(BaseTestCase):
         self.ids4 = ["%s-0" % '/'.join(portal['link1'].getPhysicalPath()[2:])]
 
     def test_missing_parameters(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         # no params
         self.assertEqual(json.loads(view()), [])
@@ -161,7 +148,6 @@ class TestViewReplaceText(BaseTestCase):
 
     def test_single_subn(self):
         portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         view.request.set('id', self.ids1[1:])
         view.request.set('searchQuery', re_pattern)
@@ -175,7 +161,6 @@ class TestViewReplaceText(BaseTestCase):
 
     def test_multiple_subn(self):
         portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         view.request.set('id', self.ids1)
         view.request.set('searchQuery', re_pattern)
@@ -189,8 +174,6 @@ class TestViewReplaceText(BaseTestCase):
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
 
     def test_unknow_type(self):
-        portal = self.layer['portal']
-        request = self.layer['request']
         view = self.view
         view.request.set('id', self.ids4)
         view.request.set('searchQuery', 'foo')

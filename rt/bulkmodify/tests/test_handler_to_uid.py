@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import unittest
 
 from rt.bulkmodify.handler.to_uid import InternalLinkToUIDUtility
 
@@ -21,7 +20,6 @@ class TestUtility(BaseTestCase):
         BaseTestCase.setUp(self)
 
     def test_not_existings(self):
-        portal = self.layer['portal']
         self.assertEqual(is_internal_link.sub(utility.repl,
                                               r'Lorem <a href="http://external.org/foo">Bar Baz</a> Ipsum'),
                          'Lorem <a href="http://external.org/foo">Bar Baz</a> Ipsum')
