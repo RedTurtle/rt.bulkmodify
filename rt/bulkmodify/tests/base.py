@@ -2,10 +2,15 @@
 
 import unittest
 
+from zope.interface import implements
+from zope.component import getGlobalSiteManager
+
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
+
+from ..interfaces import IBulkModifyReplacementHandler
 
 HTML1 = """<p>
     <ul>   
@@ -31,12 +36,27 @@ HTML3 = """<p>
 re_pattern = r'(?P<link><a target="_blank" href="(?P<url>.*?)">(?P<text>[^<]*)</a>)'
 re_subn_pattern = r'<a href="\g<url>" class="external-link">\g<text></a>'
 
+
+class FakeUtility(object):
+    implements(IBulkModifyReplacementHandler)
+    
+    name = u'Fake utility'
+    description = u"Just for testing purposes"
+
+    @classmethod
+    def repl(cls, match):
+        return 'NEW TEXT!'
+
+
 class BaseTestCase(unittest.TestCase):
     
     def setUp(self):
         portal = self.layer['portal']
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
+        fake = FakeUtility()
+        gsm = getGlobalSiteManager()
+        gsm.registerUtility(fake, name='fake')
         self.generateContents()
 
     def generateContents(self):

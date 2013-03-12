@@ -18,12 +18,12 @@ class InternalLinkToUIDUtility(object):
     name = _('utility_internal_link_to_uid_name',
              default=u"Convert internal links to resolveuid usage")
 
-    descrition = _('utility_internal_link_to_uid_description',
-                   default=u"If the match contains a group called <url> and the group called URL "
-                           u"is an internal link to a site content, let's transform it to a link using resolveuid.\n"
-                           u"Something like: <a href=\"http://site/.../resolveuid/uid/...\" class=\"internal-link\">text</a>")
+    description = _('utility_internal_link_to_uid_description',
+                    default=u"If the match contains a group called <url> and this group is an internal link to "
+                            u"a site content, let's transform it to a link using resolveuid.\n")
 
-    def repl(self, match):
+    @classmethod
+    def repl(cls, match):
         groups = match.groupdict()
         if groups.get('url'):
             old_url = groups.get('url')

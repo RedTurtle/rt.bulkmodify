@@ -18,5 +18,7 @@ class IBulkModifyReplacementHandler(Interface):
 
     def repl(match):
         """A callable that can be passed to re.sub.
-        Must accept the re.MatchObject and return the string to be replaced
-        """ 
+        Must accept the re.MatchObject and return the string to be replaced.
+        
+        Commonly is @classmethod decorated, as it must be called without any context
+        """

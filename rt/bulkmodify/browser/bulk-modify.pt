@@ -73,8 +73,7 @@
 							<input type="checkbox" name="content_type:list" id="" value=""
 							       tal:attributes="id string:type-${repeat/t/number};
 								                   value t/value;
-												   checked python:t.value in DEFAULT_TYPES and True or False;
-												   "/>
+												   checked python:t.value in DEFAULT_TYPES;" />
 							<label class="possibleContentType" for=""
 							       tal:content="t/title"
 								   tal:attributes="for string:type-${repeat/t/number};">Page</label>
@@ -110,11 +109,24 @@
 					</div>
 
 					<div class="field">
-						<label for="replaceQuery">Replace regex</label>
+						<label for="repltype-0">Replace text</label>
 						<div class="formHelp">
-							Type a replace query for performing mass changes in contents found.
+							Select the kind of text replace you want to perform (if any)
 						</div>
-						<textarea cols="80" rows="5" name="replaceQuery" id="replaceQuery"></textarea>
+						<tal:repltypes repeat="t view/repl_type_vocabulary">
+							<input type="radio" name="replace_type" id="" value=""
+							       tal:attributes="id string:repltype-${repeat/t/index};
+								                   value t/value;
+												   checked python:t['value']=='';" />
+							<label class="possibleReplaceType" for=""
+							       tal:content="t/title"
+								   tal:attributes="for string:repltype-${repeat/t/index};">Simple</label>
+							<div class="formHelp" tal:content="t/description">
+								How works the simple replacment
+							</div>
+						    <textarea cols="80" rows="5" name="replaceQuery" id="replaceQuery"
+							          tal:condition="repeat/t/start"></textarea>
+						</tal:repltypes>
 					</div>
 					
 					<input type="submit" class="allowMultiSubmit" id="searchButton" name="Search" value="Search" />

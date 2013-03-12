@@ -120,6 +120,23 @@ class TestViewBatchReplace(BaseTestCase):
         self.assertEqual(results[2]['new'],
                          u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
 
+    def test_futile_replacement(self):
+        view = self.view
+        view.request.set('content_type', ['Document', ])
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', r'<a target="_blank" href="\g<url>">\g<text></a>')
+        results = json.loads(view())
+        # if replacement return the original text, no replacement is needed
+        self.assertEqual(len(results), 0)
+
+    def test_replace_with_utility(self):
+        view = self.view
+        view.request.set('content_type', ['Document', ])
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replace_type', 'fake')
+        results = json.loads(view())
+        self.assertEqual(results[0]['new'], 'NEW TEXT!')
+
 
 class TestViewReplaceText(BaseTestCase):
 
@@ -179,5 +196,20 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('searchQuery', 'foo')
         view.request.set('replaceQuery', 'bar')
         self.assertEqual(json.loads(view()),
-                         [{u'status': u'error', u'message': u"Don't know hot to handle http://nohost/plone/link1"}])
+                         [{u'status': u'error', u'message': u"Don't know how to handle http://nohost/plone/link1"}])
+
+    def test_replace_with_utility(self):
+        portal = self.layer['portal']
+        view = self.view
+        view.request.set('id', self.ids1)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replace_type', 'fake')
+        results = json.loads(view())
+        self.assertEqual(portal.page1.getRawText(),
+                         """<p>
+    <ul>   
+        <li>Lorem ipsum dolor NEW TEXT!, sed do eiusmod tempor incididunt</li>
+        <li>Duis aute irure dolor in NEW TEXT! esse cillum dolore eu fugiat nulla pariatur</li>
+    </ul>\n</p>
+""")
 

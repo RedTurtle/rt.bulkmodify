@@ -12,6 +12,7 @@
 		// Data
         var $searchQuery = $('#searchQuery');
 		var $replaceQuery = $('#replaceQuery');
+		var $replaceType = $('#replace_type');
 
 		// Buttons
 		var commandSearchButton = $('#searchButton');
@@ -27,13 +28,19 @@
 		
 		// Temp vars
 		var running = false;
-		var lastSearchQuery, lastReplacequery, lastFlags;
+		var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType;
 
 		var markDone = function(element, info) {
 			element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>Done!</strong></td>');
 		}
 		var markError = function(element, info) {
 			element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>Error: ' + info.message +  '</strong></td>');
+		}
+
+		var checkNoResultsFound = function() {
+			if ($("#results").find('td').length===0) {
+				$("#results").find('table').append($modelDataRowNoResults.clone());
+			}
 		}
 
 		var submitSelected = function(event) {
@@ -63,7 +70,7 @@
 						type: 'POST',
 						url: portal_url + '/@@replaceText',
 						traditional: true,
-						data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags},
+						data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceQuery},
 						success: function(data) {
 							
 							for (var j=0; j<data.length; j++) {
@@ -184,10 +191,7 @@
 						$('#loading').remove();
 						commandPauseButton.hide();
 						commandSearchButton.show();
-						// check if no result found
-						if ($("#results").find('td').length===0) {
-							$("#results").find('table').append($modelDataRowNoResults.clone());
-						}
+						checkNoResultsFound();
 					} else {
 						showResults(data);
 						$results.show();
@@ -211,6 +215,7 @@
 				running = true;
 
 				lastSearchQuery = $searchQuery.val();
+				lastReplaceType = $replaceType.val();
 				$results.html(emptyResults.html());
 				$results.prepend('<div id="loading"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></div>');
 
@@ -237,6 +242,7 @@
         commandPauseButton.click(function(event) {
 			event.preventDefault();
 			running = false;
+			checkNoResultsFound();
 			commandPauseButton.hide();
 			commandSearchButton.show();
 			$('#loading').remove();

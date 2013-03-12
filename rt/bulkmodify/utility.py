@@ -2,6 +2,7 @@
 
 import re
 
+
 def de_html(txt):
     return txt.replace('<', '&lt;').replace('>', '&gt;')
 
@@ -40,8 +41,9 @@ def text_replace(text, regex, repl, flags=0):
     for f in found:
         old = f['text']
         replaced = pattern.sub(repl, old)
-        result = {'old': old, 'new': replaced}
-        result['start'] = f['start']
-        result['end'] = f['end']
-        results.append(result)
+        if old!=replaced:
+            result = {'old': old, 'new': replaced}
+            result['start'] = f['start']
+            result['end'] = f['end']
+            results.append(result)
     return results
