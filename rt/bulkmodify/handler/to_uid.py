@@ -7,6 +7,7 @@ from zope.site.hooks import getSite
 #from Products.CMFCore.PortalContent import PortalContent
 
 from plone.uuid.interfaces import IUUID
+from plone.uuid.interfaces import IUUIDAware
 
 from rt.bulkmodify import messageFactory as _
 from rt.bulkmodify.interfaces import IBulkModifyReplacementHandler
@@ -32,14 +33,19 @@ class InternalLinkToUIDUtility(object):
             site_url = site.absolute_url()
             if portal_url.isURLInPortal(old_url):
                 path = old_url.replace('%s/' % site_url, '', 1)
+                suffix = []
                 content = None
-                while not content:
+                while path:
                     content = site.unrestrictedTraverse(path, default=None)
-                    if 
-                content = site.unrestrictedTraverse(path, default=None)
+                    if IUUIDAware.providedBy(content):
+                        break
+                    suffix.insert(0, path.split('/')[-1])
+                    path = '/'.join(path.split('/')[:-1])
                 if content:
                     uuid = IUUID(content)
+                    suffix.insert(0, '')
+                    new_url = site_url + '/resolveuid/%s' % uuid + '/'.join(suffix)
                     return match.string[match.start():match.end()].replace(old_url,
-                                                                           site_url+'/resolveuid/%s' % uuid)
+                                                                           new_url)
         return match.string[match.start():match.end()]
         
