@@ -177,6 +177,7 @@ class BulkModifyView(BrowserView):
             if replace_type:
                 # let's load the proper replace type
                 utilities = [u for u in self.utilities if u[0]==replace_type]
+                replace_query_klass = u[1]
                 replace_query = u[1].repl
 
             for counter, id in enumerate(ids):
@@ -185,6 +186,8 @@ class BulkModifyView(BrowserView):
                 obj = portal.restrictedTraverse(path, default=None)
                 id = int(id)
                 if obj:
+                    if replace_type:
+                        replace_query_klass.context = obj
                     diff_info = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
                     if diff_info:
                         diff = diff_info[id-counter]

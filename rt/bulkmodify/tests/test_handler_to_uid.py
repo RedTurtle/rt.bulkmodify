@@ -50,3 +50,14 @@ class TestUtility(BaseTestCase):
         self.assertEqual(is_internal_link.sub(utility.repl,
                                               r'Lorem <a href="http://nohost/plone/file1/at_download/file">Bar Baz</a> Ipsum'),
                          'Lorem <a href="http://nohost/plone/resolveuid/' + portal.file1.UID() + '/at_download/file">Bar Baz</a> Ipsum')
+
+    def test_relative_urls(self):
+        portal = self.layer['portal']
+        utility.__class__.context = portal.page1
+        self.assertEqual(is_internal_link.sub(utility.repl,
+                                              r'Lorem <a href="page2">Bar Baz</a> Ipsum'),
+                         'Lorem <a href="http://nohost/plone/resolveuid/' + portal.page2.UID() + '">Bar Baz</a> Ipsum')
+        utility.__class__.context = portal.folder1.event1
+        self.assertEqual(is_internal_link.sub(utility.repl,
+                                              portal.folder1.event1.getText()),
+                         '<p> <a href="http://nohost/plone/resolveuid/' + portal.page2.UID() + '">Lorem Ipsum</a> </p>')

@@ -69,3 +69,6 @@ class BaseTestCase(unittest.TestCase):
                              text=HTML3)
         portal.invokeFactory('Link', 'link1', title="Link 1",
                              remoteUrl='http://plone.org/')
+        portal.invokeFactory('Folder', 'folder1', title="Folder 1")        
+        portal.folder1.invokeFactory('Event', 'event1', title="Event 1",
+                                     text="""<p> <a href="../page2">Lorem Ipsum</a> </p>""")

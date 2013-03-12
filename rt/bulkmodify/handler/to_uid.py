@@ -15,6 +15,8 @@ from rt.bulkmodify.interfaces import IBulkModifyReplacementHandler
 class InternalLinkToUIDUtility(object):
     implements(IBulkModifyReplacementHandler)
     
+    context = None
+    
     name = _('utility_internal_link_to_uid_name',
              default=u"Convert internal links to resolveuid usage")
 
@@ -30,7 +32,7 @@ class InternalLinkToUIDUtility(object):
             site = getSite()
             portal_url = site.portal_url
             site_url = site.absolute_url()
-            if portal_url.isURLInPortal(old_url):
+            if portal_url.isURLInPortal(old_url, cls.context or None):
                 path = old_url.replace('%s/' % site_url, '', 1)
                 suffix = []
                 content = None
@@ -40,7 +42,7 @@ class InternalLinkToUIDUtility(object):
                         break
                     suffix.insert(0, path.split('/')[-1])
                     path = '/'.join(path.split('/')[:-1])
-                if content:
+                if content and IUUIDAware.providedBy(content):
                     uuid = IUUID(content)
                     suffix.insert(0, '')
                     new_url = site_url + '/resolveuid/%s' % uuid + '/'.join(suffix)
