@@ -20,7 +20,14 @@
       name="default"
       title="rt.bulkmodify"
       directory="profiles/default"
-      description="Installs the rt.bulkmodify package"
+      description="An administration tool for performing mass text substitution on Plone contents"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="rt.bulkmodify: uninstall"
+      directory="profiles/uninstall"
+      description="Remove rt.bulkmodify from the site"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
   

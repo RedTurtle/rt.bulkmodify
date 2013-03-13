@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<object name="portal_javascripts">
+  <javascript cacheable="True" compression="safe" cookable="True" enabled="1"
+              expression="python:member and member.hasPermission('rt.bulkmodify: Bulk Modify', context)"
+              id="++resource++rt.bulkmodify.resources/bulk-modify.js" />
+</object>

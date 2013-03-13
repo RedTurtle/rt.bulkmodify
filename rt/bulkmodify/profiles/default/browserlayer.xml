@@ -1,0 +1,4 @@
+<layers>
+    <layer name="rt.bulkmodify"
+           interface="rt.bulkmodify.interfaces.IBulkModifyLayer" />
+</layers>

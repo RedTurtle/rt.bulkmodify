@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<object name="portal_css">
+  <stylesheet
+      id="++resource++rt.bulkmodify.resources/bulk-modify.css"
+      enabled="1"
+      expression=""
+      cookable="True"
+      media="all"
+      rel="stylesheet"
+      applyPrefix="True"
+	  authenticated="True"
+      rendering="link" />
+</object>

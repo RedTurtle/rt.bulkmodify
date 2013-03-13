@@ -5,7 +5,7 @@
 (function($){
     $(document).ready(function() {
 
-		if ($('#bulkModify').lenth==0) {
+		if ($('#bulkModify').length==0) {
 			// quick way to exit: do not try to do nothing if we are not in the right template
 			return;
 		}

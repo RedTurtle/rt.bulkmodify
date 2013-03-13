@@ -7,7 +7,7 @@ tests_require = ['plone.app.testing', ]
 
 setup(name='rt.bulkmodify',
       version=version,
-      description="Plone utility for performing mass text substitutions",
+      description="An administration tool for performing mass text substitution on Plone contents",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from

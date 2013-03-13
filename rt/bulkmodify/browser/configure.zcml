@@ -5,18 +5,19 @@
     i18n_domain="rt.bulkmodify">
 
     <browser:resourceDirectory
-	    name="rt.bulkmodify.resources"
-		directory="resources"
-		/>
+        name="rt.bulkmodify.resources"
+        directory="resources"
+        />
 
     <browser:pages
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        permission="rt.bulkmodify.BulkModify" 
+        permission="rt.bulkmodify.BulkModify"
+        layer="..interfaces.IBulkModifyLayer"
         class=".view.BulkModifyView">
            <browser:page name="bulk-modify" template="bulk-modify.pt" />
            <browser:page name="batchSearch" attribute="batchSearch" />
            <browser:page name="batchReplace" attribute="batchReplace" />
            <browser:page name="replaceText" attribute="replaceText" />
-	</browser:pages>
+    </browser:pages>
 
 </configure>

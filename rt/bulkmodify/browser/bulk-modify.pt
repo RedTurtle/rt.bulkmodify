@@ -25,9 +25,6 @@
 				<input type="submit" class="allowMultiSubmit" id="modifySelected" name="modifySelected" value="Modify selected" />
 			</script>
 		
-		    <script type="text/javascript" src="++resource++rt.bulkmodify.resources/bulk-modify.js"></script>
-		    <link rel="stylesheet" type="text/css" media="screen"  href="++resource++rt.bulkmodify.resources/bulk-modify.css" />
-
             <a href=""
                id="setup-link"
                tal:attributes="href string:$portal_url/plone_control_panel"

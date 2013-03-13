@@ -4,6 +4,10 @@ from zope.interface import Interface
 from zope.interface import Attribute
 
 
+class IBulkModifyLayer(Interface):
+    """Browser layer for rt.bulkmodify"""
+
+
 class IBulkModifyContentChanger(Interface):
     """An object that is able to readn and change text data inside a content's field"""
 
