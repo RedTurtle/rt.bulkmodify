@@ -11,7 +11,10 @@
 <body>
 <div metal:fill-slot="prefs_configlet_main">
 
-        <div id="bulkModify">
+        <div id="bulkModify"
+		     data-i18n-no-results-found="No results found"
+			 data-i18n-modify-selected="Modify selected"
+			 i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected">
         
 			<script type="text/template" id="modelDataRow">
 				<tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
@@ -22,7 +25,8 @@
 				<tr><td colspan="3" class="noResults">No results found</td></tr>
 			</script>
 			<script type="text/template" id="modelModifySelectedButton">
-				<input type="submit" class="allowMultiSubmit" id="modifySelected" name="modifySelected" value="Modify selected" />
+				<input type="submit" class="allowMultiSubmit" id="modifySelected"
+				       name="modifySelected" value="Modify selected" />
 			</script>
 		
             <a href=""
@@ -33,36 +37,40 @@
                 Site Setup
             </a> &rsaquo;
 
-			<h1 class="documentFirstHeading">
+			<h1 class="documentFirstHeading" i18n:translate="">
 				Bulk modify contents
 			</h1>
 
 			<dl class="portalMessage warning">
-				<dt>Please note!</dt>
-				<dd>
+				<dt i18n:translate="">Please note!</dt>
+				<dd i18n:translate="">
 					Read carefully notes below.
 				</dd>
 			</dl>
 			
 			<p class="documentDescription">
-				From this page you can perform a regex search inside your site contents.
-				Every search you'll run will awake site contents, and this can be painfully slow, and
-				slow down your site.<br/>
-				Even worst: if you perform substitution using the &quot;Replace regex&quot; below you
-				will perform a database write for every document you are chaging.<br />
-				Be sure of what you are doing here.
+			    <span tal:omit-tag="" i18n:translate="warning_msg_part1">
+					From this page you can perform a <a href="http://docs.python.org/2/howto/regex.html" i18n:translate=""
+					                                    i18n:name="regex_doc_link">regex search</a> inside your site contents.
+					Every search you'll run will awake site's contents.
+					This can be <strong i18n:name="heavy_note" i18n:translate="">painfully slow</strong>, and slow down your site.</span><br/>
+			    <span tal:omit-tag="" i18n:translate="warning_msg_part2">
+					Even worst: if you perform substitution using the &quot;Replace regex&quot; field below, you
+					will perform a database write for every selected document.</span><br />
+			    <span tal:omit-tag="" i18n:translate="warning_msg_part3">
+					Be sure of what you are doing here.
+				</span>
 			</p>
-
 
 			<form id="bulkSearchForm" method="post" action=""
 			      tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event', 'Topic', 'Collection')"
 			      tal:attributes="action string:${context/absolute_url}/@@batchSearch">
 				<fieldset>
-					<legend>Bulk modify</legend>
+					<legend i18n:translate="">Bulk modify</legend>
 					
 					<div class="field">
-						<label for="content_type">Content types</label>
-						<div class="formHelp">
+						<label for="content_type" i18n:translate="">Content types</label>
+						<div class="formHelp" i18n:translate="content_types_help">
 							Select the set of content types to be inspected
 						</div>
 						
@@ -78,36 +86,36 @@
 					</div>
 
 					<div class="field">
-						<strong>Regex flags</strong>
-						<div class="formHelp">
-							Regex options
+						<strong i18n:translate="">Regex flags</strong>
+						<div class="formHelp" i18n:translate="regex_flags_help">
+							Regex options. See Python regex documentation.
 						</div>
 						<span class="flag">
-						<input type="checkbox" id="re-I" name="re-I" value="2" checked="checked" /> <label for="re-I">Ignore case</label>
+						<input type="checkbox" id="re-I" name="re-I" value="2" checked="checked" /> <label for="re-I" i18n:translate="">Ignore case</label>
 						</span> 
 						<span class="flag">
-						<input type="checkbox" id="re-M" name="re-M" value="8" checked="checked" /> <label for="re-M">Multiline</label>
+						<input type="checkbox" id="re-M" name="re-M" value="8" checked="checked" /> <label for="re-M" i18n:translate="">Multiline</label>
 						</span> 
 						<span class="flag">
-						<input type="checkbox" id="re-S" name="re-S" value="16" /> <label for="re-S">Dot all</label>
+						<input type="checkbox" id="re-S" name="re-S" value="16" /> <label for="re-S" i18n:translate="">Dot all</label>
 						</span> 
 						<span class="flag">
-						<input type="checkbox" id="re-X" name="re-X" value="64" /> <label for="re-X">Verbose</label>
+						<input type="checkbox" id="re-X" name="re-X" value="64" /> <label for="re-X" i18n:translate="">Verbose</label>
 						</span> 
 
 					</div>
 
 					<div class="field">
-						<label for="searchQuery">Search regex</label>
-						<div class="formHelp">
+						<label for="searchQuery" i18n:translate="">Search regex</label>
+						<div class="formHelp" i18n:translate="search_regex_help">
 							Type a regular expression for performing the search.
 						</div>
 						<textarea cols="80" rows="5" name="searchQuery" id="searchQuery"></textarea>
 					</div>
 
 					<div class="field">
-						<label for="repltype-0">Replace text</label>
-						<div class="formHelp">
+						<label for="repltype-0" i18n:translate="">Replace text</label>
+						<div class="formHelp" i18n:translate="">
 							Select the kind of text replace you want to perform (if any)
 						</div>
 						<tal:repltypes repeat="t view/repl_type_vocabulary">
@@ -126,8 +134,10 @@
 						</tal:repltypes>
 					</div>
 					
-					<input type="submit" class="allowMultiSubmit" id="searchButton" name="Search" value="Search" />
-					<input style="display:none" type="button" class="allowMultiSubmit" id="pauseButton" name="Pause" value="Pause" />
+					<input type="submit" class="allowMultiSubmit" id="searchButton"
+					       name="Search" value="Search" i18n:attributes="value"/>
+					<input style="display:none" type="button" class="allowMultiSubmit" id="pauseButton"
+					       name="Pause" value="Pause" i18n:attributes="value"/>
 				</fieldset>
 			
 			</form>
@@ -136,9 +146,11 @@
 				<form id="bulkModifyForm" method="post" action=""
 			          tal:attributes="action string:${context/absolute_url}/@@bulk-modify">
 					<fieldset>
-						<legend>Bulk replace</legend>
+						<legend i18n:translate="">Bulk replace</legend>
 					<table class="listing">
-						<tr><th id="cellCommands"></th><th id="cellDocumentInfo">Document</th><th id="cellText">Text found</th></tr>
+						<tr>
+							<th id="cellCommands"></th><th id="cellDocumentInfo" i18n:translate="">Document</th>
+							<th id="cellText" i18n:translate="">Text found</th></tr>
 					</table>
 					</fieldset>
 				</form>

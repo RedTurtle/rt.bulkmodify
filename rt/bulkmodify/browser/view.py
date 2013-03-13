@@ -52,7 +52,7 @@ class BulkModifyView(BrowserView):
                                default=u'Default replacement'),
                     'description': _('default_replacement_type_help',
                                      default=u'Default replacement method. Use the replacement string '
-                                             u'from the "Replace regex" field below'),
+                                             u'from the field below'),
                     'value': ''}]
         utilities = self.utilities
         for hname, hobj in utilities:

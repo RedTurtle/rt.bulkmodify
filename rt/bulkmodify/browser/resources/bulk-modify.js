@@ -5,7 +5,8 @@
 (function($){
     $(document).ready(function() {
 
-		if ($('#bulkModify').length==0) {
+		var $main = $('#bulkModify');
+		if ($main.length==0) {
 			// quick way to exit: do not try to do nothing if we are not in the right template
 			return;
 		}
@@ -22,10 +23,13 @@
 		// Buttons
 		var commandSearchButton = $('#searchButton');
 		var commandPauseButton = $('#pauseButton');
+		var commandModifySelected = $($('#modelModifySelectedButton').text());
+		commandModifySelected.attr('value', $main.data('i18n-modify-selected'));
 
 		// Models
 		var $modelDataRow = $($('#modelDataRow').text());
 		var $modelDataRowNoResults = $($('#modelDataRowNoResults').text());
+		$modelDataRowNoResults.find('td').text($main.data('i18n-no-results-found'));
 		
 		var flags = 0;
 		var b_size = 20;
@@ -235,7 +239,7 @@
 					$('#cellCommands').append(selectAllCommand.clone(true));
 					lastReplaceQuery = $replaceQuery.val();
 					params.view = '/@@batchReplace';
-					$results.find('table').before($($('#modelModifySelectedButton').text()));
+					$results.find('table').before(commandModifySelected);
 					$('#modifySelected').click(submitSelected);
 				} else {
 					$('#cellCommands').empty();

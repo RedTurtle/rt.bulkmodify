@@ -6,6 +6,7 @@
     i18n_domain="rt.bulkmodify">
 
   <five:registerPackage package="." initialize=".initialize" />
+  <i18n:registerTranslations directory="locales" />
 
   <permission
         id="rt.bulkmodify.BulkModify"
