@@ -40,10 +40,10 @@
 		var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType;
 
 		var markDone = function(element, info) {
-			element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>Done!</strong></td>');
+			element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>' + $main.data('i18n-messages-done') + '!</strong></td>');
 		}
 		var markError = function(element, info) {
-			element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>Error: ' + info.message +  '</strong></td>');
+			element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>' + $main.data('i18n-messages-error') + ': ' + info.message +  '</strong></td>');
 		}
 
 		var checkNoResultsFound = function() {

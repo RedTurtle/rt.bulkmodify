@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-13 13:40+0000\n"
+"POT-Creation-Date: 2013-03-13 16:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,32 +20,40 @@ msgstr ""
 msgid "An administration tool for performing mass text substitution on Plone contents"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:69
+#: ../browser/bulk-modify.pt:71
 msgid "Bulk modify"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:40
+#: ../browser/bulk-modify.pt:42
 #: ../profiles/default/controlpanel.xml
 msgid "Bulk modify contents"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:149
+#: ../browser/bulk-modify.pt:151
 msgid "Bulk replace"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:72
+#: ../browser/bulk-modify.pt:14
+msgid "Change done!"
+msgstr ""
+
+#: ../browser/bulk-modify.pt:74
 msgid "Content types"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:152
+#: ../browser/bulk-modify.pt:154
 msgid "Document"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:100
+#: ../browser/bulk-modify.pt:102
 msgid "Dot all"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:94
+#: ../browser/bulk-modify.pt:14
+msgid "Error"
+msgstr ""
+
+#: ../browser/bulk-modify.pt:96
 msgid "Ignore case"
 msgstr ""
 
@@ -53,7 +61,7 @@ msgstr ""
 msgid "Modify selected"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:97
+#: ../browser/bulk-modify.pt:99
 msgid "Multiline"
 msgstr ""
 
@@ -61,48 +69,48 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:139
+#: ../browser/bulk-modify.pt:141
 msgid "Pause"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:45
+#: ../browser/bulk-modify.pt:47
 msgid "Please note!"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:46
+#: ../browser/bulk-modify.pt:48
 msgid "Read carefully notes below."
 msgstr ""
 
-#: ../browser/bulk-modify.pt:89
+#: ../browser/bulk-modify.pt:91
 msgid "Regex flags"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:117
+#: ../browser/bulk-modify.pt:119
 msgid "Replace text"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:137
+#: ../browser/bulk-modify.pt:139
 msgid "Search"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:109
+#: ../browser/bulk-modify.pt:111
 msgid "Search regex"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:118
+#: ../browser/bulk-modify.pt:120
 msgid "Select the kind of text replace you want to perform (if any)"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:153
+#: ../browser/bulk-modify.pt:155
 msgid "Text found"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:103
+#: ../browser/bulk-modify.pt:105
 msgid "Verbose"
 msgstr ""
 
 #. Default: "Select the set of content types to be inspected"
-#: ../browser/bulk-modify.pt:73
+#: ../browser/bulk-modify.pt:75
 msgid "content_types_help"
 msgstr ""
 
@@ -116,46 +124,46 @@ msgstr ""
 msgid "default_replacement_type_label"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:56
+#: ../browser/bulk-modify.pt:58
 msgid "painfully slow"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:53
+#: ../browser/bulk-modify.pt:55
 msgid "regex search"
 msgstr ""
 
 #. Default: "Regex options. See Python regex documentation."
-#: ../browser/bulk-modify.pt:90
+#: ../browser/bulk-modify.pt:92
 msgid "regex_flags_help"
 msgstr ""
 
 #. Default: "Type a regular expression for performing the search."
-#: ../browser/bulk-modify.pt:110
+#: ../browser/bulk-modify.pt:112
 msgid "search_regex_help"
 msgstr ""
 
 #. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid."
-#: ../handler/to_uid.py:23
+#: ../handler/to_uid.py:21
 msgid "utility_internal_link_to_uid_description"
 msgstr ""
 
 #. Default: "Convert internal links to resolveuid usage"
-#: ../handler/to_uid.py:20
+#: ../handler/to_uid.py:18
 msgid "utility_internal_link_to_uid_name"
 msgstr ""
 
 #. Default: "From this page you can perform a ${regex_doc_link} inside your site contents. Every search you'll run will awake site's contents. This can be ${heavy_note}, and slow down your site."
-#: ../browser/bulk-modify.pt:56
+#: ../browser/bulk-modify.pt:58
 msgid "warning_msg_part1"
 msgstr ""
 
 #. Default: "Even worst: if you perform substitution using the \"Replace regex\" field below, you will perform a database write for every selected document."
-#: ../browser/bulk-modify.pt:57
+#: ../browser/bulk-modify.pt:59
 msgid "warning_msg_part2"
 msgstr ""
 
 #. Default: "Be sure of what you are doing here."
-#: ../browser/bulk-modify.pt:60
+#: ../browser/bulk-modify.pt:62
 msgid "warning_msg_part3"
 msgstr ""
 
