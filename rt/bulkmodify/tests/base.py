@@ -3,6 +3,7 @@
 import unittest
 
 from zope.interface import implements
+from zope.interface import alsoProvides
 from zope.component import getGlobalSiteManager
 
 from plone.app.testing import login
@@ -11,6 +12,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 
 from ..interfaces import IBulkModifyReplacementHandler
+from ..interfaces import IBulkModifyLayer
 
 HTML1 = """<p>
     <ul>   
@@ -52,11 +54,13 @@ class BaseTestCase(unittest.TestCase):
     
     def setUp(self):
         portal = self.layer['portal']
+        request = self.layer['request']
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
         fake = FakeUtility()
         gsm = getGlobalSiteManager()
         gsm.registerUtility(fake, name='fake')
+        alsoProvides(request, IBulkModifyLayer)
         self.generateContents()
 
     def generateContents(self):
@@ -71,4 +75,4 @@ class BaseTestCase(unittest.TestCase):
                              remoteUrl='http://plone.org/')
         portal.invokeFactory('Folder', 'folder1', title="Folder 1")        
         portal.folder1.invokeFactory('Event', 'event1', title="Event 1",
-                                     text="""<p> <a href="../page2">Lorem Ipsum</a> </p>""")
+                                     text="foo, will not be used")
