@@ -16,9 +16,6 @@ class TestUtility(BaseTestCase):
 
     layer = BULK_MODIFY_INTEGRATION_TESTING
 
-    def setUp(self):
-        BaseTestCase.setUp(self)
-
     def test_not_existings(self):
         self.assertEqual(is_internal_link.sub(utility.repl,
                                               r'Lorem <a href="http://external.org/foo">Bar Baz</a> Ipsum'),
@@ -58,6 +55,11 @@ class TestUtility(BaseTestCase):
                                               r'Lorem <a href="page2">Bar Baz</a> Ipsum'),
                          'Lorem <a href="http://nohost/plone/resolveuid/' + portal.page2.UID() + '">Bar Baz</a> Ipsum')
         utility.__class__.context = portal.folder1.event1
+        portal.folder1.event1.setText('<p> <a href="../page2">Lorem Ipsum</a> </p>')
         self.assertEqual(is_internal_link.sub(utility.repl,
                                               portal.folder1.event1.getText()),
                          '<p> <a href="http://nohost/plone/resolveuid/' + portal.page2.UID() + '">Lorem Ipsum</a> </p>')
+        portal.folder1.event1.setText('<p> <a href="../page2/base_view">Lorem Ipsum</a> </p>')
+        self.assertEqual(is_internal_link.sub(utility.repl,
+                                              portal.folder1.event1.getText()),
+                         '<p> <a href="http://nohost/plone/resolveuid/' + portal.page2.UID() + '/base_view">Lorem Ipsum</a> </p>')
