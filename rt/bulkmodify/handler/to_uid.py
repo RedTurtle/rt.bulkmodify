@@ -43,7 +43,7 @@ class InternalLinkToUIDUtility(object):
                 if content and IUUIDAware.providedBy(content):
                     uuid = IUUID(content)
                     suffix.insert(0, '')
-                    new_url = site_url + '/resolveuid/%s' % uuid + '/'.join(suffix)
+                    new_url = 'resolveuid/%s' % uuid + '/'.join(suffix)
                     return match.string[match.start():match.end()].replace(old_url,
                                                                            new_url)
         return match.string[match.start():match.end()]
