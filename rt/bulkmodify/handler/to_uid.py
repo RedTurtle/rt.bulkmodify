@@ -4,8 +4,6 @@ from zope.interface import implements
 
 from zope.site.hooks import getSite
 
-#from Products.CMFCore.PortalContent import PortalContent
-
 from plone.uuid.interfaces import IUUID
 from plone.uuid.interfaces import IUUIDAware
 
