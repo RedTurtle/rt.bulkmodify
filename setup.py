@@ -22,7 +22,7 @@ setup(name='rt.bulkmodify',
       keywords='plone batch bulk regex',
       author='RedTurtle Technology',
       author_email='sviluppoplone@redturtle.it',
-      url='http://svn.plone.org/svn/collective/',
+      url='http://plone.org/products/rt.bulkmodify',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['rt'],
@@ -32,6 +32,8 @@ setup(name='rt.bulkmodify',
       extras_require=dict(test=tests_require),
       install_requires=[
           'setuptools',
+          'Products.CMFPlone>4.0b1',
+          'plone.uuid',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
