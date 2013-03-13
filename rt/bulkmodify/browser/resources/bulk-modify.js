@@ -5,6 +5,11 @@
 (function($){
     $(document).ready(function() {
 
+		if ($('#bulkModify').lenth==0) {
+			// quick way to exit: do not try to do nothing if we are not in the right template
+			return;
+		}
+
 		// Areas
 		var $form = $('#bulkSearchForm');
 		var $results = $('#results');
