@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-13 16:02+0000\n"
+"POT-Creation-Date: 2013-03-13 17:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,6 +33,11 @@ msgstr ""
 msgid "Bulk replace"
 msgstr ""
 
+#. Default: "rt.bulkmodify"
+#: ../browser/view.py:157
+msgid "Bulk text replacement"
+msgstr ""
+
 #: ../browser/bulk-modify.pt:14
 msgid "Change done!"
 msgstr ""
@@ -41,7 +46,15 @@ msgstr ""
 msgid "Content types"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:154
+#: ../browser/bulk-modify.pt:160
+msgid "Create a new version (if possible)"
+msgstr ""
+
+#: ../browser/bulk-modify.pt:156
+msgid "Do not update anything (silent change)"
+msgstr ""
+
+#: ../browser/bulk-modify.pt:169
 msgid "Document"
 msgstr ""
 
@@ -101,8 +114,12 @@ msgstr ""
 msgid "Select the kind of text replace you want to perform (if any)"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:155
+#: ../browser/bulk-modify.pt:170
 msgid "Text found"
+msgstr ""
+
+#: ../browser/bulk-modify.pt:158
+msgid "Update modification time"
 msgstr ""
 
 #: ../browser/bulk-modify.pt:105
@@ -115,12 +132,12 @@ msgid "content_types_help"
 msgstr ""
 
 #. Default: "Default replacement method. Use the replacement string from the field below"
-#: ../browser/view.py:53
+#: ../browser/view.py:57
 msgid "default_replacement_type_help"
 msgstr ""
 
 #. Default: "Default replacement"
-#: ../browser/view.py:51
+#: ../browser/view.py:55
 msgid "default_replacement_type_label"
 msgstr ""
 
@@ -140,6 +157,11 @@ msgstr ""
 #. Default: "Type a regular expression for performing the search."
 #: ../browser/bulk-modify.pt:112
 msgid "search_regex_help"
+msgstr ""
+
+#. Default: "Use commands above if you want also to modify content modification time or create new version"
+#: ../browser/bulk-modify.pt:161
+msgid "update_method_help"
 msgstr ""
 
 #. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid."

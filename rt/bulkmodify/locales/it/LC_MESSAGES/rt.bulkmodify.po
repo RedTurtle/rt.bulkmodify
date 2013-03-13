@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-13 16:02+0000\n"
+"POT-Creation-Date: 2013-03-13 17:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Luca Fabbri <keul@redturtle.it>\n"
 "Language-Team: RedTurtle Technology <sviluppoplone@redturtle.it>\n"
@@ -27,11 +27,16 @@ msgstr "Sostituzioni di massa"
 #: ../browser/bulk-modify.pt:42
 #: ../profiles/default/controlpanel.xml
 msgid "Bulk modify contents"
-msgstr "Modifiche di massa dei contenuti"
+msgstr "Modifiche in blocco dei contenuti"
 
 #: ../browser/bulk-modify.pt:151
 msgid "Bulk replace"
 msgstr "Sostituzioni in blocco"
+
+#. Default: "rt.bulkmodify"
+#: ../browser/view.py:157
+msgid "Bulk text replacement"
+msgstr "Sostituzione in blocco del testo"
 
 #: ../browser/bulk-modify.pt:14
 msgid "Change done!"
@@ -41,7 +46,15 @@ msgstr "Modifica eseguita!"
 msgid "Content types"
 msgstr "Tipi di contenuto"
 
-#: ../browser/bulk-modify.pt:154
+#: ../browser/bulk-modify.pt:160
+msgid "Create a new version (if possible)"
+msgstr "Crea una nuova versione (se possibile)"
+
+#: ../browser/bulk-modify.pt:156
+msgid "Do not update anything (silent change)"
+msgstr "Non aggiornare nulla (modifica silente)"
+
+#: ../browser/bulk-modify.pt:169
 msgid "Document"
 msgstr "Documento"
 
@@ -101,9 +114,13 @@ msgstr "Espressione regola di ricerca"
 msgid "Select the kind of text replace you want to perform (if any)"
 msgstr "Seleziona il tipo di sostituzione che vuoi eseguire (se voluta)"
 
-#: ../browser/bulk-modify.pt:155
+#: ../browser/bulk-modify.pt:170
 msgid "Text found"
 msgstr "Testo trovato"
+
+#: ../browser/bulk-modify.pt:158
+msgid "Update modification time"
+msgstr "Aggiorna data di modifica"
 
 #: ../browser/bulk-modify.pt:105
 msgid "Verbose"
@@ -115,12 +132,12 @@ msgid "content_types_help"
 msgstr "Seleziona l'insieme dei contenuti da ispezionare"
 
 #. Default: "Default replacement method. Use the replacement string from the field below"
-#: ../browser/view.py:53
+#: ../browser/view.py:57
 msgid "default_replacement_type_help"
 msgstr "Metodo di sostituzione predefinita. Usa il testo di sostituzione dal campo sotto"
 
 #. Default: "Default replacement"
-#: ../browser/view.py:51
+#: ../browser/view.py:55
 msgid "default_replacement_type_label"
 msgstr "Sostituzione predefinita"
 
@@ -141,6 +158,11 @@ msgstr "Opzioni dell'espressione regolare. Vedi la documentazione delle regexp p
 #: ../browser/bulk-modify.pt:112
 msgid "search_regex_help"
 msgstr "Inserisci un'espressione regolare per eseguire la ricerca."
+
+#. Default: "Use commands above if you want also to modify content modification time or create new version"
+#: ../browser/bulk-modify.pt:161
+msgid "update_method_help"
+msgstr "Usa i controlli sopra se vuoi anche modificare la data di ultima modifica o creare una nuova versione"
 
 #. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid."
 #: ../handler/to_uid.py:21

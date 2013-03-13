@@ -11,6 +11,10 @@
 	padding: 0em 0.5em;
 }
 
+.changeCommands label {
+	margin-right: 1em;
+}
+
 #loading {
 	text-align: center;
 }

@@ -12,25 +12,25 @@
 <div metal:fill-slot="prefs_configlet_main">
 
         <div id="bulkModify"
-		     data-i18n-no-results-found="No results found"
-			 data-i18n-modify-selected="Modify selected"
-			 data-i18n-messages-done="Change done!"
-			 data-i18n-messages-error="Error"
-			 i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error">
+             data-i18n-no-results-found="No results found"
+             data-i18n-modify-selected="Modify selected"
+             data-i18n-messages-done="Change done!"
+             data-i18n-messages-error="Error"
+             i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error">
         
-			<script type="text/template" id="modelDataRow">
-				<tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
-				<td class="matchDocument"></td>
-				<td class="matchText"></td></tr>
-			</script>
-			<script type="text/template" id="modelDataRowNoResults">
-				<tr><td colspan="3" class="noResults">No results found</td></tr>
-			</script>
-			<script type="text/template" id="modelModifySelectedButton">
-				<input type="submit" class="allowMultiSubmit" id="modifySelected"
-				       name="modifySelected" value="Modify selected" />
-			</script>
-		
+            <script type="text/template" id="modelDataRow">
+                <tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
+                <td class="matchDocument"></td>
+                <td class="matchText"></td></tr>
+            </script>
+            <script type="text/template" id="modelDataRowNoResults">
+                <tr><td colspan="3" class="noResults">No results found</td></tr>
+            </script>
+            <script type="text/template" id="modelModifySelectedButton">
+                <input type="submit" class="allowMultiSubmit" id="modifySelected"
+                       name="modifySelected" value="Modify selected" />
+            </script>
+        
             <a href=""
                id="setup-link"
                tal:attributes="href string:$portal_url/plone_control_panel"
@@ -39,126 +39,141 @@
                 Site Setup
             </a> &rsaquo;
 
-			<h1 class="documentFirstHeading" i18n:translate="">
-				Bulk modify contents
-			</h1>
+            <h1 class="documentFirstHeading" i18n:translate="">
+                Bulk modify contents
+            </h1>
 
-			<dl class="portalMessage warning">
-				<dt i18n:translate="">Please note!</dt>
-				<dd i18n:translate="">
-					Read carefully notes below.
-				</dd>
-			</dl>
-			
-			<p class="documentDescription">
-			    <span tal:omit-tag="" i18n:translate="warning_msg_part1">
-					From this page you can perform a <a href="http://docs.python.org/2/howto/regex.html" i18n:translate=""
-					                                    i18n:name="regex_doc_link">regex search</a> inside your site contents.
-					Every search you'll run will awake site's contents.
-					This can be <strong i18n:name="heavy_note" i18n:translate="">painfully slow</strong>, and slow down your site.</span><br/>
-			    <span tal:omit-tag="" i18n:translate="warning_msg_part2">
-					Even worst: if you perform substitution using the &quot;Replace regex&quot; field below, you
-					will perform a database write for every selected document.</span><br />
-			    <span tal:omit-tag="" i18n:translate="warning_msg_part3">
-					Be sure of what you are doing here.
-				</span>
-			</p>
+            <dl class="portalMessage warning">
+                <dt i18n:translate="">Please note!</dt>
+                <dd i18n:translate="">
+                    Read carefully notes below.
+                </dd>
+            </dl>
+            
+            <p class="documentDescription">
+                <span tal:omit-tag="" i18n:translate="warning_msg_part1">
+                    From this page you can perform a <a href="http://docs.python.org/2/howto/regex.html" i18n:translate=""
+                                                        i18n:name="regex_doc_link">regex search</a> inside your site contents.
+                    Every search you'll run will awake site's contents.
+                    This can be <strong i18n:name="heavy_note" i18n:translate="">painfully slow</strong>, and slow down your site.</span><br/>
+                <span tal:omit-tag="" i18n:translate="warning_msg_part2">
+                    Even worst: if you perform substitution using the &quot;Replace regex&quot; field below, you
+                    will perform a database write for every selected document.</span><br />
+                <span tal:omit-tag="" i18n:translate="warning_msg_part3">
+                    Be sure of what you are doing here.
+                </span>
+            </p>
 
-			<form id="bulkSearchForm" method="post" action=""
-			      tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event', 'Topic', 'Collection')"
-			      tal:attributes="action string:${context/absolute_url}/@@batchSearch">
-				<fieldset>
-					<legend i18n:translate="">Bulk modify</legend>
-					
-					<div class="field">
-						<label for="content_type" i18n:translate="">Content types</label>
-						<div class="formHelp" i18n:translate="content_types_help">
-							Select the set of content types to be inspected
-						</div>
-						
-						<tal:types repeat="t view/type_vocabulary">
-							<input type="checkbox" name="content_type:list" id="" value=""
-							       tal:attributes="id string:type-${repeat/t/number};
-								                   value t/value;
-												   checked python:t.value in DEFAULT_TYPES;" />
-							<label class="possibleContentType" for=""
-							       tal:content="t/title"
-								   tal:attributes="for string:type-${repeat/t/number};">Page</label>
-						</tal:types>
-					</div>
+            <form id="bulkSearchForm" method="post" action=""
+                  tal:define="DEFAULT_TYPES python:('Document', 'News Item', 'Event', 'Topic', 'Collection')"
+                  tal:attributes="action string:${context/absolute_url}/@@batchSearch">
+                <fieldset>
+                    <legend i18n:translate="">Bulk modify</legend>
+                    
+                    <div class="field">
+                        <label for="content_type" i18n:translate="">Content types</label>
+                        <div class="formHelp" i18n:translate="content_types_help">
+                            Select the set of content types to be inspected
+                        </div>
+                        
+                        <tal:types repeat="t view/type_vocabulary">
+                            <input type="checkbox" name="content_type:list" id="" value=""
+                                   tal:attributes="id string:type-${repeat/t/number};
+                                                   value t/value;
+                                                   checked python:t.value in DEFAULT_TYPES;" />
+                            <label class="possibleContentType" for=""
+                                   tal:content="t/title"
+                                   tal:attributes="for string:type-${repeat/t/number};">Page</label>
+                        </tal:types>
+                    </div>
 
-					<div class="field">
-						<strong i18n:translate="">Regex flags</strong>
-						<div class="formHelp" i18n:translate="regex_flags_help">
-							Regex options. See Python regex documentation.
-						</div>
-						<span class="flag">
-						<input type="checkbox" id="re-I" name="re-I" value="2" checked="checked" /> <label for="re-I" i18n:translate="">Ignore case</label>
-						</span> 
-						<span class="flag">
-						<input type="checkbox" id="re-M" name="re-M" value="8" checked="checked" /> <label for="re-M" i18n:translate="">Multiline</label>
-						</span> 
-						<span class="flag">
-						<input type="checkbox" id="re-S" name="re-S" value="16" /> <label for="re-S" i18n:translate="">Dot all</label>
-						</span> 
-						<span class="flag">
-						<input type="checkbox" id="re-X" name="re-X" value="64" /> <label for="re-X" i18n:translate="">Verbose</label>
-						</span> 
+                    <div class="field">
+                        <strong i18n:translate="">Regex flags</strong>
+                        <div class="formHelp" i18n:translate="regex_flags_help">
+                            Regex options. See Python regex documentation.
+                        </div>
+                        <span class="flag">
+                        <input type="checkbox" id="re-I" name="re-I" value="2" checked="checked" /> <label for="re-I" i18n:translate="">Ignore case</label>
+                        </span> 
+                        <span class="flag">
+                        <input type="checkbox" id="re-M" name="re-M" value="8" checked="checked" /> <label for="re-M" i18n:translate="">Multiline</label>
+                        </span> 
+                        <span class="flag">
+                        <input type="checkbox" id="re-S" name="re-S" value="16" /> <label for="re-S" i18n:translate="">Dot all</label>
+                        </span> 
+                        <span class="flag">
+                        <input type="checkbox" id="re-X" name="re-X" value="64" /> <label for="re-X" i18n:translate="">Verbose</label>
+                        </span> 
 
-					</div>
+                    </div>
 
-					<div class="field">
-						<label for="searchQuery" i18n:translate="">Search regex</label>
-						<div class="formHelp" i18n:translate="search_regex_help">
-							Type a regular expression for performing the search.
-						</div>
-						<textarea cols="80" rows="5" name="searchQuery" id="searchQuery"></textarea>
-					</div>
+                    <div class="field">
+                        <label for="searchQuery" i18n:translate="">Search regex</label>
+                        <div class="formHelp" i18n:translate="search_regex_help">
+                            Type a regular expression for performing the search.
+                        </div>
+                        <textarea cols="80" rows="5" name="searchQuery" id="searchQuery"></textarea>
+                    </div>
 
-					<div class="field">
-						<label for="repltype-0" i18n:translate="">Replace text</label>
-						<div class="formHelp" i18n:translate="">
-							Select the kind of text replace you want to perform (if any)
-						</div>
-						<tal:repltypes repeat="t view/repl_type_vocabulary">
-							<input type="radio" name="replace_type" id="" value=""
-							       tal:attributes="id string:repltype-${repeat/t/index};
-								                   value t/value;
-												   checked python:t['value']=='';" />
-							<label class="possibleReplaceType" for=""
-							       tal:content="t/title"
-								   tal:attributes="for string:repltype-${repeat/t/index};">Simple</label>
-							<div class="formHelp" tal:content="t/description">
-								How works the simple replacment
-							</div>
-						    <textarea cols="80" rows="5" name="replaceQuery" id="replaceQuery"
-							          tal:condition="repeat/t/start"></textarea>
-						</tal:repltypes>
-					</div>
-					
-					<input type="submit" class="allowMultiSubmit" id="searchButton"
-					       name="Search" value="Search" i18n:attributes="value"/>
-					<input style="display:none" type="button" class="allowMultiSubmit" id="pauseButton"
-					       name="Pause" value="Pause" i18n:attributes="value"/>
-				</fieldset>
-			
-			</form>
+                    <div class="field">
+                        <label for="repltype-0" i18n:translate="">Replace text</label>
+                        <div class="formHelp" i18n:translate="">
+                            Select the kind of text replace you want to perform (if any)
+                        </div>
+                        <tal:repltypes repeat="t view/repl_type_vocabulary">
+                            <input type="radio" name="replace_type" id="" value=""
+                                   tal:attributes="id string:repltype-${repeat/t/index};
+                                                   value t/value;
+                                                   checked python:t['value']=='';" />
+                            <label class="possibleReplaceType" for=""
+                                   tal:content="t/title"
+                                   tal:attributes="for string:repltype-${repeat/t/index};">Simple</label>
+                            <div class="formHelp" tal:content="t/description">
+                                How works the simple replacment
+                            </div>
+                            <textarea cols="80" rows="5" name="replaceQuery" id="replaceQuery"
+                                      tal:condition="repeat/t/start"></textarea>
+                        </tal:repltypes>
+                    </div>
+                    
+                    <input type="submit" class="allowMultiSubmit" id="searchButton"
+                           name="Search" value="Search" i18n:attributes="value"/>
+                    <input style="display:none" type="button" class="allowMultiSubmit" id="pauseButton"
+                           name="Pause" value="Pause" i18n:attributes="value"/>
+                </fieldset>
+            
+            </form>
 
-			<div id="results" style="display:none">
-				<form id="bulkModifyForm" method="post" action=""
-			          tal:attributes="action string:${context/absolute_url}/@@bulk-modify">
-					<fieldset>
-						<legend i18n:translate="">Bulk replace</legend>
-					<table class="listing">
-						<tr>
-							<th id="cellCommands"></th><th id="cellDocumentInfo" i18n:translate="">Document</th>
-							<th id="cellText" i18n:translate="">Text found</th></tr>
-					</table>
-					</fieldset>
-				</form>
-			</div>
+            <div id="results" style="display:none">
+                <form id="bulkModifyForm" method="post" action=""
+                      tal:attributes="action string:${context/absolute_url}/@@bulk-modify">
+                    <fieldset>
+                        <legend i18n:translate="">Bulk replace</legend>
 
-		</div>
+                        <div class="changeCommands">
+                            <div class="field">
+                                <input type="radio" id="update_none" name="update_method" value="" checked="checked" />
+                                <label for="update_none" i18n:translate="">Do not update anything (silent change)</label>
+                                <input type="radio" id="update_time" name="update_method" value="change_time" />
+                                <label for="update_time" i18n:translate="">Update modification time</label>
+                                <input type="radio" id="new_version" name="update_method" value="new_version" />
+                                <label for="new_version" i18n:translate="">Create a new version (if possible)</label>
+                                <div class="formHelp" i18n:translate="update_method_help">
+                                    Use commands above if you want also to modify content modification time or create new version
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="listing">
+                            <tr>
+                                <th id="cellCommands"></th><th id="cellDocumentInfo" i18n:translate="">Document</th>
+                                <th id="cellText" i18n:translate="">Text found</th></tr>
+                        </table>
+                    </fieldset>
+                </form>
+            </div>
+
+        </div>
 
 </div>
 </body>
