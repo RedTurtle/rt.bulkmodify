@@ -137,7 +137,7 @@ class BulkModifyView(BrowserView):
         if replace_type:
             # let's load the proper replace type
             utilities = [u for u in self.utilities if u[0]==replace_type]
-            replace_query = u[1].repl
+            replace_query = utilities[0][1].repl
 
         for brain in brains:
             obj = brain.getObject()

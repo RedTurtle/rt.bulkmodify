@@ -18,7 +18,7 @@
 		// Data
         var $searchQuery = $('#searchQuery');
 		var $replaceQuery = $('#replaceQuery');
-		var $replaceType = $('#replace_type');
+		var $replaceTypes = $(':input[name=replace_type]');
 
 		// Buttons
 		var commandSearchButton = $('#searchButton');
@@ -79,7 +79,7 @@
 						type: 'POST',
 						url: portal_url + '/@@replaceText',
 						traditional: true,
-						data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceQuery},
+						data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceType},
 						success: function(data) {
 							
 							for (var j=0; j<data.length; j++) {
@@ -141,7 +141,7 @@
 				} else {
 					newRes.addClass('odd')
 				}
-				if ($replaceQuery.val()) {
+				if ($replaceQuery.val() || $replaceTypes.filter(':checked').val()) {
 					// match id for server side changes (is uid-xxx)
 					$(':checkbox', newRes).attr('value', element.id+'-'+lastId).attr("data-uid", element.uid).attr("id", element.uid);
 				} else {
@@ -224,7 +224,7 @@
 				running = true;
 
 				lastSearchQuery = $searchQuery.val();
-				lastReplaceType = $replaceType.val();
+				lastReplaceType = $replaceTypes.filter(':checked').val();
 				$results.html(emptyResults.html());
 				$results.prepend('<div id="loading"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></div>');
 
@@ -234,10 +234,9 @@
 					flags = flags | $(this).val();
 					lastFlags = flags;
 				});
-				
-				if ($replaceQuery.val()) {
+
+				if ($replaceQuery.val() || lastReplaceType) {
 					$('#cellCommands').append(selectAllCommand.clone(true));
-					lastReplaceQuery = $replaceQuery.val();
 					params.view = '/@@batchReplace';
 					$results.find('table').before(commandModifySelected);
 					$('#modifySelected').click(submitSelected);
