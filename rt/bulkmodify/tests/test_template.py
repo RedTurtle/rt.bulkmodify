@@ -4,8 +4,6 @@ from zope.component import getMultiAdapter
 
 from rt.bulkmodify.testing import BULK_MODIFY_INTEGRATION_TESTING
 from .base import BaseTestCase
-from .base import re_pattern
-from .base import re_subn_pattern
 
 
 class TestViewBatchSearch(BaseTestCase):

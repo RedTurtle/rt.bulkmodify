@@ -204,7 +204,7 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('id', self.ids1)
         view.request.set('searchQuery', re_pattern)
         view.request.set('replace_type', 'fake')
-        results = json.loads(view())
+        view()
         self.assertEqual(portal.page1.getRawText(),
                          """<p>
     <ul>   

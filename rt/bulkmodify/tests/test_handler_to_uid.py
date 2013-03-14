@@ -54,6 +54,9 @@ class TestUtility(BaseTestCase):
         self.assertEqual(is_internal_link.sub(utility.repl,
                                               r'Lorem <a href="page2">Bar Baz</a> Ipsum'),
                          'Lorem <a href="resolveuid/' + portal.page2.UID() + '">Bar Baz</a> Ipsum')
+        self.assertEqual(is_internal_link.sub(utility.repl,
+                                              r'Lorem <a href="folder1/event1">Bar Baz</a> Ipsum'),
+                         'Lorem <a href="resolveuid/' + portal.folder1.event1.UID() + '">Bar Baz</a> Ipsum')
         utility.__class__.context = portal.folder1.event1
         portal.folder1.event1.setText('<p> <a href="../page2">Lorem Ipsum</a> </p>')
         self.assertEqual(is_internal_link.sub(utility.repl,
