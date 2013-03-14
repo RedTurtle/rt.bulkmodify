@@ -27,24 +27,25 @@ class InternalLinkToUIDUtility(object):
         groups = match.groupdict()
         if groups.get('url'):
             old_url = groups.get('url')
-            site = getSite()
-            portal_url = site.portal_url
-            site_url = site.absolute_url()
-            if portal_url.isURLInPortal(old_url, cls.context or None):
-                path = old_url.replace('%s/' % site_url, '', 1)
-                suffix = []
-                content = None
-                while path:
-                    content = site.unrestrictedTraverse(path, default=None)
-                    if IUUIDAware.providedBy(content):
-                        break
-                    suffix.insert(0, path.split('/')[-1])
-                    path = '/'.join(path.split('/')[:-1])
-                if content and IUUIDAware.providedBy(content):
-                    uuid = IUUID(content)
-                    suffix.insert(0, '')
-                    new_url = 'resolveuid/%s' % uuid + '/'.join(suffix)
-                    return match.string[match.start():match.end()].replace(old_url,
-                                                                           new_url)
+            if not old_url.startswith('resolveuid/'):
+                site = getSite()
+                portal_url = site.portal_url
+                site_url = site.absolute_url()
+                if portal_url.isURLInPortal(old_url, cls.context or None):
+                    path = old_url.replace('%s/' % site_url, '', 1)
+                    suffix = []
+                    content = None
+                    while path:
+                        content = site.unrestrictedTraverse(path, default=None)
+                        if IUUIDAware.providedBy(content):
+                            break
+                        suffix.insert(0, path.split('/')[-1])
+                        path = '/'.join(path.split('/')[:-1])
+                    if content and IUUIDAware.providedBy(content):
+                        uuid = IUUID(content)
+                        suffix.insert(0, '')
+                        new_url = 'resolveuid/%s' % uuid + '/'.join(suffix)
+                        return match.string[match.start():match.end()].replace(old_url,
+                                                                               new_url)
         return match.string[match.start():match.end()]
         

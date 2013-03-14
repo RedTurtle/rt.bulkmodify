@@ -16,7 +16,8 @@
              data-i18n-modify-selected="Modify selected"
              data-i18n-messages-done="Change done!"
              data-i18n-messages-error="Error"
-             i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error">
+			 data-i18n-message-server-error="An error has occurred"
+             i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error; data-i18n-message-server-error">
         
             <script type="text/template" id="modelDataRow">
                 <tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
@@ -150,7 +151,7 @@
                     <fieldset>
                         <legend i18n:translate="">Bulk replace</legend>
 
-                        <div class="changeCommands">
+                        <div id="changeCommands">
                             <div class="field">
                                 <input type="radio" id="update_none" name="update_method" value="" checked="checked" />
                                 <label for="update_none" i18n:translate="">Do not update anything (silent change)</label>

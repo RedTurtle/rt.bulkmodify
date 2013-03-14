@@ -11,12 +11,18 @@
 	padding: 0em 0.5em;
 }
 
-.changeCommands label {
+#changeCommands label {
 	margin-right: 1em;
 }
 
 #loading {
 	text-align: center;
+	margin: 0.5em 0em;
+}
+#serverError {
+	font-size: 140%;
+	text-align: center;
+	color: red;
 }
 
 #content #bulkModifyForm .matchText{

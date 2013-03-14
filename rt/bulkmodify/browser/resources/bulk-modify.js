@@ -25,6 +25,7 @@
         var commandPauseButton = $('#pauseButton');
         var commandModifySelected = $($('#modelModifySelectedButton').text());
         commandModifySelected.attr('value', $main.data('i18n-modify-selected'));
+        $changeCommands = $('#changeCommands').remove();
 
         // Models
         var $modelDataRow = $($('#modelDataRow').text());
@@ -83,7 +84,6 @@
                         traditional: true,
                         data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceType, 'update_time:boolean': update_time, 'new_version:boolean': new_version},
                         success: function(data) {
-                            
                             for (var j=0; j<data.length; j++) {
                                 var serverMessage = data[j];
                                 if (serverMessage.status && serverMessage.status==='OK') {
@@ -210,6 +210,10 @@
                             batchSearch({b_start: params.b_start+b_size, view: params.view})
                         }
                     }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#loading').remove();
+                    $("#results").find('table').append('<tr id="serverError"><td colspan="3">' + $main.data('i18n-message-server-error') +  '</td></tr>');
                 }
             });
         }
@@ -226,9 +230,10 @@
                 running = true;
 
                 lastSearchQuery = $searchQuery.val();
+                lastReplaceQuery = $replaceQuery.val();
                 lastReplaceType = $replaceTypes.filter(':checked').val();
                 $results.html(emptyResults.html());
-                $results.prepend('<div id="loading"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></div>');
+                $("#results").find('table').append('<tr id="loading"><td colspan="3"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></td></tr>');
 
                 // loading flags
                 flags = 0;
@@ -240,10 +245,12 @@
                 if ($replaceQuery.val() || lastReplaceType) {
                     $('#cellCommands').append(selectAllCommand.clone(true));
                     params.view = '/@@batchReplace';
-                    $results.find('.changeCommands').append(commandModifySelected);
+                    $results.find('table').before($changeCommands);
+                    $changeCommands.append(commandModifySelected);
                     $('#modifySelected').click(submitSelected);
                 } else {
                     $('#cellCommands').empty();
+                    $('#changeCommands').hide();
                 }
                 batchSearch(params);
             }
