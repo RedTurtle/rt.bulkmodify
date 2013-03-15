@@ -105,14 +105,14 @@ Replacing options
 When changing text you are (obviously) changing a Plone content, so you have some additional option available:
 
 *Do not update anything (silent change)*
-    Useful you you want to fix some contents without updating other metadata from the content itself.
-    Only the text field (and the Plone full text index) will be updated).
+    Useful if you want to fix some contents without updating other metadata from the content itself.
+    Only the text field (and the Plone full text index) will be updated.
     
-    Site members will never notice this tpe of changes.
+    Site members will never notice this type of changes.
 *Update modification time*
     Update also the last modification time of the document.
 *Create a new version (if possible)*
-    Full modification. If the content type is versionable, a new version will be saved.ù
+    Full modification. If the content type is versionable, a new version will be saved.
 
 Advanced use
 ============
@@ -159,7 +159,7 @@ product::
 TODO
 ====
 
-* Adding a way of using product's features as a running script instance
+* Adding a way for using test substitution also as a running script instance
 * We need JavaScript testing 
 * The product is designed for performing multiple write commit on ZODB, but probably a
   way of performing a single huge write operation can be useful
