@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.1.1 (unreleased)
-----------------
+0.1.1 (2013-03-15)
+------------------
 
 - When loading data from Archetypes field, use the ``raw`` format.
   This prevent substitution from destroying ``resolveuid`` usage.
