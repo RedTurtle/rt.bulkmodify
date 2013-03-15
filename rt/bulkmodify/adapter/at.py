@@ -13,7 +13,7 @@ class TextContentAdapters(object):
         self.context = context
 
     def _get_text(self):
-        return self.context.getField('text').get(self.context)
+        return str(self.context.getField('text').get(self.context, raw=True))
     
     def _set_text(self, text):
         self.context.getField('text').set(self.context, text)
