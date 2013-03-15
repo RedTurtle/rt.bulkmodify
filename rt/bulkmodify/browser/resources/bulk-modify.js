@@ -205,7 +205,6 @@
                         checkNoResultsFound();
                     } else {
                         showResults(data);
-                        $results.show();
                         if (running) {
                             batchSearch({b_start: params.b_start+b_size, view: params.view})
                         }
@@ -234,6 +233,7 @@
                 lastReplaceType = $replaceTypes.filter(':checked').val();
                 $results.html(emptyResults.html());
                 $("#results").find('table').append('<tr id="loading"><td colspan="3"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></td></tr>');
+                $results.show();
 
                 // loading flags
                 flags = 0;

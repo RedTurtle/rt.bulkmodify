@@ -7,7 +7,9 @@ Changelog
 - When loading data from Archetypes field, use the ``raw`` format.
   This prevent substitution from destroying ``resolveuid`` usage.
   [keul]
-
+- When  performing searches, display immediately the "loading" info,
+  not after the first completed request
+  [keul]
 
 0.1 (2013-03-14)
 ----------------
