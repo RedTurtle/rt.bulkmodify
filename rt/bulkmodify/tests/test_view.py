@@ -190,6 +190,24 @@ class TestViewReplaceText(BaseTestCase):
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
 
+    def test_multiple_subn_for_one_version(self):
+        portal = self.layer['portal']
+        view = self.view
+        portal_repository = portal.portal_repository
+        portal_repository.applyVersionControl(portal.page1, comment='Init')
+        view.request.set('id', self.ids1)
+        view.request.set('new_version', True)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+        self.assertEqual(len(portal_repository.getHistoryMetadata(portal.page1)),
+                         1)
+        # we are now applying 2 changes in the same document
+        self.view()
+        self.assertEqual(len(portal_repository.getHistoryMetadata(portal.page1)),
+                         2)        
+
     def test_unknow_type(self):
         view = self.view
         view.request.set('id', self.ids4)

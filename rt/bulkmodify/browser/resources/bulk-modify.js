@@ -6,10 +6,15 @@
     $(document).ready(function() {
 
         var $main = $('#bulkModify');
+        // quick way to exit: do not try to do nothing if we are not in the right template
         if ($main.length==0) {
-            // quick way to exit: do not try to do nothing if we are not in the right template
             return;
         }
+
+        $('a[rel=external]').live('click', function(event) {
+            event.preventDefault();
+            window.open($(this).attr('href'));
+        });
 
         // Areas
         var $form = $('#bulkSearchForm');
@@ -41,10 +46,16 @@
         var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType;
 
         var markDone = function(element, info) {
-            element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>' + $main.data('i18n-messages-done') + '!</strong></td>');
+            var content_link = element.find('a[rel=external]').remove();
+            element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>' + $main.data('i18n-messages-done') + '</strong> - </td>');
+            content_link.text($main.data('i18n-messages-view-content'));
+            element.find('td').append(content_link);
         }
         var markError = function(element, info) {
-            element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>' + $main.data('i18n-messages-error') + ': ' + info.message +  '</strong></td>');
+            var content_link = element.find('a[rel=external]').remove();
+            element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>' + $main.data('i18n-messages-error') + ': ' + info.message +  '</strong> - </td>');
+            content_link.text($main.data('i18n-messages-view-content'));
+            element.find('td').append(content_link);
         }
 
         var checkNoResultsFound = function() {

@@ -151,14 +151,14 @@ class BulkModifyView(BrowserView):
             results.extend(inner_results)
         return json.dumps(results)
 
-    def createNewVersion(self, obj):
+    def _createNewVersion(self, obj):
         _ = getToolByName(self.context, 'translation_service').utranslate
         if isObjectChanged(obj) and isObjectVersioned(obj):
             maybeSaveVersion(obj, comment=_(msgid="Bulk text replacement",
                                             domain="rt.bulkmodify",
                                             context=obj))
 
-    def changeDocumentText(self, obj, diff, update_time=False, new_version=False):
+    def changeDocumentText(self, obj, diff):
         """Change the text document. Return "true" if any change takes place"""
         adapter = queryAdapter(obj, IBulkModifyContentChanger)
         if adapter:
@@ -166,11 +166,6 @@ class BulkModifyView(BrowserView):
             new_text = text[:diff['start']] + diff['new'] + text[diff['end']:]
             if text != new_text:
                 adapter.text = new_text
-                if update_time or new_version:
-                    # a little dirty, but this way I'm sure all is updated
-                    obj.reindexObject()
-                    if new_version:
-                        self.createNewVersion(obj)
                 return True
         return False
 
@@ -187,6 +182,7 @@ class BulkModifyView(BrowserView):
         update_time = request.get('update_time', False)
         new_version = request.get('new_version', False)
         flags = request.get('flags', 0)
+        tobe_updated = False
 
         messages = []
 
@@ -209,7 +205,8 @@ class BulkModifyView(BrowserView):
                     diff_info = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
                     if diff_info:
                         diff = diff_info[id-counter]
-                        if self.changeDocumentText(obj, diff, update_time, new_version):
+                        if self.changeDocumentText(obj, diff):
+                            tobe_updated = True
                             messages.append({'status': 'OK'})
                         else:
                             messages.append({'status': 'warn', 'message': 'No change is needed'})
@@ -217,5 +214,14 @@ class BulkModifyView(BrowserView):
                         messages.append({'status': 'error', 'message': "Don't know how to handle %s" % obj.absolute_url()})
                 else:
                     messages.append({'status': 'error', 'message': 'Document "%s" not found' % obj.absolute_url()})
+
+            # check if we need to update some other data
+            if tobe_updated:
+                if update_time or new_version:
+                    # a little dirty, but this way I'm sure all is updated
+                    obj.reindexObject()
+                    if new_version:
+                        self._createNewVersion(obj)
+
         return json.dumps(messages)
 

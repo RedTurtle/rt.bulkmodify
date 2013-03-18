@@ -4,8 +4,13 @@ Changelog
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Kept a link to content after server changes
+  [keul]
+- Open links in new windows
+  [keul]
+- When a document is updated multiple times, only *one* new
+  version is screated
+  [keul]
 
 0.1.1 (2013-03-15)
 ------------------

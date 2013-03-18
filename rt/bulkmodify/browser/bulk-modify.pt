@@ -14,10 +14,11 @@
         <div id="bulkModify"
              data-i18n-no-results-found="No results found"
              data-i18n-modify-selected="Modify selected"
-             data-i18n-messages-done="Change done!"
+             data-i18n-messages-done="Change done"
+             data-i18n-messages-view-content="View content"
              data-i18n-messages-error="Error"
-			 data-i18n-message-server-error="An error has occurred"
-             i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error; data-i18n-message-server-error">
+             data-i18n-message-server-error="An error has occurred"
+             i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error; data-i18n-message-server-error; data-i18n-messages-view-content">
         
             <script type="text/template" id="modelDataRow">
                 <tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
