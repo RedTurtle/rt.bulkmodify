@@ -77,11 +77,17 @@ class BulkModifyView(BrowserView):
         catalog = getToolByName(context, 'portal_catalog')
         
         results = []
+        total_documents_count = 0
 
         if not portal_type or not search_query:
             return json.dumps(results)
         
-        brains = catalog(portal_type=portal_type)[b_start:b_start+b_size]
+        all_brains = catalog(portal_type=portal_type)
+        if b_start==0:
+            # counting brains is slow, but it's better to say something to the final user
+            total_documents_count = len(all_brains)
+        brains = all_brains[b_start:b_start+b_size]
+
         if not brains:
             # stop client side queries
             return json.dumps(None)
@@ -99,6 +105,8 @@ class BulkModifyView(BrowserView):
                     result['icon'] = brain.getIcon
                     result['normalized_portal_type'] = brain.portal_type.lower().replace(' ','-')
                 results.extend(inner_results)
+        if total_documents_count:
+            results[0]['total_documents_count'] = total_documents_count
         return json.dumps(results)
 
     def get_content_diff_info(self, obj, search_query, replace_query, flags=0):
@@ -129,11 +137,17 @@ class BulkModifyView(BrowserView):
         catalog = getToolByName(context, 'portal_catalog')
         
         results = []
+        total_documents_count = 0
         
         if not portal_type or not search_query or (not replace_query and not replace_type):
             return json.dumps(results)
         
-        brains = catalog(portal_type=portal_type)[b_start:b_start+b_size]
+        all_brains = catalog(portal_type=portal_type)
+        if b_start==0:
+            # counting brains is slow, but it's better to say something to the final user
+            total_documents_count = len(all_brains)
+        brains = all_brains[b_start:b_start+b_size]
+
         if not brains:
             # stop client side queries
             return json.dumps(None)
@@ -149,6 +163,8 @@ class BulkModifyView(BrowserView):
             for ir in inner_results:
                 ir['icon'] = brain.getIcon
             results.extend(inner_results)
+        if total_documents_count:
+            results[0]['total_documents_count'] = total_documents_count
         return json.dumps(results)
 
     def _createNewVersion(self, obj):

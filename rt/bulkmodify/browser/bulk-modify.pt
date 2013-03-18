@@ -142,6 +142,8 @@
                            name="Search" value="Search" i18n:attributes="value"/>
                     <input style="display:none" type="button" class="allowMultiSubmit" id="pauseButton"
                            name="Pause" value="Pause" i18n:attributes="value"/>
+                    <input style="display:none" type="button" class="allowMultiSubmit" id="continueButton"
+                           name="Continue" value="Continue" i18n:attributes="value"/>
                 </fieldset>
             
             </form>

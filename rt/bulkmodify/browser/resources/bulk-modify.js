@@ -39,6 +39,7 @@
         
         var flags = 0;
         var b_size = 20;
+        var b_start = 0;
         var emptyResults = $results.clone();
         
         // Temp vars
@@ -66,7 +67,7 @@
 
         var submitSelected = function(event) {
             event.preventDefault();
-            var allCheckbox = $('.selectCommand:checked');
+            var allCheckbox = $('.selectCommand:checked:not(:disabled)');
             var submittedCount = 0;
             var update_time = $('#update_time').is(':checked') ? 'True' : 'False';
             var new_version = $('#new_version').is(':checked') ? 'True' : 'False';
@@ -76,6 +77,8 @@
                     var ids = [];
                     var checkbox = $(allCheckbox.get(submittedCount));
                     var sameContentCheckBox = $('.selectCommand:checked[data-uid=' + checkbox.data('uid') + ']');
+                    sameContentCheckBox.attr('disabled','disabled');
+                    sameContentCheckBox.after($(' <img alt="" src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-loader-mini.gif" />'));
 
                     // now grouping changes to the same content in the same request
                     if (sameContentCheckBox.length>1) {
@@ -138,6 +141,11 @@
             var lastId = 0;
             var lastElement = null;
 
+            if (data[0] && data[0].total_documents_count) {
+                $('.totalDocuments').text(' / ' + data[0].total_documents_count);
+            }
+            $('.currentDocument').text(b_start);
+
             for (var i=0;i<data.length;i++) {
                 var element = data[i];
 
@@ -188,11 +196,13 @@
         var batchSearch = function (params) {
             params = $.extend( {b_start: 0,
                                 view: '/@@batchSearch'}, params);
-    
+
+            b_start = params.b_start;
+
             formData = $form.serializeArray();
             formData.push({
                 name: 'b_start:int',
-                value: params.b_start
+                value: b_start
             });
             formData.push({
                 name: 'b_size:int',
@@ -217,7 +227,7 @@
                     } else {
                         showResults(data);
                         if (running) {
-                            batchSearch({b_start: params.b_start+b_size, view: params.view})
+                            batchSearch({b_start: b_start+b_size, view: params.view})
                         }
                     }
                 },
@@ -243,7 +253,7 @@
                 lastReplaceQuery = $replaceQuery.val();
                 lastReplaceType = $replaceTypes.filter(':checked').val();
                 $results.html(emptyResults.html());
-                $("#results").find('table').append('<tr id="loading"><td colspan="3"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /></td></tr>');
+                $("#results").find('table').append('<tr id="loading"><td colspan="3"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /><span class="counter currentDocument"></span><span class="counter totalDocuments"></span></td></tr>');
                 $results.show();
 
                 // loading flags

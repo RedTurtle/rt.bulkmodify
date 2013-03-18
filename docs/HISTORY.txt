@@ -11,6 +11,11 @@ Changelog
 - When a document is updated multiple times, only *one* new
   version is screated
   [keul]
+- When request for replacements are submitted show a spinner and disable
+  checkbox
+  [keul]
+- Display a counter about running searches
+  [keul]
 
 0.1.1 (2013-03-15)
 ------------------
