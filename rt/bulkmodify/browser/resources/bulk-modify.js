@@ -1,17 +1,19 @@
+/*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, strict:true, undef:true, unused:true, curly:true, browser:true, jquery:true, indent:4, maxerr:50*/
+
 /**
  * Bulk Modify - JavaScript Code
  */
 
-(function($){
-    $(document).ready(function() {
+(function ($) {
+    $(document).ready(function () {
 
         var $main = $('#bulkModify');
         // quick way to exit: do not try to do nothing if we are not in the right template
-        if ($main.length==0) {
+        if ($main.length === 0) {
             return;
         }
 
-        $('a[rel=external]').live('click', function(event) {
+        $('a[rel=external]').live('click', function (event) {
             event.preventDefault();
             window.open($(this).attr('href'));
         });
@@ -28,76 +30,76 @@
         // Buttons
         var commandSearchButton = $('#searchButton');
         var commandPauseButton = $('#pauseButton');
-        var commandModifySelected = $($('#modelModifySelectedButton').text());
+        var commandModifySelected = $($('#modelModifySelectedButton').text() || $('#modelModifySelectedButton').html());
         commandModifySelected.attr('value', $main.data('i18n-modify-selected'));
-        $changeCommands = $('#changeCommands').remove();
+        var $changeCommands = $('#changeCommands').remove();
 
         // Models
-        var $modelDataRow = $($('#modelDataRow').text());
-        var $modelDataRowNoResults = $($('#modelDataRowNoResults').text());
+        var $modelDataRow = $($('#modelDataRow').text() || $('#modelDataRow').html());
+        var $modelDataRowNoResults = $($('#modelDataRowNoResults').text() || $('#modelDataRowNoResults').html());
         $modelDataRowNoResults.find('td').text($main.data('i18n-no-results-found'));
-        
+
         var flags = 0;
         var b_size = 20;
         var b_start = 0;
         var emptyResults = $results.clone();
-        
+
         // Temp vars
         var running = false;
         var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType;
 
-        var markDone = function(element, info) {
+        var markDone = function (element, info) {
             var content_link = element.find('a[rel=external]').remove();
             element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>' + $main.data('i18n-messages-done') + '</strong> - </td>');
             content_link.text($main.data('i18n-messages-view-content'));
             element.find('td').append(content_link);
-        }
-        var markError = function(element, info) {
+        };
+        var markError = function (element, info) {
             var content_link = element.find('a[rel=external]').remove();
             element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>' + $main.data('i18n-messages-error') + ': ' + info.message +  '</strong> - </td>');
             content_link.text($main.data('i18n-messages-view-content'));
             element.find('td').append(content_link);
-        }
+        };
 
-        var checkNoResultsFound = function() {
-            if ($("#results").find('td').length===0) {
+        var checkNoResultsFound = function () {
+            if ($("#results").find('td').length === 0) {
                 $("#results").find('table').append($modelDataRowNoResults.clone());
             }
-        }
+        };
 
-        var submitSelected = function(event) {
+        var submitSelected = function (event) {
             event.preventDefault();
             var allCheckbox = $('.selectCommand:checked:not(:disabled)');
             var submittedCount = 0;
             var update_time = $('#update_time').is(':checked') ? 'True' : 'False';
             var new_version = $('#new_version').is(':checked') ? 'True' : 'False';
 
-            if (allCheckbox.length>0) {
-                var callServerSideChange = function() {
+            if (allCheckbox.length > 0) {
+                var callServerSideChange = function () {
                     var ids = [];
                     var checkbox = $(allCheckbox.get(submittedCount));
                     var sameContentCheckBox = $('.selectCommand:checked[data-uid=' + checkbox.data('uid') + ']');
-                    sameContentCheckBox.attr('disabled','disabled');
+                    sameContentCheckBox.attr('disabled', 'disabled');
                     sameContentCheckBox.after($(' <img alt="" src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-loader-mini.gif" />'));
 
                     // now grouping changes to the same content in the same request
-                    if (sameContentCheckBox.length>1) {
+                    if (sameContentCheckBox.length > 1) {
                         sameContentCheckBox.each(function () {
                             ids.push($(this).val());
                         });
                         // skipping other check for the same content
-                        submittedCount = submittedCount+sameContentCheckBox.length-1;
+                        submittedCount = submittedCount + sameContentCheckBox.length - 1;
                     } else {
                         ids = [checkbox.val()];
                     }
-                    
+
                     $.ajax({
                         dataType: "json",
                         type: 'POST',
                         url: portal_url + '/@@replaceText',
                         traditional: true,
                         data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceType, 'update_time:boolean': update_time, 'new_version:boolean': new_version},
-                        success: function(data) {
+                        success: function (data) {
                             for (var j=0; j<data.length; j++) {
                                 var serverMessage = data[j];
                                 if (serverMessage.status && serverMessage.status==='OK') {
@@ -112,9 +114,9 @@
                                 callServerSideChange();
                             }
                         },
-                        error: function(jqXHR, textStatus, errorThrown) {
+                        error: function (jqXHR, textStatus, errorThrown) {
                             sameContentCheckBox.each(function() {
-                                markError($(this).closest('tr'), textStatus)
+                                markError($(this).closest('tr'), textStatus);
                             });
                             submittedCount++;
                             if (submittedCount<allCheckbox.length) {
@@ -122,7 +124,7 @@
                             }
                         }
                     });                
-                }
+                };
                 callServerSideChange();
             }
         };
@@ -155,12 +157,11 @@
                     lastElement = element.id;
                     lastId = 0;
                 }
-                
                 var newRes = $modelDataRow.clone();
                 if (i % 2 === 0) {
-                    newRes.addClass('even')
+                    newRes.addClass('even');
                 } else {
-                    newRes.addClass('odd')
+                    newRes.addClass('odd');
                 }
                 if ($replaceQuery.val() || $replaceTypes.filter(':checked').val()) {
                     // match id for server side changes (is uid-xxx)
@@ -174,7 +175,7 @@
                 newRes.find('label').attr('for', element.uid);
                 // icon
                 if (element.icon) {
-                    $label.before('<img alt="" src="' + portal_url + '/' + element.icon + '" />&nbsp;')
+                    $label.before('<img alt="" src="' + portal_url + '/' + element.icon + '" />&nbsp;');
                 } else {
                     $label.addClass('contenttype-' + element.normalized_portal_type);
                 }
@@ -188,10 +189,9 @@
                 } else {
                     $('.matchText', newRes).html(element.text);
                 }
-                
                 $('table', $results).append(newRes);
             }
-        }
+        };
 
         var batchSearch = function (params) {
             params = $.extend( {b_start: 0,
@@ -199,7 +199,7 @@
 
             b_start = params.b_start;
 
-            formData = $form.serializeArray();
+            var formData = $form.serializeArray();
             formData.push({
                 name: 'b_start:int',
                 value: b_start
@@ -227,7 +227,7 @@
                     } else {
                         showResults(data);
                         if (running) {
-                            batchSearch({b_start: b_start+b_size, view: params.view})
+                            batchSearch({b_start: b_start+b_size, view: params.view});
                         }
                     }
                 },
@@ -236,12 +236,10 @@
                     $("#results").find('table').append('<tr id="serverError"><td colspan="3">' + $main.data('i18n-message-server-error') +  '</td></tr>');
                 }
             });
-        }
+        };
 
         commandSearchButton.click(function(event) {
             event.preventDefault();
-            var counter = 0;
-            var formData = null;
             var params = {};
 
             if ($searchQuery.val()) {
@@ -287,4 +285,4 @@
         });
 
     });
-})(jQuery)
+})(jQuery);

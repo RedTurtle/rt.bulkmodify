@@ -105,7 +105,7 @@ class BulkModifyView(BrowserView):
                     result['icon'] = brain.getIcon
                     result['normalized_portal_type'] = brain.portal_type.lower().replace(' ','-')
                 results.extend(inner_results)
-        if total_documents_count:
+        if total_documents_count and results:
             results[0]['total_documents_count'] = total_documents_count
         return json.dumps(results)
 
@@ -163,7 +163,7 @@ class BulkModifyView(BrowserView):
             for ir in inner_results:
                 ir['icon'] = brain.getIcon
             results.extend(inner_results)
-        if total_documents_count:
+        if total_documents_count and results:
             results[0]['total_documents_count'] = total_documents_count
         return json.dumps(results)
 

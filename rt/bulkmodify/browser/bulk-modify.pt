@@ -171,7 +171,8 @@
                         <table class="listing">
                             <tr>
                                 <th id="cellCommands"></th><th id="cellDocumentInfo" i18n:translate="">Document</th>
-                                <th id="cellText" i18n:translate="">Text found</th></tr>
+                                <th id="cellText" i18n:translate="">Text found</th>
+                            </tr>
                         </table>
                     </fieldset>
                 </form>

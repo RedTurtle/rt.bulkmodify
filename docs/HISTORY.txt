@@ -16,6 +16,8 @@ Changelog
   [keul]
 - Display a counter about running searches
   [keul]
+- JSHint cleanup and fix for Internet Explorer
+  [keul]
 
 0.1.1 (2013-03-15)
 ------------------
