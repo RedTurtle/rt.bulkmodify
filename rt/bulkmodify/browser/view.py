@@ -76,11 +76,13 @@ class BulkModifyView(BrowserView):
         portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
         
+        result_json = {}
         results = []
         total_documents_count = 0
 
         if not portal_type or not search_query:
-            return json.dumps(results)
+            result_json['results'] = results
+            return json.dumps(result_json)
         
         all_brains = catalog(portal_type=portal_type)
         if b_start==0:
@@ -90,7 +92,9 @@ class BulkModifyView(BrowserView):
 
         if not brains:
             # stop client side queries
-            return json.dumps(None)
+            result_json['results'] = None
+            return json.dumps(result_json)
+
         for brain in brains:
             obj = brain.getObject()
             adapter = queryAdapter(obj, IBulkModifyContentChanger)
@@ -105,9 +109,11 @@ class BulkModifyView(BrowserView):
                     result['icon'] = brain.getIcon
                     result['normalized_portal_type'] = brain.portal_type.lower().replace(' ','-')
                 results.extend(inner_results)
-        if total_documents_count and results:
-            results[0]['total_documents_count'] = total_documents_count
-        return json.dumps(results)
+
+        if total_documents_count:
+            result_json['total_documents_count'] = total_documents_count
+        result_json['results'] = results
+        return json.dumps(result_json)
 
     def get_content_diff_info(self, obj, search_query, replace_query, flags=0):
         adapter = queryAdapter(obj, IBulkModifyContentChanger)
@@ -136,11 +142,13 @@ class BulkModifyView(BrowserView):
         portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
         
+        result_json = {}
         results = []
         total_documents_count = 0
         
         if not portal_type or not search_query or (not replace_query and not replace_type):
-            return json.dumps(results)
+            result_json['results'] = results
+            return json.dumps(result_json)
         
         all_brains = catalog(portal_type=portal_type)
         if b_start==0:
@@ -150,7 +158,8 @@ class BulkModifyView(BrowserView):
 
         if not brains:
             # stop client side queries
-            return json.dumps(None)
+            result_json['results'] = None
+            return json.dumps(result_json)
 
         if replace_type:
             # let's load the proper replace type
@@ -163,9 +172,11 @@ class BulkModifyView(BrowserView):
             for ir in inner_results:
                 ir['icon'] = brain.getIcon
             results.extend(inner_results)
-        if total_documents_count and results:
-            results[0]['total_documents_count'] = total_documents_count
-        return json.dumps(results)
+
+        if total_documents_count:
+            result_json['total_documents_count'] = total_documents_count
+        result_json['results'] = results
+        return json.dumps(result_json)
 
     def _createNewVersion(self, obj):
         _ = getToolByName(self.context, 'translation_service').utranslate

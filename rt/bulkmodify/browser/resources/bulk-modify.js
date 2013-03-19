@@ -139,12 +139,13 @@
             }
         });
 
-        var showResults = function(data) {
+        var showResults = function(results) {
             var lastId = 0;
             var lastElement = null;
+            var data = results.results
 
-            if (data[0] && data[0].total_documents_count) {
-                $('.totalDocuments').text(' / ' + data[0].total_documents_count);
+            if (results.total_documents_count) {
+                $('.totalDocuments').text(' / ' + results.total_documents_count);
             }
             $('.currentDocument').text(b_start);
 
@@ -217,7 +218,8 @@
                 type: 'POST',
                 url: portal_url + params.view,
                 data: formData,
-                success: function(data) {
+                success: function(results) {
+                    var data = results.results;
                     if (data===null) {
                         // we have finished
                         $('#loading').remove();
@@ -225,7 +227,7 @@
                         commandSearchButton.show();
                         checkNoResultsFound();
                     } else {
-                        showResults(data);
+                        showResults(results);
                         if (running) {
                             batchSearch({b_start: b_start+b_size, view: params.view});
                         }
@@ -234,6 +236,7 @@
                 error: function(jqXHR, textStatus, errorThrown) {
                     $('#loading').remove();
                     $("#results").find('table').append('<tr id="serverError"><td colspan="3">' + $main.data('i18n-message-server-error') +  '</td></tr>');
+					commandPauseButton.trigger('click');
                 }
             });
         };
