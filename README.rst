@@ -19,6 +19,20 @@ query and optionally performing text substitutions on the main rich text field o
 
 __ http://en.wikipedia.org/wiki/Regular_expression
 
+A usecase
+=========
+
+You are working for the Ministry of Truth in the super-state of Oceania. The Party have choose Plone as the
+unique CMS available.
+You are in charge of keeping the Oceania web site updated.
+
+When the Party choose that Oceania has never been allied with Eastasia, but it's allied with Eurasia (and in war
+with Eastasia), you must quickly updated the Plone site. Doublethink.
+
+You need to quickly review all document where Eastasia and Eurasia are named and, if needed, switch the two names.
+You can't simply perform a bach substitution because you must read the context on which the term to be replaced is
+used.
+
 How to use
 ==========
 
