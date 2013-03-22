@@ -87,7 +87,7 @@ class BulkModifyView(BrowserView):
         all_brains = catalog(portal_type=portal_type)
         if b_start==0:
             # counting brains is slow, but it's better to say something to the final user
-            total_documents_count = len(all_brains)
+            total_documents_count = all_brains.actual_result_count
         brains = all_brains[b_start:b_start+b_size]
 
         if not brains:
@@ -153,7 +153,7 @@ class BulkModifyView(BrowserView):
         all_brains = catalog(portal_type=portal_type)
         if b_start==0:
             # counting brains is slow, but it's better to say something to the final user
-            total_documents_count = len(all_brains)
+            total_documents_count = all_brains.actual_result_count
         brains = all_brains[b_start:b_start+b_size]
 
         if not brains:
