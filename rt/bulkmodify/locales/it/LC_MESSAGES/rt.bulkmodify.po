@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-18 11:52+0000\n"
+"POT-Creation-Date: 2013-03-25 12:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Luca Fabbri <keul@redturtle.it>\n"
 "Language-Team: RedTurtle Technology <sviluppoplone@redturtle.it>\n"
@@ -33,12 +33,12 @@ msgstr "Sostituzioni di massa"
 msgid "Bulk modify contents"
 msgstr "Modifiche in blocco dei contenuti"
 
-#: ../browser/bulk-modify.pt:153
+#: ../browser/bulk-modify.pt:155
 msgid "Bulk replace"
 msgstr "Sostituzioni in blocco"
 
 #. Default: "rt.bulkmodify"
-#: ../browser/view.py:157
+#: ../browser/view.py:184
 msgid "Bulk text replacement"
 msgstr "Sostituzione in blocco del testo"
 
@@ -50,15 +50,19 @@ msgstr "Modifica eseguita"
 msgid "Content types"
 msgstr "Tipi di contenuto"
 
-#: ../browser/bulk-modify.pt:162
+#: ../browser/bulk-modify.pt:143
+msgid "Continue"
+msgstr "Continua"
+
+#: ../browser/bulk-modify.pt:164
 msgid "Create a new version (if possible)"
 msgstr "Crea una nuova versione (se possibile)"
 
-#: ../browser/bulk-modify.pt:158
+#: ../browser/bulk-modify.pt:160
 msgid "Do not update anything (silent change)"
 msgstr "Non aggiornare nulla (modifica silente)"
 
-#: ../browser/bulk-modify.pt:171
+#: ../browser/bulk-modify.pt:173
 msgid "Document"
 msgstr "Documento"
 
@@ -86,7 +90,7 @@ msgstr "Multiriga"
 msgid "No results found"
 msgstr "Nessun risultato trovato"
 
-#: ../browser/bulk-modify.pt:143
+#: ../browser/bulk-modify.pt:145
 msgid "Pause"
 msgstr "Pausa"
 
@@ -118,11 +122,11 @@ msgstr "Espressione regolare di ricerca"
 msgid "Select the kind of text replace you want to perform (if any)"
 msgstr "Seleziona il tipo di sostituzione che vuoi eseguire (se voluta)"
 
-#: ../browser/bulk-modify.pt:172
+#: ../browser/bulk-modify.pt:174
 msgid "Text found"
 msgstr "Testo trovato"
 
-#: ../browser/bulk-modify.pt:160
+#: ../browser/bulk-modify.pt:162
 msgid "Update modification time"
 msgstr "Aggiorna data di modifica"
 
@@ -168,7 +172,7 @@ msgid "search_regex_help"
 msgstr "Inserisci un'espressione regolare per eseguire la ricerca."
 
 #. Default: "Use commands above if you want also to modify content modification time or create new version"
-#: ../browser/bulk-modify.pt:163
+#: ../browser/bulk-modify.pt:165
 msgid "update_method_help"
 msgstr "Usa i controlli sopra se vuoi anche modificare la data di ultima modifica o creare una nuova versione"
 
@@ -193,7 +197,7 @@ msgstr ""
 #. Default: "Even worst: if you perform substitution using the \"Replace regex\" field below, you will perform a database write for every selected document."
 #: ../browser/bulk-modify.pt:61
 msgid "warning_msg_part2"
-msgstr "Ancora peggio: se eseguirai delle sostituzioni usando il campo \"Sostituzione testo\" sotto, verrà eseguita una scrittura sul database per ogni documento selezionato."
+msgstr "Ancor peggio: se eseguirai delle sostituzioni usando il campo \"Sostituzione testo\" sotto, verrà eseguita una scrittura sul database per ogni documento selezionato."
 
 #. Default: "Be sure of what you are doing here."
 #: ../browser/bulk-modify.pt:64

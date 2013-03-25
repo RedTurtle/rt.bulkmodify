@@ -85,9 +85,7 @@ class BulkModifyView(BrowserView):
             return json.dumps(result_json)
         
         all_brains = catalog(portal_type=portal_type)
-        if b_start==0:
-            # counting brains is slow, but it's better to say something to the final user
-            total_documents_count = all_brains.actual_result_count
+        total_documents_count = all_brains.actual_result_count
         brains = all_brains[b_start:b_start+b_size]
 
         if not brains:
@@ -110,8 +108,7 @@ class BulkModifyView(BrowserView):
                     result['normalized_portal_type'] = brain.portal_type.lower().replace(' ','-')
                 results.extend(inner_results)
 
-        if total_documents_count:
-            result_json['total_documents_count'] = total_documents_count
+        result_json['total_documents_count'] = total_documents_count
         result_json['results'] = results
         return json.dumps(result_json)
 
@@ -151,9 +148,7 @@ class BulkModifyView(BrowserView):
             return json.dumps(result_json)
         
         all_brains = catalog(portal_type=portal_type)
-        if b_start==0:
-            # counting brains is slow, but it's better to say something to the final user
-            total_documents_count = all_brains.actual_result_count
+        total_documents_count = all_brains.actual_result_count
         brains = all_brains[b_start:b_start+b_size]
 
         if not brains:
@@ -173,8 +168,7 @@ class BulkModifyView(BrowserView):
                 ir['icon'] = brain.getIcon
             results.extend(inner_results)
 
-        if total_documents_count:
-            result_json['total_documents_count'] = total_documents_count
+        result_json['total_documents_count'] = total_documents_count
         result_json['results'] = results
         return json.dumps(result_json)
 

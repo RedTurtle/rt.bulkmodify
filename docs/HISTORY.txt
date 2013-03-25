@@ -18,6 +18,8 @@ Changelog
   [keul]
 - JSHint cleanup and fix for Internet Explorer
   [keul]
+- Is now possible to pause, then continue, a search operation
+  [keul]
 
 0.1.1 (2013-03-15)
 ------------------

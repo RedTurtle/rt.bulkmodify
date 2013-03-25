@@ -30,6 +30,7 @@
         // Buttons
         var commandSearchButton = $('#searchButton');
         var commandPauseButton = $('#pauseButton');
+        var commandContinueButton = $('#continueButton');
         var commandModifySelected = $($('#modelModifySelectedButton').text() || $('#modelModifySelectedButton').html());
         commandModifySelected.attr('value', $main.data('i18n-modify-selected'));
         var $changeCommands = $('#changeCommands').remove();
@@ -38,6 +39,7 @@
         var $modelDataRow = $($('#modelDataRow').text() || $('#modelDataRow').html());
         var $modelDataRowNoResults = $($('#modelDataRowNoResults').text() || $('#modelDataRowNoResults').html());
         $modelDataRowNoResults.find('td').text($main.data('i18n-no-results-found'));
+        var modelLoading = $('<tr id="loading"><td colspan="3"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /><span class="counter currentDocument"></span><span class="counter totalDocuments"></span></td></tr>');
 
         var flags = 0;
         var b_size = 20;
@@ -46,7 +48,7 @@
 
         // Temp vars
         var running = false;
-        var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType;
+        var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType, lastCalledView;
 
         var markDone = function (element, info) {
             var content_link = element.find('a[rel=external]').remove();
@@ -194,13 +196,26 @@
             }
         };
 
+        /**
+         * Running UI elements
+         * @param {Boolean} newSearch true for performing a new search from scratch
+         */
+        var setRunningState = function(newSearch) {
+            if (newSearch) {
+                $results.html(emptyResults.html());
+                $results.find('table').append(modelLoading.clone());
+            } else {
+                $('#loading td').prepend(modelLoading.find('img').clone());
+            }
+        };
+
         var batchSearch = function (params) {
             params = $.extend( {b_start: 0,
                                 view: '/@@batchSearch'}, params);
-
             b_start = params.b_start;
-
+            lastCalledView = params.view;
             var formData = $form.serializeArray();
+
             formData.push({
                 name: 'b_start:int',
                 value: b_start
@@ -222,6 +237,7 @@
                     var data = results.results;
                     if (data===null) {
                         // we have finished
+                        running = false;
                         $('#loading').remove();
                         commandPauseButton.hide();
                         commandSearchButton.show();
@@ -236,7 +252,7 @@
                 error: function(jqXHR, textStatus, errorThrown) {
                     $('#loading').remove();
                     $("#results").find('table').append('<tr id="serverError"><td colspan="3">' + $main.data('i18n-message-server-error') +  '</td></tr>');
-					commandPauseButton.trigger('click');
+                    commandPauseButton.trigger('click');
                 }
             });
         };
@@ -245,17 +261,17 @@
             event.preventDefault();
             var params = {};
 
-            if ($searchQuery.val()) {
+            if ($searchQuery.val() && !running) {
                 commandPauseButton.show();
+                commandContinueButton.hide();
                 commandSearchButton.hide();
                 running = true;
 
                 lastSearchQuery = $searchQuery.val();
                 lastReplaceQuery = $replaceQuery.val();
                 lastReplaceType = $replaceTypes.filter(':checked').val();
-                $results.html(emptyResults.html());
-                $("#results").find('table').append('<tr id="loading"><td colspan="3"><img alt="Loading..." title="Loading..." src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-load.gif" /><span class="counter currentDocument"></span><span class="counter totalDocuments"></span></td></tr>');
                 $results.show();
+                setRunningState(true);
 
                 // loading flags
                 flags = 0;
@@ -280,11 +296,28 @@
 
         commandPauseButton.click(function(event) {
             event.preventDefault();
-            running = false;
-            checkNoResultsFound();
-            commandPauseButton.hide();
-            commandSearchButton.show();
-            $('#loading').remove();
+            if (running) {
+                commandContinueButton.show();
+                running = false;
+                checkNoResultsFound();
+                commandPauseButton.hide();
+                commandContinueButton.show();
+                commandSearchButton.show();
+                $('#loading img').remove();
+            }
+        });
+
+        commandContinueButton.click(function(event) {
+            event.preventDefault();
+            var params = {b_start: b_start, view: lastCalledView};
+            if (!running) {
+                running = true;
+                setRunningState(false);
+                batchSearch(params);
+                commandContinueButton.hide();
+                commandPauseButton.show();
+                commandSearchButton.show();
+            }
         });
 
     });
