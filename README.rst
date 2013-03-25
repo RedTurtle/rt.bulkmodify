@@ -22,16 +22,21 @@ __ http://en.wikipedia.org/wiki/Regular_expression
 A usecase
 =========
 
-You are working for the Ministry of Truth in the super-state of Oceania. The Party have choose Plone as the
-unique CMS available.
-You are in charge of keeping the Oceania web site updated.
+You are working at the Ministry of Truth in the super-state of Oceania.
+War history say that Oceania is allied with Eastasia and in war with Eurasia.
 
-When the Party choose that Oceania has never been allied with Eastasia, but it's allied with Eurasia (and in war
-with Eastasia), you must quickly updated the Plone site. Doublethink.
+You are in charge of keeping the Oceania web site updated and the Party choosed Plone as the unique CMS available.
+
+Then the Party apply the Doublethink, and history change: Oceania had never been allied with Eastasia, but
+it's allied with Eurasia (and in war with Eastasia).
+You must quickly updated the Plone site.
 
 You need to quickly review all document where Eastasia and Eurasia are named and, if needed, switch the two names.
 You can't simply perform a bach substitution because you must read the context on which the term to be replaced is
 used.
+
+For example: a document that talk about Eastasia as a friend must be changed, a document that describe the
+geographical position of Eurasia can remain untouched.
 
 How to use
 ==========
