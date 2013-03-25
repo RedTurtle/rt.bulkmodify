@@ -9,7 +9,7 @@ You must be a `Python regular expression`__ expert (probably a Grand Master).
 
 __ http://docs.python.org/2/howto/regex.html
 
-.. Note:: the product is in **alpha** state. Use at your how risk.
+Also: when used this product can **slow down** your running Plone site.
 
 Introduction
 ============
