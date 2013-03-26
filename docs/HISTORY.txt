@@ -15,7 +15,7 @@ Changelog
 - Open links in new windows
   [keul]
 - When a document is updated multiple times, only *one* new
-  version is screated
+  version is created
   [keul]
 - When request for replacements are submitted show a spinner and disable
   checkbox
