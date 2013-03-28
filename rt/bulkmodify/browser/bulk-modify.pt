@@ -54,8 +54,9 @@
             
             <p class="documentDescription">
                 <span tal:omit-tag="" i18n:translate="warning_msg_part1">
-                    From this page you can perform a <a href="http://docs.python.org/2/howto/regex.html" i18n:translate=""
-                                                        i18n:name="regex_doc_link">regex search</a> inside your site contents.
+                    From this page you can perform search using <a href="http://docs.python.org/2/howto/regex.html"
+					                                               i18n:translate=""
+                                                                   i18n:name="regex_doc_link">a regex</a> inside your site contents.
                     Every search you'll run will awake site's contents.
                     This can be <strong i18n:name="heavy_note" i18n:translate="">painfully slow</strong>, and slow down your site.</span><br/>
                 <span tal:omit-tag="" i18n:translate="warning_msg_part2">

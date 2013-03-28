@@ -11,6 +11,8 @@ __ http://docs.python.org/2/howto/regex.html
 
 Also: when used this product can **slow down** your running Plone site.
 
+.. Note:: **backup** your Plone site and be careful
+
 Introduction
 ============
 
