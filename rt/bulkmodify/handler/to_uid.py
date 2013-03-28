@@ -14,10 +14,8 @@ class InternalLinkToUIDUtility(object):
     implements(IBulkModifyReplacementHandler)
     
     context = None
-    
     name = _('utility_internal_link_to_uid_name',
              default=u"Convert internal links to resolveuid usage")
-
     description = _('utility_internal_link_to_uid_description',
                     default=u"If the match contains a group called <url> and this group is an internal link to "
                             u"a site content, let's transform it to a link using resolveuid.")

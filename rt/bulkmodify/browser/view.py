@@ -160,6 +160,8 @@ class BulkModifyView(BrowserView):
             # let's load the proper replace type
             utilities = [u for u in self.utilities if u[0]==replace_type]
             replace_query = utilities[0][1].repl
+            # fix multiple replacement
+            utilities[0][1].context = None
 
         for brain in brains:
             obj = brain.getObject()
@@ -213,7 +215,9 @@ class BulkModifyView(BrowserView):
                 # let's load the proper replace type
                 utilities = [u for u in self.utilities if u[0]==replace_type]
                 replace_query_klass = utilities[0][1]
-                replace_query = utilities[0][1].repl
+                # fix multiple replacement
+                replace_query_klass.context = None
+                replace_query = replace_query_klass.repl
 
             for counter, id in enumerate(ids):
                 match = path_id_pattern.match(id)

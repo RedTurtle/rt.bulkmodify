@@ -1,11 +1,12 @@
 Changelog
 =========
 
-0.3 (unreleased)
-----------------
+0.2.1 (unreleased)
+------------------
 
-- Nothing changed yet.
-
+- Calling a new search after a change were not working until
+  you re-start the instance
+  [keul]
 
 0.2 (2013-03-26)
 ----------------
