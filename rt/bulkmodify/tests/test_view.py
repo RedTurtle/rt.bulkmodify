@@ -23,28 +23,28 @@ class TestViewBatchSearch(BaseTestCase):
     def test_missing_parameters(self):
         view = self.view
         # no params
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
         # only content_type
         view.request.set('content_type', ['foo'])
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
         # only query
-        view.request.set('content_type', [])
+        view.request.set('content_type', {u'results': []})
         view.request.set('searchQuery', 'foo')
+        self.assertEqual(json.loads(view()), {u'results': None})
         # both
-        self.assertEqual(json.loads(view()), [])
         view.request.set('content_type', ['foo'])
         view.request.set('searchQuery', 'foo')
-        self.assertNotEqual(json.loads(view()), [])
-        # an existing type, but query
+        self.assertEqual(json.loads(view()), {u'results': None})
+        # an existing type, but no query
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', '')
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
 
     def test_simple_search(self):
         view = self.view
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
-        results = json.loads(view())
+        results = json.loads(view())['results']
         
         self.assertEqual(len(results), 4)
         self.assertEqual(results[0]['title'], 'Page 1')
@@ -63,7 +63,7 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('b_start', 1)
         self.assertEqual(len(json.loads(view())), 2)
         view.request.set('b_start', 2)
-        self.assertEqual(json.loads(view()), None)
+        self.assertEqual(json.loads(view()), {u'results': None})
 
 
 class TestViewBatchReplace(BaseTestCase):
@@ -79,18 +79,18 @@ class TestViewBatchReplace(BaseTestCase):
     def test_missing_parameters(self):
         view = self.view
         # no params
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
         view.request.set('content_type', ['foo'])
         # only content_type
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
         # only query
         view.request.set('content_type', [])
         view.request.set('searchQuery', 'foo')
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
         # only replace query
         view.request.set('searchQuery', '')
         view.request.set('replaceQuery', '')
-        self.assertEqual(json.loads(view()), [])
+        self.assertEqual(json.loads(view()), {u'results': []})
         # all three paarameters
         view.request.set('content_type', ['foo'])
         view.request.set('searchQuery', 'foo')
@@ -106,7 +106,7 @@ class TestViewBatchReplace(BaseTestCase):
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
         view.request.set('replaceQuery', re_subn_pattern)
-        results = json.loads(view())
+        results = json.loads(view())['results']
 
         self.assertEqual(len(results), 4)
         self.assertEqual(results[0]['title'], 'Page 1')
@@ -125,7 +125,7 @@ class TestViewBatchReplace(BaseTestCase):
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
         view.request.set('replaceQuery', r'<a target="_blank" href="\g<url>">\g<text></a>')
-        results = json.loads(view())
+        results = json.loads(view())['results']
         # if replacement return the original text, no replacement is needed
         self.assertEqual(len(results), 0)
 
@@ -134,7 +134,7 @@ class TestViewBatchReplace(BaseTestCase):
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
         view.request.set('replace_type', 'fake')
-        results = json.loads(view())
+        results = json.loads(view())['results']
         self.assertEqual(results[0]['new'], 'NEW TEXT!')
 
 

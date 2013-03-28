@@ -7,6 +7,8 @@ Changelog
 - Calling a new search after a change were not working until
   you re-start the instance
   [keul]
+- Fixed broken tests
+  [keul]
 
 0.2 (2013-03-26)
 ----------------
