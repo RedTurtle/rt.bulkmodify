@@ -49,9 +49,14 @@
 #cellText {
 	width: 60%;
 }
+#bulkModifyForm table.listing tr.allDocFocus,
+#bulkModifyForm table.listing tr.allDocFocus td {
+	background-color: #E1F762;
+}
 
 .allOfTheDoc {
 	margin-left: 0.7em;
+	background-color: blue;
 }
 
 .substitutionMsg {

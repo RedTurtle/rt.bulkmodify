@@ -173,6 +173,9 @@
                     // this is a new document
                     lastElement = element.id;
                     lastId = 0;
+                    // remove the all-of-the-document checkbox in the row above
+                    // AKA: there's only one match so two checkboxes can confuse
+                    $('table tr:last', $results).find('.allOfTheDoc').remove();
                     // check fox selecting all changes in the document
                     allOfTheDocsSelection = $('<input class="allOfTheDoc" type="checkbox" name="" value="" />');
                     allOfTheDocsSelection.click(function(event) {
@@ -181,6 +184,10 @@
                         } else {
                             $('input[data-uid='+ $(this).prev(':checkbox').attr('data-uid') +']').removeAttr('checked');
                         }
+                    }).mouseenter(function() {
+                        $('input[data-uid='+ $(this).prev(':checkbox').attr('data-uid') +']').closest('tr').addClass('allDocFocus');
+                    }).mouseleave(function() {
+                        $('input[data-uid='+ $(this).prev(':checkbox').attr('data-uid') +']').closest('tr').removeClass('allDocFocus');
                     });
                 }
                 var newRes = $modelDataRow.clone();
@@ -222,6 +229,8 @@
                 }
                 $('table', $results).append(newRes);
             }
+            // a single-match document can be the last
+            $('table tr:last', $results).find('.allOfTheDoc').remove();
         };
 
         /**

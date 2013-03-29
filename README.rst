@@ -181,7 +181,8 @@ TODO
 ====
 
 * Adding a way for using text substitution also as a running script for instance
-* We **really** need JavaScript tests 
+* We **really** need JavaScript tests
+* JavaScript is all but optimized
 * The product is designed for performing multiple write commit on ZODB, but probably a
   way of performing a single huge write operation can be useful
 
