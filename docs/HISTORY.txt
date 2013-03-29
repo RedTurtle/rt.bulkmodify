@@ -1,13 +1,19 @@
 Changelog
 =========
 
-0.2.1 (unreleased)
-------------------
+0.3 (unreleased)
+----------------
 
 - Calling a new search after a change were not working until
   you re-start the instance
   [keul]
 - Fixed broken tests
+  [keul]
+- Better UI after changes (display only one message per content, and keep
+  the content title)
+  [keul]
+- Calling additional changes on the same content were not working
+  (or worst: it could perform a wrong substitution)
   [keul]
 
 0.2 (2013-03-26)

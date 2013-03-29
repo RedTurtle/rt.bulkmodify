@@ -19,7 +19,7 @@
              data-i18n-messages-error="Error"
              data-i18n-message-server-error="An error has occurred"
              i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error; data-i18n-message-server-error; data-i18n-messages-view-content">
-        
+    
             <script type="text/template" id="modelDataRow">
                 <tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
                 <td class="matchDocument"></td>
@@ -55,7 +55,7 @@
             <p class="documentDescription">
                 <span tal:omit-tag="" i18n:translate="warning_msg_part1">
                     From this page you can perform search using <a href="http://docs.python.org/2/howto/regex.html"
-					                                               i18n:translate=""
+                                                                   i18n:translate=""
                                                                    i18n:name="regex_doc_link">a regex</a> inside your site contents.
                     Every search you'll run will awake site's contents.
                     This can be <strong i18n:name="heavy_note" i18n:translate="">painfully slow</strong>, and slow down your site.</span><br/>

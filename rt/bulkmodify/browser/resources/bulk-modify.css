@@ -55,6 +55,11 @@
 	vertical-align: middle;
 	font-size: 140%;
 }
+.substitutionMsg .discreet {
+	font-size: 70%;
+	margin-top: 0em;
+	margin-bottom: 0em;
+}
 .substitutionDone {
 	color: green;	
 }

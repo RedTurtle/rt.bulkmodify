@@ -50,17 +50,13 @@
         var running = false;
         var lastSearchQuery, lastReplaceQuery, lastFlags, lastReplaceType, lastCalledView;
 
-        var markDone = function (element, info) {
+        var markMessage = function (element, info, msgType) {
             var content_link = element.find('a[rel=external]').remove();
-            element.html('<td colspan="3" class="substitutionMsg substitutionDone"><strong>' + $main.data('i18n-messages-done') + '</strong> - </td>');
+            var link_text = element.find('label').text();
+            element.html('<td colspan="3" class="substitutionMsg ' + (msgType=='ok'?'substitutionDone':'substitutionError') +  '"><strong>' + (msgType=='ok'?$main.data('i18n-messages-done'):$main.data('i18n-messages-error')) + '</strong> - </td>');
             content_link.text($main.data('i18n-messages-view-content'));
-            element.find('td').append(content_link);
-        };
-        var markError = function (element, info) {
-            var content_link = element.find('a[rel=external]').remove();
-            element.html('<td colspan="3" class="substitutionMsg substitutionError"><strong>' + $main.data('i18n-messages-error') + ': ' + info.message +  '</strong> - </td>');
-            content_link.text($main.data('i18n-messages-view-content'));
-            element.find('td').append(content_link);
+            element.find('td').append(content_link).append('<div class="discreet">' + link_text + '</div>');
+            return element.find('td')[0];
         };
 
         var checkNoResultsFound = function () {
@@ -80,6 +76,7 @@
                 var callServerSideChange = function () {
                     var ids = [];
                     var checkbox = $(allCheckbox.get(submittedCount));
+                    var allSameContentCheckBox = $('.selectCommand[data-uid=' + checkbox.data('uid') + ']');
                     var sameContentCheckBox = $('.selectCommand:checked[data-uid=' + checkbox.data('uid') + ']');
                     sameContentCheckBox.attr('disabled', 'disabled');
                     sameContentCheckBox.after($(' <img alt="" src="' + portal_url + '/++resource++rt.bulkmodify.resources/ajax-loader-mini.gif" />'));
@@ -102,14 +99,25 @@
                         traditional: true,
                         data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceType, 'update_time:boolean': update_time, 'new_version:boolean': new_version},
                         success: function (data) {
+                            var done_elems = [], err_elems = [];
                             for (var j=0; j<data.length; j++) {
                                 var serverMessage = data[j];
                                 if (serverMessage.status && serverMessage.status==='OK') {
-                                    markDone($(sameContentCheckBox[j]).closest('tr'), serverMessage);
+                                    done_elems.push(markMessage($(sameContentCheckBox.get(j)).closest('tr'), serverMessage, 'ok'));
                                 } else {
-                                    markError($(sameContentCheckBox[j]).closest('tr'), serverMessage);
+                                    err_elems.push(markMessage($(sameContentCheckBox.get(j)).closest('tr'), serverMessage, 'ko'));
                                 }                                
                             }
+                            // need to fix id for remaining checkboxes of the same type
+                            allSameContentCheckBox.filter(':visible').each(function() {
+                                var ndiff = $(this).closest('tr').prevAll('tr').find('.substitutionMsg').length;
+                                var cb_id = parseInt($(this).val().split('-')[$(this).val().split('-').length-1]);
+                                $(this).val($(this).val().replace(RegExp("-" + cb_id + "$"), '-' + (cb_id-ndiff)));
+                            });
+                            
+                            // let's display only one messages per type
+                            $(done_elems).filter(':not(:first)').remove();
+                            $(err_elems).filter(':not(:first)').remove();
 
                             submittedCount++;
                             if (submittedCount<allCheckbox.length) {
@@ -117,9 +125,11 @@
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
+                            err_elems = [];
                             sameContentCheckBox.each(function() {
-                                markError($(this).closest('tr'), textStatus);
+                                err_elems.push(markMessage($(this).closest('tr'), textStatus, 'ko'));
                             });
+                            $(err_elems).filter('not:first').remove();
                             submittedCount++;
                             if (submittedCount<allCheckbox.length) {
                                 callServerSideChange();
