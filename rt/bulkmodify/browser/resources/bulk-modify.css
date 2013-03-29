@@ -41,13 +41,17 @@
 }
 
 #cellCommands {
-	width: 5%;
+	width: 7%;
 }
 #cellDocumentInfo {
-	width: 35%;
+	width: 33%;
 }
 #cellText {
 	width: 60%;
+}
+
+.allOfTheDoc {
+	margin-left: 0.7em;
 }
 
 .substitutionMsg {

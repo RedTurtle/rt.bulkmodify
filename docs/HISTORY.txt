@@ -15,6 +15,10 @@ Changelog
 - Calling additional changes on the same content were not working
   (or worst: it could perform a wrong substitution)
   [keul]
+- Fixed a bug in the label/checkbox association when you have multiple match on same element
+  [keul]
+- Added a new checkbox type, for selecting all matches of the same document
+  [keul]
 
 0.2 (2013-03-26)
 ----------------

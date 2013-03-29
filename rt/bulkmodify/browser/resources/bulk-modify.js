@@ -163,14 +163,32 @@
 
             for (var i=0;i<data.length;i++) {
                 var element = data[i];
+                var isNewDoc = false;
+                var allOfTheDocsSelection = null;
 
                 if (lastElement===element.id) {
+                    // same document as before
                     lastId = lastId+1;
                 } else {
+                    // this is a new document
                     lastElement = element.id;
                     lastId = 0;
+                    // check fox selecting all changes in the document
+                    allOfTheDocsSelection = $('<input class="allOfTheDoc" type="checkbox" name="" value="" />');
+                    allOfTheDocsSelection.click(function(event) {
+                        if ($(this).is(':checked')) {
+                            $('input[data-uid='+ $(this).prev(':checkbox').attr('data-uid') +']').attr('checked', 'checked');
+                        } else {
+                            $('input[data-uid='+ $(this).prev(':checkbox').attr('data-uid') +']').removeAttr('checked');
+                        }
+                    });
                 }
                 var newRes = $modelDataRow.clone();
+                
+                if (allOfTheDocsSelection) {
+                    newRes.find(':checkbox').after(allOfTheDocsSelection);
+                }
+
                 if (i % 2 === 0) {
                     newRes.addClass('even');
                 } else {
@@ -178,14 +196,14 @@
                 }
                 if ($replaceQuery.val() || $replaceTypes.filter(':checked').val()) {
                     // match id for server side changes (is uid-xxx)
-                    $(':checkbox', newRes).attr('value', element.id+'-'+lastId).attr("data-uid", element.uid).attr("id", element.uid);
+                    $(':checkbox', newRes).attr('value', element.id+'-'+lastId).attr("data-uid", element.uid).attr('id', element.id+'-'+lastId);
                 } else {
                     $(':checkbox', newRes).remove();
                 }
                 // document title and URL
                 var $label = $('<label>' + element.title + '</label>');
                 $('.matchDocument', newRes).append($label);
-                newRes.find('label').attr('for', element.uid);
+                newRes.find('label').attr('for', element.id+'-'+lastId);
                 // icon
                 if (element.icon) {
                     $label.before('<img alt="" src="' + portal_url + '/' + element.icon + '" />&nbsp;');
