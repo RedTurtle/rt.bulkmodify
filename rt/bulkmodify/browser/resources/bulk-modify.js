@@ -53,7 +53,7 @@
         var markMessage = function (element, info, msgType) {
             var content_link = element.find('a[rel=external]').remove();
             var link_text = element.find('label').text();
-            element.html('<td colspan="3" class="substitutionMsg ' + (msgType=='ok'?'substitutionDone':'substitutionError') +  '"><strong>' + (msgType=='ok'?$main.data('i18n-messages-done'):$main.data('i18n-messages-error')) + '</strong> - </td>');
+            element.html('<td colspan="3" class="substitutionMsg ' + (msgType==='ok'?'substitutionDone':'substitutionError') +  '"><strong>' + (msgType==='ok'?$main.data('i18n-messages-done'):$main.data('i18n-messages-error')) + '</strong> - </td>');
             content_link.text($main.data('i18n-messages-view-content'));
             element.find('td').append(content_link).append('<div class="discreet">' + link_text + '</div>');
             return element.find('td')[0];
@@ -111,7 +111,7 @@
                             // need to fix id for remaining checkboxes of the same type
                             allSameContentCheckBox.filter(':visible').each(function() {
                                 var ndiff = $(this).closest('tr').prevAll('tr').find('.substitutionMsg').length;
-                                var cb_id = parseInt($(this).val().split('-')[$(this).val().split('-').length-1]);
+                                var cb_id = parseInt($(this).val().split('-')[$(this).val().split('-').length-1], 10);
                                 $(this).val($(this).val().replace(RegExp("-" + cb_id + "$"), '-' + (cb_id-ndiff)));
                             });
                             
@@ -125,7 +125,7 @@
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            err_elems = [];
+                            var err_elems = [];
                             sameContentCheckBox.each(function() {
                                 err_elems.push(markMessage($(this).closest('tr'), textStatus, 'ko'));
                             });
@@ -154,7 +154,7 @@
         var showResults = function(results) {
             var lastId = 0;
             var lastElement = null;
-            var data = results.results
+            var data = results.results;
 
             if (results.total_documents_count) {
                 $('.totalDocuments').text(' / ' + results.total_documents_count);
