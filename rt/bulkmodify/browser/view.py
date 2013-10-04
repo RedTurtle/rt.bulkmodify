@@ -138,6 +138,7 @@ class BulkModifyView(BrowserView):
         replace_type = request.get('replace_type')
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
+        really_checked_docs = request.get('really_checked_docs', 0)
         flags = request.get('flags', 0)
         portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
@@ -169,11 +170,14 @@ class BulkModifyView(BrowserView):
         for brain in brains:
             obj = brain.getObject()
             inner_results = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
+            if inner_results:
+                really_checked_docs += 1
             for ir in inner_results:
                 ir['icon'] = brain.getIcon
             results.extend(inner_results)
 
         result_json['total_documents_count'] = total_documents_count
+        result_json['really_checked_docs'] = really_checked_docs
         result_json['results'] = results
         return json.dumps(result_json)
 
