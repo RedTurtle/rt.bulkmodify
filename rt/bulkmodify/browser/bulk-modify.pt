@@ -18,14 +18,14 @@
              data-i18n-messages-view-content="View content"
              data-i18n-messages-error="Error"
              data-i18n-messages-server-error="An error has occurred"
-			 data-i18n-checked-docs="documents checked"
+             data-i18n-checked-docs="documents checked"
              i18n:attributes="data-i18n-no-results-found;
-			                  data-i18n-modify-selected;
-							  data-i18n-messages-done;
-							  data-i18n-messages-error;
-							  data-i18n-messages-server-error;
-							  data-i18n-messages-view-content;
-							  data-i18n-checked-docs">
+                              data-i18n-modify-selected;
+                              data-i18n-messages-done;
+                              data-i18n-messages-error;
+                              data-i18n-messages-server-error;
+                              data-i18n-messages-view-content;
+                              data-i18n-checked-docs">
     
             <script type="text/template" id="modelDataRow">
                 <tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
@@ -86,25 +86,25 @@
                             Select the set of content types to be inspected
                         </div>
                         
-						<div>
-							<input type="checkbox" name="selectAllTypes" id="selectAllTypes" />
-							<label for="selectAllTypes"
-							       i18n:translate="">Select all</label>
-						</div>
+                        <div>
+                            <input type="checkbox" name="selectAllTypes" id="selectAllTypes" />
+                            <label for="selectAllTypes"
+                                   i18n:translate="">Select all</label>
+                        </div>
                         <tal:types repeat="t view/type_vocabulary">
-                        	<div class="typeCheck"
+                            <div class="typeCheck"
                                  tal:define="even repeat/t/even;"
-								 tal:attributes="class python:even and 'typeCheck typeCheckEven' or 'typeCheck typeCheckOdd'">
-	                            <input type="checkbox" name="content_type:list" id="" value=""
-	                                   tal:attributes="id string:type-${repeat/t/number};
-	                                                   value t/value;
-	                                                   checked python:t.value in DEFAULT_TYPES;" />
-	                            <label class="possibleContentType" for=""
-	                                   tal:content="t/title"
-	                                   tal:attributes="for string:type-${repeat/t/number};">Page</label>
-							</div>
+                                 tal:attributes="class python:even and 'typeCheck typeCheckEven' or 'typeCheck typeCheckOdd'">
+                                <input type="checkbox" name="content_type:list" id="" value=""
+                                       tal:attributes="id string:type-${repeat/t/number};
+                                                       value t/value;
+                                                       checked python:t.value in DEFAULT_TYPES;" />
+                                <label class="possibleContentType" for=""
+                                       tal:content="t/title"
+                                       tal:attributes="for string:type-${repeat/t/number};">Page</label>
+                            </div>
                         </tal:types>
-						<div class="visualClear"><!-- --></div>
+                        <div class="visualClear"><!-- --></div>
                     </div>
 
                     <div class="field">
@@ -174,13 +174,19 @@
 
                         <div id="changeCommands">
                             <div class="field">
-                                <input type="radio" id="update_none" name="update_method" value="" checked="checked" />
-                                <label for="update_none" i18n:translate="">Do not update anything (silent change)</label>
-                                <input type="radio" id="update_time" name="update_method" value="change_time" />
-                                <label for="update_time" i18n:translate="">Update modification time</label>
-                                <input type="radio" id="new_version" name="update_method" value="new_version" />
-                                <label for="new_version" i18n:translate="">Create a new version (if possible)</label>
-                                <div class="formHelp" i18n:translate="update_method_help">
+                                <div class="replacementKind">
+                                    <input type="radio" id="update_none" name="update_method" value="" checked="checked" />
+                                    <label for="update_none" i18n:translate="">Do not update anything (silent change)</label>
+                                </div>
+                                <div class="replacementKind">
+                                    <input type="radio" id="update_time" name="update_method" value="change_time" />
+                                    <label for="update_time" i18n:translate="">Update modification time</label>
+                                </div>
+                                <div class="replacementKind">
+                                    <input type="radio" id="new_version" name="update_method" value="new_version" />
+                                    <label for="new_version" i18n:translate="">Create a new version (if possible)</label>
+                                </div>
+                                <div class="formHelp visualClear" i18n:translate="update_method_help">
                                     Use commands above if you want also to modify content modification time or create new version
                                 </div>
                             </div>

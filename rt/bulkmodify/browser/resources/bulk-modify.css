@@ -108,3 +108,9 @@
 .typeCheckOdd {
 	margin-left: 50%;
 }
+
+.replacementKind {
+	float:left;
+	width: 30%;
+	margin-right: 1em;
+}
