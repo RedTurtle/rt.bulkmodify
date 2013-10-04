@@ -18,6 +18,15 @@
             window.open($(this).attr('href'));
         });
 
+		// Select all types command
+		$('#selectAllTypes').click(function(event) {
+            if ($(this).is(':checked')) {
+                $('.typeCheck > :checkbox').attr('checked', 'checked');
+            } else {
+                $('.typeCheck > :checkbox').removeAttr('checked');
+            }
+        });
+
         // Areas
         var $form = $('#bulkSearchForm');
         var $results = $('#results');
@@ -44,6 +53,7 @@
         var flags = 0;
         var b_size = 20;
         var b_start = 0;
+        var really_checked_docs = 0;
         var emptyResults = $results.clone();
 
         // Temp vars
@@ -157,7 +167,10 @@
             var data = results.results;
 
             if (results.total_documents_count) {
-                $('.totalDocuments').text(' / ' + results.total_documents_count);
+                really_checked_docs = results.really_checked_docs;
+                $('.totalDocuments').text(' / ' + results.total_documents_count
+                        + ' (' + really_checked_docs +' '
+                        + $main.data('i18n-checked-docs') + ')');
             }
             $('.currentDocument').text(b_start);
 
@@ -248,8 +261,10 @@
 
         var batchSearch = function (params) {
             params = $.extend( {b_start: 0,
+                                really_checked_docs: 0,
                                 view: '/@@batchSearch'}, params);
             b_start = params.b_start;
+            really_checked_docs = params.really_checked_docs;
             lastCalledView = params.view;
             var formData = $form.serializeArray();
 
@@ -260,6 +275,10 @@
             formData.push({
                 name: 'b_size:int',
                 value: b_size
+            });
+            formData.push({
+                name: 'really_checked_docs:int',
+                value: really_checked_docs
             });
             formData.push({
                 name: 'flags:int',
@@ -282,13 +301,15 @@
                     } else {
                         showResults(results);
                         if (running) {
-                            batchSearch({b_start: b_start+b_size, view: params.view});
+                            batchSearch({b_start: b_start+b_size,
+                                         really_checked_docs: really_checked_docs,
+                                         view: params.view});
                         }
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     $('#loading').remove();
-                    $("#results").find('table').append('<tr id="serverError"><td colspan="3">' + $main.data('i18n-message-server-error') +  '</td></tr>');
+                    $("#results").find('table').append('<tr id="serverError"><td colspan="3">' + $main.data('i18n-messages-server-error') +  '</td></tr>');
                     commandPauseButton.trigger('click');
                 }
             });
@@ -346,7 +367,9 @@
 
         commandContinueButton.click(function(event) {
             event.preventDefault();
-            var params = {b_start: b_start, view: lastCalledView};
+            var params = {b_start: b_start,
+                          really_checked_docs: really_checked_docs,
+                          view: lastCalledView};
             if (!running) {
                 running = true;
                 setRunningState(false);

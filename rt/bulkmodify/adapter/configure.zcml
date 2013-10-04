@@ -10,7 +10,7 @@
         provides="..interfaces.IBulkModifyContentChanger"
         factory=".at.TextContentAdapters"
         />
-  <!-- Event type -->
+  <!-- Event type (... why this is not a ITextContent is a real mistery for me) -->
   <adapter
         for="Products.ATContentTypes.interfaces.event.IATEvent"
         provides="..interfaces.IBulkModifyContentChanger"

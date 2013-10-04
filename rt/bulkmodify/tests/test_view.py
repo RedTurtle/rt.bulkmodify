@@ -59,11 +59,19 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('content_type', ['Document', ])
         view.request.set('searchQuery', re_pattern)
         view.request.set('b_size', 1)
-        self.assertEqual(len(json.loads(view())), 2)
+        self.assertEqual(len(json.loads(view())), 3)
         view.request.set('b_start', 1)
-        self.assertEqual(len(json.loads(view())), 2)
+        self.assertEqual(len(json.loads(view())), 3)
         view.request.set('b_start', 2)
         self.assertEqual(json.loads(view()), {u'results': None})
+
+    def test_discarded_types(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('searchQuery', 'this text is not found inside the document HTML')
+        results = json.loads(view())
+        self.assertEqual(results['results'], [])
+        self.assertEqual(results['really_checked_docs'], 2)
 
 
 class TestViewBatchReplace(BaseTestCase):

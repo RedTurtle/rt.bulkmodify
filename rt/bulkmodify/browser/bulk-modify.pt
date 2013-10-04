@@ -17,8 +17,15 @@
              data-i18n-messages-done="Change done"
              data-i18n-messages-view-content="View content"
              data-i18n-messages-error="Error"
-             data-i18n-message-server-error="An error has occurred"
-             i18n:attributes="data-i18n-no-results-found; data-i18n-modify-selected; data-i18n-messages-done; data-i18n-messages-error; data-i18n-message-server-error; data-i18n-messages-view-content">
+             data-i18n-messages-server-error="An error has occurred"
+			 data-i18n-checked-docs="documents checked"
+             i18n:attributes="data-i18n-no-results-found;
+			                  data-i18n-modify-selected;
+							  data-i18n-messages-done;
+							  data-i18n-messages-error;
+							  data-i18n-messages-server-error;
+							  data-i18n-messages-view-content;
+							  data-i18n-checked-docs">
     
             <script type="text/template" id="modelDataRow">
                 <tr><td><input class="selectCommand" type="checkbox" name="textMatch" value="" /></td>
@@ -79,15 +86,25 @@
                             Select the set of content types to be inspected
                         </div>
                         
+						<div>
+							<input type="checkbox" name="selectAllTypes" id="selectAllTypes" />
+							<label for="selectAllTypes"
+							       i18n:translate="">Select all</label>
+						</div>
                         <tal:types repeat="t view/type_vocabulary">
-                            <input type="checkbox" name="content_type:list" id="" value=""
-                                   tal:attributes="id string:type-${repeat/t/number};
-                                                   value t/value;
-                                                   checked python:t.value in DEFAULT_TYPES;" />
-                            <label class="possibleContentType" for=""
-                                   tal:content="t/title"
-                                   tal:attributes="for string:type-${repeat/t/number};">Page</label>
+                        	<div class="typeCheck"
+                                 tal:define="even repeat/t/even;"
+								 tal:attributes="class python:even and 'typeCheck typeCheckEven' or 'typeCheck typeCheckOdd'">
+	                            <input type="checkbox" name="content_type:list" id="" value=""
+	                                   tal:attributes="id string:type-${repeat/t/number};
+	                                                   value t/value;
+	                                                   checked python:t.value in DEFAULT_TYPES;" />
+	                            <label class="possibleContentType" for=""
+	                                   tal:content="t/title"
+	                                   tal:attributes="for string:type-${repeat/t/number};">Page</label>
+							</div>
                         </tal:types>
+						<div class="visualClear"><!-- --></div>
                     </div>
 
                     <div class="field">

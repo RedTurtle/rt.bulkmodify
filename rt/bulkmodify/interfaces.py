@@ -9,7 +9,7 @@ class IBulkModifyLayer(Interface):
 
 
 class IBulkModifyContentChanger(Interface):
-    """An object that is able to readn and change text data inside a content's field"""
+    """An object that is able to read and change text data inside a content's field"""
 
     text = Attribute('''Text attribute getter & setter''')
 

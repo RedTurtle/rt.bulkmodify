@@ -4,8 +4,11 @@ Changelog
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Nicely display types check, plus a select all/none command
+  [keul]
+- Show a counter for documents really checked (means: for documents where
+  the ``IBulkModifyContentChanger`` adapter has been found)
+  [keul]
 
 0.3 (2013-04-02)
 ----------------

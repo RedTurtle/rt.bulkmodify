@@ -72,6 +72,7 @@ class BulkModifyView(BrowserView):
         search_query = request.get('searchQuery')
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
+        really_checked_docs = request.get('really_checked_docs', 0)
         flags = request.get('flags', 0)
         portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
@@ -97,6 +98,7 @@ class BulkModifyView(BrowserView):
             obj = brain.getObject()
             adapter = queryAdapter(obj, IBulkModifyContentChanger)
             if adapter:
+                really_checked_docs += 1
                 text = adapter.text
                 inner_results = utility.text_search(text, search_query, flags=flags, preview=True)
                 for result in inner_results:
@@ -109,6 +111,7 @@ class BulkModifyView(BrowserView):
                 results.extend(inner_results)
 
         result_json['total_documents_count'] = total_documents_count
+        result_json['really_checked_docs'] = really_checked_docs
         result_json['results'] = results
         return json.dumps(result_json)
 

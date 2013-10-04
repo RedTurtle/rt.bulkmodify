@@ -101,3 +101,10 @@
 	background-color: #71F271;
 	color: black;
 }
+
+.typeCheckEven {
+	float:left;
+}
+.typeCheckOdd {
+	margin-left: 50%;
+}
