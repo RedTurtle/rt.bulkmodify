@@ -44,9 +44,13 @@ class TestUtility(unittest.TestCase):
         self.assertEqual(len(search), 2)
         self.assertEqual(search,
                          [{'start': 793, 'end': 872,
+                           'pre_text': '...lorem.\n',
+                           'post_text': 'BAR fil...',
                            'text': '<a class="internal-link"\n'
                                    '   href="http://foo.org/aaa/bar.exe/at_download/file">'},
-                          {'start': 1243, 'end': 1330, 'text': '<a href="http://foo.org/aaa/foo.pdf/at_download/file/@@someview" class="internal-link">'}])
+                          {'start': 1243, 'end': 1330,
+                           'pre_text': '...p&gt;\n    ', 'post_text': 'FOO\nfil...',
+                           'text': '<a href="http://foo.org/aaa/foo.pdf/at_download/file/@@someview" class="internal-link">'}])
 
     
     def test_replace(self):

@@ -234,9 +234,14 @@
                 $('.matchDocument', newRes).append($('<a href="' + element.url + '" rel="external">' + element.url + '</a>'));
                 // text!
                 if (element['new']) {
-                    $('.matchText', newRes).html('<div class="pre"></div><div class="post"></div>');
-                    $('.matchText .pre', newRes).text(element.old);
-                    $('.matchText .post', newRes).text(element['new']);
+                    $('.matchText', newRes).html('<div class="preChange"><span class="pre"></span><span class="content"></span><span class="post"></span></div>\n'
+							+'<div class="postChange"><span class="pre"></span><span class="content"></span><span class="post"></span></div>');
+                    $('.matchText .preChange .content', newRes).text(element.old);
+					$('.matchText .preChange .pre', newRes).html(element.pre_text);
+					$('.matchText .preChange .post', newRes).html(element.post_text);
+                    $('.matchText .postChange .content', newRes).text(element['new']);
+					$('.matchText .postChange .pre', newRes).html(element.pre_text);
+					$('.matchText .postChange .post', newRes).html(element.post_text);
                 } else {
                     $('.matchText', newRes).html(element.text);
                 }

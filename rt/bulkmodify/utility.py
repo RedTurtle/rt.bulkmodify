@@ -18,9 +18,9 @@ def text_search(text, regex, flags=0, preview=False):
         start = result['start'] = match.start()
         end = result['end'] = match.end()
         pos = end
+        estart = start-7 if start-10>=0 else 0
+        eend = end+7 if end+10<t_length else t_length
         if preview:
-            estart = start-7 if start-10>=0 else 0
-            eend = end+7 if end+10<t_length else t_length
             result['text'] = '...' + de_html(text[estart:start]) \
                         + '<span class="mark">' \
                         + de_html(text[start:end]) \
@@ -29,6 +29,8 @@ def text_search(text, regex, flags=0, preview=False):
                         + '...'
         else:
             result['text'] = text[start:end]
+            result['pre_text'] = '...' + de_html(text[estart:start])
+            result['post_text'] = de_html(text[end:eend]) + '...'
         results.append(result)
         match = pattern.search(text, pos)
     return results
@@ -45,5 +47,7 @@ def text_replace(text, regex, repl, flags=0):
             result = {'old': old, 'new': replaced}
             result['start'] = f['start']
             result['end'] = f['end']
+            result['pre_text'] = f['pre_text']
+            result['post_text'] = f['post_text']
             results.append(result)
     return results

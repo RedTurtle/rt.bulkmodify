@@ -9,6 +9,8 @@ Changelog
 - Show a counter for documents really checked (means: for documents where
   the ``IBulkModifyContentChanger`` adapter has been found)
   [keul]
+- Show an HTML preview also when replacing text (this close #3)
+  [keul]
 
 0.3 (2013-04-02)
 ----------------

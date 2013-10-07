@@ -91,13 +91,17 @@
 	margin-right: 1em;
 }
 
-.matchText .pre {
+.matchText .preChange,
+.matchText .postChange {
 	padding:0.5em;
+}
+.matchText .preChange .content {
+	padding:2px;
 	background-color: red;
 	color: white;
 }
-.matchText .post {
-	padding:0.5em;
+.matchText .postChange .content {
+	padding:2px;
 	background-color: #71F271;
 	color: black;
 }
@@ -113,4 +117,8 @@
 	float:left;
 	width: 30%;
 	margin-right: 1em;
+}
+
+#selectAllTypes {
+	margin-bottom: 0.5em;
 }
