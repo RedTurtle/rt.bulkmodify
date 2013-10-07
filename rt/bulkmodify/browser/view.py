@@ -20,6 +20,7 @@ from Products.CMFEditions.utilities import maybeSaveVersion
 from Products.CMFEditions.utilities import isObjectVersioned
 
 from rt.bulkmodify import messageFactory as _
+from rt.bulkmodify import logger
 from rt.bulkmodify import utility
 from rt.bulkmodify.interfaces import IBulkModifyContentChanger
 from rt.bulkmodify.interfaces import IBulkModifyReplacementHandler
@@ -98,8 +99,12 @@ class BulkModifyView(BrowserView):
             obj = brain.getObject()
             adapter = queryAdapter(obj, IBulkModifyContentChanger)
             if adapter:
+                try:
+                    text = adapter.text
+                except:
+                    logger.error("Can't get text for %s" % obj.absolute_url_path())
+                    continue
                 really_checked_docs += 1
-                text = adapter.text
                 inner_results = utility.text_search(text, search_query, flags=flags, preview=True)
                 for result in inner_results:
                     result['url'] = brain.getURL()

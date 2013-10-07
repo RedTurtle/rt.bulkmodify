@@ -11,6 +11,8 @@ Changelog
   [keul]
 - Show an HTML preview also when replacing text (this close #3)
   [keul]
+- Do not break if "text" can't be read (for example: for ComputedField named "text")
+  [keul]
 
 0.3 (2013-04-02)
 ----------------
