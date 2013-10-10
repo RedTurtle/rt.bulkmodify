@@ -1,9 +1,19 @@
 from setuptools import setup, find_packages
 import os
+import sys
 
 version = '0.4.1.dev0'
 
 tests_require = ['plone.app.testing', ]
+
+install_requires = [
+      'setuptools',
+      'Products.CMFPlone>4.0b1',
+      'plone.uuid',
+]
+
+if sys.version_info < (2, 7):
+    install_requires.append('zope.tal>=3.6.1')
 
 setup(name='rt.bulkmodify',
       version=version,
@@ -18,6 +28,7 @@ setup(name='rt.bulkmodify',
         "Framework :: Plone :: 4.2",
         "Framework :: Plone :: 4.3",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
         "Programming Language :: JavaScript",
         ],
       keywords='plone batch bulk regex',
@@ -31,11 +42,7 @@ setup(name='rt.bulkmodify',
       zip_safe=False,
       tests_require=tests_require,
       extras_require=dict(test=tests_require),
-      install_requires=[
-          'setuptools',
-          'Products.CMFPlone>4.0b1',
-          'plone.uuid',
-      ],
+      install_requires=install_requires,
       entry_points="""
       [z3c.autoinclude.plugin]
       target = plone
