@@ -4,8 +4,10 @@ Changelog
 0.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Requires zope.tal >= 3.6.1 if on Python 2.6. This close `#2`__.
+  [keul]
 
+__ https://github.com/RedTurtle/rt.bulkmodify/issues/2
 
 0.4 (2013-10-07)
 ----------------
