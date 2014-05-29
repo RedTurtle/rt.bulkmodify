@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.1 (unreleased)
+0.4.1 (2014-05-29)
 ------------------
 
 - Requires zope.tal >= 3.6.1 if on Python 2.6. This close `#2`__.
