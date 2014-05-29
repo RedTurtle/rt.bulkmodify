@@ -5,9 +5,9 @@
       enabled="1"
       expression=""
       cookable="True"
-      media="all"
+      media="screen"
       rel="stylesheet"
-      applyPrefix="True"
-	  authenticated="True"
+      applyPrefix=""
+	  authenticated=""
       rendering="link" />
 </object>

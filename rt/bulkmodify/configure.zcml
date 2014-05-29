@@ -31,5 +31,15 @@
       description="Remove rt.bulkmodify from the site"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  
+
+  <genericsetup:upgradeStep
+        title="Upgrade to 0.4.1"
+        description="Migrate rt.bulkmodify to 0.4.1"
+        source="1000"
+        destination="1100"
+        handler=".setuphandlers.migrateTo41"
+        sortkey="1"
+        profile="rt.bulkmodify:default"
+    />
+
 </configure>
