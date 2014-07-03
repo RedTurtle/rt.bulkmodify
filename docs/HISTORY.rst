@@ -4,8 +4,8 @@ Changelog
 0.4.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Version 0.4.1 was providing a bad setup handler target
+  [keul]
 
 0.4.1 (2014-05-29)
 ------------------
