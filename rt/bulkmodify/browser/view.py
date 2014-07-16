@@ -105,7 +105,7 @@ class BulkModifyView(BrowserView):
                     logger.error("Can't get text for %s" % obj.absolute_url_path())
                     continue
                 really_checked_docs += 1
-                inner_results = utility.text_search(text, search_query, flags=flags, preview=True)
+                inner_results = utility.text_search(text.decode('utf-8'), search_query, flags=flags, preview=True)
                 for result in inner_results:
                     result['url'] = brain.getURL()
                     result['id'] = brain.getPath()

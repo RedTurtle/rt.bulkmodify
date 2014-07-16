@@ -6,6 +6,11 @@ Changelog
 
 - Version 0.4.1 was providing a bad setup handler target
   [keul]
+- Fixed UnicodeDecodeError when the extracted text for preview contains
+  non-ASCII chars. This close `#4`__.
+  [keul]
+
+__ https://github.com/RedTurtle/rt.bulkmodify/issues/4
 
 0.4.1 (2014-05-29)
 ------------------
