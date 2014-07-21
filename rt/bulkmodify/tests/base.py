@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from plone.portlet.static.static import Assignment
+from plone.portlets.interfaces import IPortletManager, IPortletAssignmentMapping
 
 from zope.interface import implements
 from zope.interface import alsoProvides
-from zope.component import getGlobalSiteManager
+from zope.component import getGlobalSiteManager, getUtility, getMultiAdapter
 
 from plone.app.testing import login
 from plone.app.testing import setRoles
@@ -76,3 +78,9 @@ class BaseTestCase(unittest.TestCase):
         portal.invokeFactory('Folder', 'folder1', title="Folder 1")        
         portal.folder1.invokeFactory('Event', 'event1', title="Event 1",
                                      text="foo, will not be used")
+        portlet_manager = getUtility(IPortletManager, name="plone.leftcolumn",
+                                     context=portal.folder1)
+        mapping = getMultiAdapter((portal.folder1, portlet_manager),
+                                  IPortletAssignmentMapping)
+        mapping['1'] = Assignment(text="I am a portlet")
+        self.layer['portlet'] = mapping['1']

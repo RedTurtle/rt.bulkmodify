@@ -39,6 +39,37 @@ class IBulkModify(Interface):
     def replaceText():
         """Apply a regex replacement to documents"""
 
+class Result(object):
+    def __init__(self, brain, portal_types, portlets):
+        self.brain = brain
+        self.obj = brain.getObject()
+        self.portal_types = portal_types
+        self.portlets = portlets
+
+    @property
+    def text(self):
+        if not hasattr(self, '_text'):
+            self._text = ''
+            if self.obj.portal_type in self.portal_types:
+                adapter = queryAdapter(self.obj, IBulkModifyContentChanger)
+                if adapter:
+                    self._text = adapter.text.decode('utf-8')
+        return self._text
+
+    def __getitem__(self, key):
+        if key == 'url':
+            return self.brain.getURL()
+        if key == 'id':
+            return self.brain.getPath()
+        if key == 'uid':
+            return self.brain.UID
+        if key == 'title':
+            return self.brain.Title
+        if key == 'icon':
+            return self.brain.getIcon
+        if key == 'normalized_portal_type':
+            return self.brain.portal_type.lower().replace(' ', '-')
+
 
 class BulkModifyView(BrowserView):
     implements(IBulkModify)
@@ -66,6 +97,13 @@ class BulkModifyView(BrowserView):
                                 value=hname))
         return results
 
+    def _catalog_search(self, portal_type, portlets, start, size):
+        catalog = getToolByName(self.context, 'portal_catalog')
+        all_brains = catalog(portal_type=portal_type)
+        return all_brains.actual_result_count, \
+               [Result(x, portal_type, portlets) for x in
+                all_brains[start:start+size]]
+
     def batchSearch(self):
         context = self.context
         request = self.request
@@ -75,44 +113,40 @@ class BulkModifyView(BrowserView):
         b_size = request.get('b_size', 20)
         really_checked_docs = request.get('really_checked_docs', 0)
         flags = request.get('flags', 0)
+        portlets = request.get('portlets', False)
         portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
         
         result_json = {}
         results = []
-        total_documents_count = 0
 
         if not portal_type or not search_query:
             result_json['results'] = results
             return json.dumps(result_json)
         
-        all_brains = catalog(portal_type=portal_type)
-        total_documents_count = all_brains.actual_result_count
-        brains = all_brains[b_start:b_start+b_size]
+        total_documents_count, search_results = \
+            self._catalog_search(portal_type, portlets, b_start, b_size)
 
-        if not brains:
+        if not search_results:
             # stop client side queries
             result_json['results'] = None
             return json.dumps(result_json)
 
-        for brain in brains:
-            obj = brain.getObject()
-            adapter = queryAdapter(obj, IBulkModifyContentChanger)
-            if adapter:
-                try:
-                    text = adapter.text
-                except:
-                    logger.error("Can't get text for %s" % obj.absolute_url_path())
-                    continue
+        for search_result in search_results:
+            if search_result.text:
                 really_checked_docs += 1
-                inner_results = utility.text_search(text.decode('utf-8'), search_query, flags=flags, preview=True)
+                inner_results = utility.text_search(search_result.text,
+                                                    search_query,
+                                                    flags=flags,
+                                                    preview=True)
                 for result in inner_results:
-                    result['url'] = brain.getURL()
-                    result['id'] = brain.getPath()
-                    result['uid'] = brain.UID
-                    result['title'] = brain.Title
-                    result['icon'] = brain.getIcon
-                    result['normalized_portal_type'] = brain.portal_type.lower().replace(' ','-')
+                    result['url'] = search_result['url']
+                    result['id'] = search_result['id']
+                    result['uid'] = search_result['uid']
+                    result['title'] = search_result['title']
+                    result['icon'] = search_result['icon']
+                    result['normalized_portal_type'] = \
+                        search_result['normalized_portal_type']
                 results.extend(inner_results)
 
         result_json['total_documents_count'] = total_documents_count

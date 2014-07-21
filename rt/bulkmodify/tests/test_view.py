@@ -73,6 +73,24 @@ class TestViewBatchSearch(BaseTestCase):
         self.assertEqual(results['results'], [])
         self.assertEqual(results['really_checked_docs'], 2)
 
+    def test_discarded_types_with_portlets(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('portlets', 'true')
+        view.request.set('searchQuery', 'this text is not found inside the document HTML')
+        results = json.loads(view())
+        self.assertEqual(results['results'], [])
+        self.assertEqual(results['really_checked_docs'], 2)
+
+    def test_search_portlets(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('portlets', 'true')
+        view.request.set('searchQuery', "portlet")
+        results = json.loads(view())
+        self.assertEqual(results['results'], [])
+        self.assertEqual(results['really_checked_docs'], 3)
+
 
 class TestViewBatchReplace(BaseTestCase):
 
