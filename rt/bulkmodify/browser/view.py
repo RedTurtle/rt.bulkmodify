@@ -113,7 +113,8 @@ class BulkModifyView(BrowserView):
 
     def _catalog_search(self, portal_type, portlets, start, size):
         catalog = getToolByName(self.context, 'portal_catalog')
-        all_brains = catalog(portal_type=portal_type)
+        all_brains = catalog(portal_type=portal_type,
+                             language="ALL")
         return all_brains.actual_result_count, \
                [Result(x, portal_type, portlets) for x in
                 all_brains[start:start+size]]
@@ -121,7 +122,8 @@ class BulkModifyView(BrowserView):
     def batchSearch(self):
         context = self.context
         request = self.request
-        request.response.setHeader('Content-Type','application/json;charset=utf-8')
+        request.response.setHeader('Content-Type',
+                                   'application/json;charset=utf-8')
         search_query = request.get('searchQuery')
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
