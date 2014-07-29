@@ -184,7 +184,7 @@ class TestViewBatchReplace(BaseTestCase):
 class TestViewReplaceText(BaseTestCase):
 
     layer = BULK_MODIFY_INTEGRATION_TESTING
-    
+
     def setUp(self):
         BaseTestCase.setUp(self)
         portal = self.layer['portal']
@@ -197,6 +197,7 @@ class TestViewReplaceText(BaseTestCase):
         self.ids3 = ["%s-0" % '/'.join(portal['page2'].getPhysicalPath()[2:]),
                      "%s-1" % '/'.join(portal['page2'].getPhysicalPath()[2:])]
         self.ids4 = ["%s-0" % '/'.join(portal['link1'].getPhysicalPath()[2:])]
+        self.ids5 = ["%s-0" % '/'.join(portal['folder1'].getPhysicalPath()[2:])]
 
     def test_missing_parameters(self):
         view = self.view
@@ -214,10 +215,20 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('replaceQuery', re_subn_pattern)
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
-        self.assertEqual(json.loads(view()), [{"status": "OK"}]) 
+        self.assertEqual(json.loads(view()), [{"status": "OK"}])
         self.assertFalse('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+
+    def test_portlet_subn(self):
+        portal = self.layer['portal']
+        view = self.view
+        view.request.set('id', self.ids5)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet'].text)
+        self.assertEqual([{"status": "OK"}], json.loads(view()))
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet'].text)
 
     def test_multiple_subn(self):
         portal = self.layer['portal']
@@ -227,7 +238,7 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('replaceQuery', re_subn_pattern)
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
-        self.assertEqual(json.loads(view()), [{"status": "OK"}, {"status": "OK"}]) 
+        self.assertEqual(json.loads(view()), [{"status": "OK"}, {"status": "OK"}])
         self.assertFalse('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertFalse('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
@@ -249,7 +260,7 @@ class TestViewReplaceText(BaseTestCase):
         # we are now applying 2 changes in the same document
         self.view()
         self.assertEqual(len(portal_repository.getHistoryMetadata(portal.page1)),
-                         2)        
+                         2)
 
     def test_unknow_type(self):
         view = self.view

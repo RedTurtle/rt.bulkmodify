@@ -78,7 +78,7 @@ class Result(object):
                                     self._get_text_adapters() if x.text])
         return self._text
 
-    def replace(self, regex, repl, flags):
+    def get_possible_replacements(self, regex, repl, flags):
         retval = []
         for adapter in self._get_text_adapters():
             matches = text_search(adapter.text.decode('utf-8'), regex,
@@ -95,6 +95,16 @@ class Result(object):
                     result['post_text'] = match['post_text']
                     retval.append(result)
         return retval
+
+    def replace(self, diff):
+        start = 0
+        for adapter in self._get_text_adapters():
+            text = adapter.text
+            if diff['start'] < len(text):
+                adapter.text = text[:diff['start']] + diff['new'] \
+                               + text[diff['end']:]
+                return adapter.text != text
+            start += len(self.text) + 1
 
     def __getitem__(self, key):
         if key == 'url':
@@ -157,8 +167,7 @@ class BulkModifyView(BrowserView):
         flags = request.get('flags', 0)
         portlets = request.get('portlets', False)
         portal_type = request.get('content_type', [])
-        catalog = getToolByName(context, 'portal_catalog')
-        
+
         result_json = {}
         results = []
 
@@ -199,8 +208,10 @@ class BulkModifyView(BrowserView):
     def get_content_diff_info(self, search_result, search_query, replace_query,
                               flags=0):
         if search_result.text:
-            inner_results = search_result.replace(search_query, replace_query,
-                                                  flags)
+            inner_results = \
+                search_result.get_possible_replacements(search_query,
+                                                        replace_query,
+                                                        flags)
             for result in inner_results:
                 result['url'] = search_result['url']
                 result['id'] = search_result['id']
@@ -224,12 +235,12 @@ class BulkModifyView(BrowserView):
         flags = request.get('flags', 0)
         portlets = request.get('portlets', False)
         portal_type = request.get('content_type', [])
-        catalog = getToolByName(context, 'portal_catalog')
-        
+
         result_json = {}
         results = []
 
-        if not portal_type or not search_query or (not replace_query and not replace_type):
+        if not portal_type or not search_query \
+                or (not replace_query and not replace_type):
             result_json['results'] = results
             return json.dumps(result_json)
 
@@ -271,24 +282,14 @@ class BulkModifyView(BrowserView):
                                             domain="rt.bulkmodify",
                                             context=obj))
 
-    def changeDocumentText(self, obj, diff):
-        """Change the text document. Return "true" if any change takes place"""
-        adapter = queryAdapter(obj, IBulkModifyContentChanger)
-        if adapter:
-            text = adapter.text
-            new_text = text[:diff['start']] + diff['new'] + text[diff['end']:]
-            if text != new_text:
-                adapter.text = new_text
-                return True
-        return False
-
     def replaceText(self):
         context = self.context
         request = self.request
         portal = getToolByName(context, 'portal_url').getPortalObject()
-        request.response.setHeader('Content-Type','application/json;charset=utf-8')
+        request.response.setHeader('Content-Type',
+                                   'application/json;charset=utf-8')
         # ids MUST be of the same objects
-        ids = request.get('id')
+        paths_with_match_number = request.get('id')
         search_query = request.get('searchQuery')
         replace_query = request.get('replaceQuery')
         replace_type = request.get('replace_type')
@@ -299,30 +300,37 @@ class BulkModifyView(BrowserView):
 
         messages = []
 
-        if ids and search_query and (replace_query or replace_type):
+        if paths_with_match_number and search_query \
+                and (replace_query or replace_type):
             
             if replace_type:
                 # let's load the proper replace type
-                utilities = [u for u in self.utilities if u[0]==replace_type]
+                utilities = [u for u in self.utilities if u[0] == replace_type]
                 replace_query_klass = utilities[0][1]
                 # fix multiple replacement
                 replace_query_klass.context = None
                 replace_query = replace_query_klass.repl
 
-            for counter, id in enumerate(ids):
-                match = path_id_pattern.match(id)
-                path, id = match.groups()
-                obj = portal.restrictedTraverse(path, default=None)
-                id = int(id)
+            doc_path = None  # Trick to make assertion work
+            for counter, document_path_with_match_number in \
+                    enumerate(paths_with_match_number):
+                match = path_id_pattern.match(document_path_with_match_number)
+                assert doc_path is None or \
+                       document_path_with_match_number.startswith(doc_path), \
+                        "This method must be called with a single document only"
+                doc_path, match_number = match.groups()
+                obj = portal.restrictedTraverse(doc_path, default=None)
+                match_number = int(match_number)
                 if obj:
+                    result_obj = Result(obj, [], True)
                     if replace_type:
                         replace_query_klass.context = obj
                     diff_info = self.get_content_diff_info(
-                        Result(obj, [], True), search_query, replace_query,
+                        result_obj, search_query, replace_query,
                         flags=flags)
                     if diff_info:
-                        diff = diff_info[id-counter]
-                        if self.changeDocumentText(obj, diff):
+                        diff = diff_info[match_number-counter]
+                        if result_obj.replace(diff):
                             tobe_updated = True
                             messages.append({'status': 'OK'})
                         else:
