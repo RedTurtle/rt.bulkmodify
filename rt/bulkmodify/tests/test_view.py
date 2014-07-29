@@ -89,7 +89,7 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('searchQuery', "portlet")
         results = json.loads(view())
         self.assertEquals(1, len(results['results']))
-        self.assertEquals(u'...\nI am a <span class="mark">portlet</span>...',
+        self.assertEquals(u'...I am a <span class="mark">portlet</span>&lt;/p&gt;\n&lt;/p&gt;\n...',
                           results['results'][0]['text'])
         self.assertEqual(results['really_checked_docs'], 3)
 

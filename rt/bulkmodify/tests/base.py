@@ -37,6 +37,15 @@ HTML3 = """<p>
 </p>
 """
 
+HTML4 = """<p>
+    <ul>
+        <li>Sed tristique accumsan arcu et congue. <a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>, dignissim imperdiet lectus</li>
+        <li>Integer<a target="_blank" href="http://loripsum.net/">facilisis cursus</a> iaculis</li>
+    </ul>
+    <p>Also, I am a portlet</p>
+</p>
+"""
+
 re_pattern = r'(?P<link><a target="_blank" href="(?P<url>.*?)">(?P<text>[^<]*)</a>)'
 re_subn_pattern = r'<a href="\g<url>" class="external-link">\g<text></a>'
 
@@ -82,5 +91,5 @@ class BaseTestCase(unittest.TestCase):
                                      context=portal.folder1)
         mapping = getMultiAdapter((portal.folder1, portlet_manager),
                                   IPortletAssignmentMapping)
-        mapping['1'] = Assignment(text="I am a portlet")
+        mapping['1'] = Assignment(text=HTML4)
         self.layer['portlet'] = mapping['1']
