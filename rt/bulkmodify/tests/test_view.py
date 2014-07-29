@@ -80,7 +80,7 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('searchQuery', 'this text is not found inside the document HTML')
         results = json.loads(view())
         self.assertEqual(results['results'], [])
-        self.assertEqual(results['really_checked_docs'], 2)
+        self.assertEqual(results['really_checked_docs'], 3)
 
     def test_search_portlets(self):
         view = self.view
@@ -88,7 +88,9 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('portlets', 'true')
         view.request.set('searchQuery', "portlet")
         results = json.loads(view())
-        self.assertEqual(results['results'], [])
+        self.assertEquals(1, len(results['results']))
+        self.assertEquals(u'...\nI am a <span class="mark">portlet</span>...',
+                          results['results'][0]['text'])
         self.assertEqual(results['really_checked_docs'], 3)
 
 

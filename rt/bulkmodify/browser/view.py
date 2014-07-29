@@ -2,8 +2,11 @@
 
 import re
 import json
+from plone.portlet.static.static import Assignment as StaticAssignment
+from plone.portlets.interfaces import ILocalPortletAssignable, IPortletManager, \
+    IPortletAssignmentMapping
 
-from zope.component import getUtility
+from zope.component import getUtility, getMultiAdapter
 from zope.component import queryAdapter
 from zope.component import getUtilitiesFor
 from zope.interface import implements
@@ -40,6 +43,8 @@ class IBulkModify(Interface):
         """Apply a regex replacement to documents"""
 
 class Result(object):
+    managers = ['plone.leftcolumn', 'plone.rightcolumn']
+
     def __init__(self, brain, portal_types, portlets):
         self.brain = brain
         self.obj = brain.getObject()
@@ -54,6 +59,15 @@ class Result(object):
                 adapter = queryAdapter(self.obj, IBulkModifyContentChanger)
                 if adapter:
                     self._text = adapter.text.decode('utf-8')
+            if self.portlets and ILocalPortletAssignable.providedBy(self.obj):
+                for manager_name in self.managers:
+                    manager = getUtility(IPortletManager, name=manager_name,
+                                         context=self.obj)
+                    mapping = getMultiAdapter((self.obj, manager),
+                                              IPortletAssignmentMapping)
+                    for ignored, assignment in mapping.items():
+                        if isinstance(assignment, StaticAssignment):
+                            self._text += "\n" + assignment.text.decode('utf-8')
         return self._text
 
     def __getitem__(self, key):
