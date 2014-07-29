@@ -5,6 +5,7 @@ import json
 from plone.portlet.static.static import Assignment as StaticAssignment
 from plone.portlets.interfaces import ILocalPortletAssignable, IPortletManager, \
     IPortletAssignmentMapping
+from rt.bulkmodify.utility import text_search
 
 from zope.component import getUtility, getMultiAdapter
 from zope.component import queryAdapter
@@ -45,44 +46,69 @@ class IBulkModify(Interface):
 class Result(object):
     managers = ['plone.leftcolumn', 'plone.rightcolumn']
 
-    def __init__(self, brain, portal_types, portlets):
-        self.brain = brain
-        self.obj = brain.getObject()
+    def __init__(self, brain_or_object, portal_types, portlets):
+        if hasattr(brain_or_object, 'getObject'):
+            self.brain = brain_or_object
+            self.obj = brain_or_object.getObject()
+        else:
+            self.brain = None
+            self.obj = brain_or_object
         self.portal_types = portal_types
         self.portlets = portlets
+        
+    def _get_text_adapters(self):
+        if self.obj.portal_type in self.portal_types or self.portal_types == []:
+            adapter = queryAdapter(self.obj, IBulkModifyContentChanger)
+            if adapter:
+                yield adapter
+        if self.portlets and ILocalPortletAssignable.providedBy(self.obj):
+            for manager_name in self.managers:
+                manager = getUtility(IPortletManager, name=manager_name,
+                                     context=self.obj)
+                mapping = getMultiAdapter((self.obj, manager),
+                                          IPortletAssignmentMapping)
+                for ignored, assignment in mapping.items():
+                    if isinstance(assignment, StaticAssignment):
+                        yield assignment
 
     @property
     def text(self):
         if not hasattr(self, '_text'):
-            self._text = ''
-            if self.obj.portal_type in self.portal_types:
-                adapter = queryAdapter(self.obj, IBulkModifyContentChanger)
-                if adapter:
-                    self._text = adapter.text.decode('utf-8')
-            if self.portlets and ILocalPortletAssignable.providedBy(self.obj):
-                for manager_name in self.managers:
-                    manager = getUtility(IPortletManager, name=manager_name,
-                                         context=self.obj)
-                    mapping = getMultiAdapter((self.obj, manager),
-                                              IPortletAssignmentMapping)
-                    for ignored, assignment in mapping.items():
-                        if isinstance(assignment, StaticAssignment):
-                            self._text += "\n" + assignment.text.decode('utf-8')
+            self._text = '\n'.join([x.text.decode('utf-8') for x in 
+                                    self._get_text_adapters() if x.text])
         return self._text
+
+    def replace(self, regex, repl, flags):
+        retval = []
+        for adapter in self._get_text_adapters():
+            matches = text_search(adapter.text.decode('utf-8'), regex,
+                                  flags=flags)
+            pattern = re.compile(regex, flags)
+            for match in matches:
+                old = match['text']
+                replaced = pattern.sub(repl, old)
+                if old != replaced:
+                    result = dict(old=old, new=replaced)
+                    result['start'] = match['start']
+                    result['end'] = match['end']
+                    result['pre_text'] = match['pre_text']
+                    result['post_text'] = match['post_text']
+                    retval.append(result)
+        return retval
 
     def __getitem__(self, key):
         if key == 'url':
-            return self.brain.getURL()
+            return self.obj.absolute_url()
         if key == 'id':
-            return self.brain.getPath()
+            return '/'.join(self.obj.getPhysicalPath()[2:])
         if key == 'uid':
-            return self.brain.UID
+            return self.obj.UID()
         if key == 'title':
-            return self.brain.Title
+            return self.obj.Title()
         if key == 'icon':
-            return self.brain.getIcon
+            return self.brain.getIcon if self.brain else ""
         if key == 'normalized_portal_type':
-            return self.brain.portal_type.lower().replace(' ', '-')
+            return self.obj.portal_type.lower().replace(' ', '-')
 
 
 class BulkModifyView(BrowserView):
@@ -170,17 +196,18 @@ class BulkModifyView(BrowserView):
         result_json['results'] = results
         return json.dumps(result_json)
 
-    def get_content_diff_info(self, obj, search_query, replace_query, flags=0):
-        adapter = queryAdapter(obj, IBulkModifyContentChanger)
-        if adapter:
-            text = adapter.text
-            inner_results = utility.text_replace(text, search_query, replace_query, flags=flags)
+    def get_content_diff_info(self, search_result, search_query, replace_query,
+                              flags=0):
+        if search_result.text:
+            inner_results = search_result.replace(search_query, replace_query,
+                                                  flags)
             for result in inner_results:
-                result['url'] = obj.absolute_url()
-                result['id'] = '/'.join(obj.getPhysicalPath()[2:])
-                result['uid'] = obj.UID()
-                result['title'] = obj.Title()
-                result['normalized_portal_type'] = obj.portal_type.lower().replace(' ','-')
+                result['url'] = search_result['url']
+                result['id'] = search_result['id']
+                result['uid'] = search_result['uid']
+                result['title'] = search_result['title']
+                result['normalized_portal_type'] = \
+                    search_result['normalized_portal_type']
             return inner_results
         return []
 
@@ -195,40 +222,41 @@ class BulkModifyView(BrowserView):
         b_size = request.get('b_size', 20)
         really_checked_docs = request.get('really_checked_docs', 0)
         flags = request.get('flags', 0)
+        portlets = request.get('portlets', False)
         portal_type = request.get('content_type', [])
         catalog = getToolByName(context, 'portal_catalog')
         
         result_json = {}
         results = []
-        total_documents_count = 0
-        
+
         if not portal_type or not search_query or (not replace_query and not replace_type):
             result_json['results'] = results
             return json.dumps(result_json)
-        
-        all_brains = catalog(portal_type=portal_type)
-        total_documents_count = all_brains.actual_result_count
-        brains = all_brains[b_start:b_start+b_size]
 
-        if not brains:
+        total_documents_count, search_results = \
+            self._catalog_search(portal_type, portlets, b_start, b_size)
+
+        if not search_results:
             # stop client side queries
             result_json['results'] = None
             return json.dumps(result_json)
 
         if replace_type:
             # let's load the proper replace type
-            utilities = [u for u in self.utilities if u[0]==replace_type]
+            utilities = [u for u in self.utilities if u[0] == replace_type]
             replace_query = utilities[0][1].repl
             # fix multiple replacement
             utilities[0][1].context = None
 
-        for brain in brains:
-            obj = brain.getObject()
-            inner_results = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
+        for search_result in search_results:
+            inner_results = self.get_content_diff_info(search_result,
+                                                       search_query,
+                                                       replace_query,
+                                                       flags=flags)
             if inner_results:
                 really_checked_docs += 1
             for ir in inner_results:
-                ir['icon'] = brain.getIcon
+                ir['icon'] = search_result['icon']
             results.extend(inner_results)
 
         result_json['total_documents_count'] = total_documents_count
@@ -289,7 +317,9 @@ class BulkModifyView(BrowserView):
                 if obj:
                     if replace_type:
                         replace_query_klass.context = obj
-                    diff_info = self.get_content_diff_info(obj, search_query, replace_query, flags=flags)
+                    diff_info = self.get_content_diff_info(
+                        Result(obj, [], True), search_query, replace_query,
+                        flags=flags)
                     if diff_info:
                         diff = diff_info[id-counter]
                         if self.changeDocumentText(obj, diff):

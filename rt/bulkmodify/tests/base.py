@@ -40,7 +40,6 @@ HTML3 = """<p>
 HTML4 = """<p>
     <ul>
         <li>Sed tristique accumsan arcu et congue. <a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>, dignissim imperdiet lectus</li>
-        <li>Integer<a target="_blank" href="http://loripsum.net/">facilisis cursus</a> iaculis</li>
     </ul>
     <p>Also, I am a portlet</p>
 </p>

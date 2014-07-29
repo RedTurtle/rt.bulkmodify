@@ -148,6 +148,21 @@ class TestViewBatchReplace(BaseTestCase):
         self.assertEqual(results[2]['new'],
                          u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
 
+    def test_replace_portlets(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('portlets', True)
+        view.request.set('replaceQuery', re_subn_pattern)
+        results = json.loads(view())['results']
+
+        self.assertEqual(len(results), 5)
+        self.assertEqual(results[4]['title'], 'Folder 1')
+        self.assertEqual(results[4]['old'],
+                         u'<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>')
+        self.assertEqual(results[4]['new'],
+                         u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
+
     def test_futile_replacement(self):
         view = self.view
         view.request.set('content_type', ['Document', ])
