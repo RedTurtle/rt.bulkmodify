@@ -96,15 +96,24 @@ class Result(object):
                     retval.append(result)
         return retval
 
-    def replace(self, diff):
-        start = 0
-        for adapter in self._get_text_adapters():
-            text = adapter.text
-            if diff['start'] < len(text):
-                adapter.text = text[:diff['start']] + diff['new'] \
-                               + text[diff['end']:]
-                return adapter.text != text
-            start += len(self.text) + 1
+    def replace(self, diffs):
+        offset_number = 0
+        changed = []
+        for diff in diffs:
+            offset = lambda x: diff[x]+offset_number
+            start = 0
+            for adapter in self._get_text_adapters():
+                text = adapter.text
+                if offset('start') < len(text):
+                    adapter.text = text[:offset('start')] + diff['new'] \
+                                   + text[offset('end'):]
+                    has_changed = adapter.text != text
+                    if has_changed:
+                        offset_number += len(adapter.text) - len(text)
+                    changed.append(has_changed)
+
+                start += len(self.text) + 1
+        return changed
 
     def __getitem__(self, key):
         if key == 'url':
@@ -300,6 +309,7 @@ class BulkModifyView(BrowserView):
 
         messages = []
 
+
         if paths_with_match_number and search_query \
                 and (replace_query or replace_type):
             
@@ -312,33 +322,38 @@ class BulkModifyView(BrowserView):
                 replace_query = replace_query_klass.repl
 
             doc_path = None  # Trick to make assertion work
-            for counter, document_path_with_match_number in \
-                    enumerate(paths_with_match_number):
+
+            diff_indexes = []
+            for document_path_with_match_number in paths_with_match_number:
                 match = path_id_pattern.match(document_path_with_match_number)
-                assert doc_path is None or \
-                       document_path_with_match_number.startswith(doc_path), \
-                        "This method must be called with a single document only"
-                doc_path, match_number = match.groups()
-                obj = portal.restrictedTraverse(doc_path, default=None)
-                match_number = int(match_number)
-                if obj:
-                    result_obj = Result(obj, [], True)
-                    if replace_type:
-                        replace_query_klass.context = obj
-                    diff_info = self.get_content_diff_info(
-                        result_obj, search_query, replace_query,
-                        flags=flags)
-                    if diff_info:
-                        diff = diff_info[match_number-counter]
-                        if result_obj.replace(diff):
+                if doc_path:
+                    assert document_path_with_match_number.startswith(doc_path)
+                    doc_path, match_number = match.groups()
+                else:
+                    doc_path, match_number = match.groups()
+                    obj = portal.restrictedTraverse(doc_path, default=None)
+                diff_indexes.append(int(match_number))
+
+            if obj:
+                result_obj = Result(obj, [], True)
+                if replace_type:
+                    replace_query_klass.context = obj
+                diff_info = self.get_content_diff_info(
+                    result_obj, search_query, replace_query,
+                    flags=flags)
+                if diff_info:
+                    diffs = [x[1] for x in enumerate(diff_info)
+                             if x[0] in diff_indexes]
+                    for result in result_obj.replace(diffs):
+                        if result:
                             tobe_updated = True
                             messages.append({'status': 'OK'})
                         else:
                             messages.append({'status': 'warn', 'message': 'No change is needed'})
-                    else:
-                        messages.append({'status': 'error', 'message': "Don't know how to handle %s" % obj.absolute_url()})
                 else:
-                    messages.append({'status': 'error', 'message': 'Document "%s" not found' % obj.absolute_url()})
+                    messages.append({'status': 'error', 'message': "Don't know how to handle %s" % obj.absolute_url()})
+            else:
+                messages.append({'status': 'error', 'message': 'Document "%s" not found' % obj.absolute_url()})
 
             # check if we need to update some other data
             if tobe_updated:
