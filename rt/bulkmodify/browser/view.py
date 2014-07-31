@@ -304,11 +304,13 @@ class BulkModifyView(BrowserView):
         replace_type = request.get('replace_type')
         update_time = request.get('update_time', False)
         new_version = request.get('new_version', False)
+        portlets = request.get('portlets', False)
         flags = request.get('flags', 0)
         tobe_updated = False
+        obj = None
+        replace_query_klass = None
 
         messages = []
-
 
         if paths_with_match_number and search_query \
                 and (replace_query or replace_type):
@@ -335,7 +337,7 @@ class BulkModifyView(BrowserView):
                 diff_indexes.append(int(match_number))
 
             if obj:
-                result_obj = Result(obj, [], True)
+                result_obj = Result(obj, [], portlets)
                 if replace_type:
                     replace_query_klass.context = obj
                 diff_info = self.get_content_diff_info(
@@ -349,11 +351,16 @@ class BulkModifyView(BrowserView):
                             tobe_updated = True
                             messages.append({'status': 'OK'})
                         else:
-                            messages.append({'status': 'warn', 'message': 'No change is needed'})
+                            messages.append({'status': 'warn',
+                                             'message': 'No change is needed'})
                 else:
-                    messages.append({'status': 'error', 'message': "Don't know how to handle %s" % obj.absolute_url()})
+                    messages.append({'status': 'error',
+                                     'message': "Don't know how to handle %s" %
+                                                obj.absolute_url()})
             else:
-                messages.append({'status': 'error', 'message': 'Document "%s" not found' % obj.absolute_url()})
+                messages.append({'status': 'error',
+                                 'message': 'Document "%s" not found' %
+                                            obj.absolute_url()})
 
             # check if we need to update some other data
             if tobe_updated:

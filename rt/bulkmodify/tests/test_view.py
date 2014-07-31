@@ -226,6 +226,7 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('id', self.ids5)
         view.request.set('searchQuery', re_pattern)
         view.request.set('replaceQuery', re_subn_pattern)
+        view.request.set('portlets', True)
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet'].text)
         self.assertEqual([{"status": "OK"}], json.loads(view()))
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet'].text)
