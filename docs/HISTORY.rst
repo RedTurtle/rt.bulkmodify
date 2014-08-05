@@ -12,6 +12,12 @@ Changelog
 
 __ https://github.com/RedTurtle/rt.bulkmodify/issues/4
 
+- Add Portlet Replacement code
+  [do3cc]
+
+- Find text language independent
+  [do3cc]
+
 0.4.1 (2014-05-29)
 ------------------
 
