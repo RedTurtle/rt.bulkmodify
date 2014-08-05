@@ -108,6 +108,19 @@
                     </div>
 
                     <div class="field">
+                        <label for="portlets" i18n:translate="">Portlets</label>
+                        <div class="formHelp" i18n:translate="">
+                            Choose whether you also want to search for static content portlets.
+                        </div>
+
+                        <div>
+                            <input type="checkbox" name="portlets" id="portlets" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="field">
                         <strong i18n:translate="">Regex flags</strong>
                         <div class="formHelp" i18n:translate="regex_flags_help">
                             Regex options. See Python regex documentation.
