@@ -80,39 +80,43 @@ class Result(object):
 
     def get_possible_replacements(self, regex, repl, flags):
         retval = []
+        offset_number = 0
         for adapter in self._get_text_adapters():
             matches = text_search(adapter.text.decode('utf-8'), regex,
                                   flags=flags)
             pattern = re.compile(regex, flags)
             for match in matches:
+                offset = lambda x: match[x]+offset_number
                 old = match['text']
                 replaced = pattern.sub(repl, old)
                 if old != replaced:
                     result = dict(old=old, new=replaced)
-                    result['start'] = match['start']
-                    result['end'] = match['end']
+                    result['start'] = offset('start')
+                    result['end'] = offset('end')
                     result['pre_text'] = match['pre_text']
                     result['post_text'] = match['post_text']
                     retval.append(result)
+            offset_number += len(adapter.text) + 1
         return retval
 
     def replace(self, diffs):
-        offset_number = 0
         changed = []
-        for diff in diffs:
-            offset = lambda x: diff[x]+offset_number
-            start = 0
-            for adapter in self._get_text_adapters():
-                text = adapter.text
-                if offset('start') < len(text):
-                    adapter.text = text[:offset('start')] + diff['new'] \
-                                   + text[offset('end'):]
+        multi_adapter_offset = 0
+        for adapter in self._get_text_adapters():
+            next_adapter_offset = len(adapter.text) + 1
+            multi_match_offset = 0
+            for diff in diffs:
+                offset = lambda x: diff[x]+multi_adapter_offset+multi_match_offset
+                text = adapter.text.decode('utf-8')
+                if offset('start') > 0 and offset('start') < len(text):
+                    adapter.text = (text[:offset('start')] + diff['new'] \
+                                   + text[offset('end'):]).encode('utf-8')
                     has_changed = adapter.text != text
                     if has_changed:
-                        offset_number += len(adapter.text) - len(text)
+                        multi_match_offset += len(adapter.text) - len(text)
                     changed.append(has_changed)
 
-                start += len(self.text) + 1
+            multi_adapter_offset -= next_adapter_offset
         return changed
 
     def __getitem__(self, key):

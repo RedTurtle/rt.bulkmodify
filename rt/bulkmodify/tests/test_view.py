@@ -88,7 +88,7 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('portlets', 'true')
         view.request.set('searchQuery', "portlet")
         results = json.loads(view())
-        self.assertEquals(1, len(results['results']))
+        self.assertEquals(2, len(results['results']))
         self.assertEquals(u'...I am a <span class="mark">portlet</span>&lt;/p&gt;\n&lt;/p&gt;\n...',
                           results['results'][0]['text'])
         self.assertEqual(results['really_checked_docs'], 3)
@@ -156,11 +156,11 @@ class TestViewBatchReplace(BaseTestCase):
         view.request.set('replaceQuery', re_subn_pattern)
         results = json.loads(view())['results']
 
-        self.assertEqual(len(results), 5)
-        self.assertEqual(results[4]['title'], 'Folder 1')
-        self.assertEqual(results[4]['old'],
+        self.assertEqual(len(results), 6)
+        self.assertEqual(results[5]['title'], 'Folder 1')
+        self.assertEqual(results[5]['old'],
                          u'<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>')
-        self.assertEqual(results[4]['new'],
+        self.assertEqual(results[5]['new'],
                          u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
 
     def test_futile_replacement(self):
@@ -198,6 +198,9 @@ class TestViewReplaceText(BaseTestCase):
                      "%s-1" % '/'.join(portal['page2'].getPhysicalPath()[2:])]
         self.ids4 = ["%s-0" % '/'.join(portal['link1'].getPhysicalPath()[2:])]
         self.ids5 = ["%s-0" % '/'.join(portal['folder1'].getPhysicalPath()[2:])]
+        self.ids6 = ["%s-0" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
+                     "%s-1" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
+                     "%s-2" % '/'.join(portal['page1'].getPhysicalPath()[2:])]
 
     def test_missing_parameters(self):
         view = self.view
@@ -220,16 +223,28 @@ class TestViewReplaceText(BaseTestCase):
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
 
-    def test_portlet_subn(self):
+    def test_portlet_subn_folder(self):
         portal = self.layer['portal']
         view = self.view
         view.request.set('id', self.ids5)
         view.request.set('searchQuery', re_pattern)
         view.request.set('replaceQuery', re_subn_pattern)
         view.request.set('portlets', True)
-        self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet'].text)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet1'].text)
         self.assertEqual([{"status": "OK"}], json.loads(view()))
-        self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet'].text)
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet1'].text)
+
+    def test_portlet_subn_document(self):
+        portal = self.layer['portal']
+        view = self.view
+        view.request.set('id', self.ids6)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        view.request.set('portlets', True)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet2'].text)
+        self.assertEqual([{"status": "OK"}, {"status": "OK"}, {"status": "OK"}], json.loads(view()))
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet2'].text)
+        self.assertEqual('<p>\n    <ul>\n        <li>Sed tristique accumsan arcu et congue. <a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>, dignissim imperdiet lectus</li>\n    </ul>\n    <p>Also, I am a portlet</p>\n</p>\n', self.layer['portlet2'].text)
 
     def test_multiple_subn(self):
         portal = self.layer['portal']

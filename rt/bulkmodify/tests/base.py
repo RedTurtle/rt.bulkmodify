@@ -91,4 +91,10 @@ class BaseTestCase(unittest.TestCase):
         mapping = getMultiAdapter((portal.folder1, portlet_manager),
                                   IPortletAssignmentMapping)
         mapping['1'] = Assignment(text=HTML4)
-        self.layer['portlet'] = mapping['1']
+        self.layer['portlet1'] = mapping['1']
+        portlet_manager = getUtility(IPortletManager, name="plone.leftcolumn",
+                                     context=portal.page1)
+        mapping = getMultiAdapter((portal.page1, portlet_manager),
+                                  IPortletAssignmentMapping)
+        mapping['1'] = Assignment(text=HTML4)
+        self.layer['portlet2'] = mapping['1']
