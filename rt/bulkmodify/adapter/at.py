@@ -19,5 +19,13 @@ class TextContentAdapters(object):
         self.context.getField('text').set(self.context, text)
         self.context.reindexObject(idxs=['SearchableText'])
 
+    def _get_utext(self):
+        return self.text.decode('utf-8')
+
+    def _set_utext(self, text):
+        self.text = text.encode('utf-8')
+
     text = property(_get_text, _set_text)
+
+    utext = property(_get_utext, _set_utext)
 

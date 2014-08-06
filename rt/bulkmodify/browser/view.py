@@ -74,16 +74,15 @@ class Result(object):
     @property
     def text(self):
         if not hasattr(self, '_text'):
-            self._text = '\n'.join([x.text for x in
-                                    self._get_text_adapters() if x.text])
+            self._text = u'\n'.join([x.utext for x in
+                                      self._get_text_adapters() if x.text])
         return self._text
 
     def get_possible_replacements(self, regex, repl, flags):
         retval = []
         offset_number = 0
         for adapter in self._get_text_adapters():
-            matches = text_search(adapter.text.decode('utf-8'), regex,
-                                  flags=flags)
+            matches = text_search(adapter.utext, regex, flags=flags)
             pattern = re.compile(regex, flags)
             for match in matches:
                 offset = lambda x: match[x]+offset_number
@@ -107,13 +106,13 @@ class Result(object):
             multi_match_offset = 0
             for diff in diffs:
                 offset = lambda x: diff[x]+multi_adapter_offset+multi_match_offset
-                text = adapter.text.decode('utf-8')
+                text = adapter.utext
                 if offset('start') >= 0 and offset('start') < len(text):
-                    adapter.text = (text[:offset('start')] + diff['new'] \
-                                   + text[offset('end'):]).encode('utf-8')
-                    has_changed = adapter.text != text.encode('utf-8')
+                    adapter.utext = (text[:offset('start')] + diff['new'] \
+                                    + text[offset('end'):])
+                    has_changed = adapter.utext != text
                     if has_changed:
-                        multi_match_offset += len(adapter.text) - len(text)
+                        multi_match_offset += len(adapter.utext) - len(text)
                     changed.append(has_changed)
 
             multi_adapter_offset -= next_adapter_offset
@@ -173,7 +172,7 @@ class BulkModifyView(BrowserView):
         request = self.request
         request.response.setHeader('Content-Type',
                                    'application/json;charset=utf-8')
-        search_query = request.get('searchQuery')
+        search_query = request.get('searchQuery', '').decode('utf-8')
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
         really_checked_docs = request.get('really_checked_docs', 0)
@@ -239,8 +238,8 @@ class BulkModifyView(BrowserView):
         context = self.context
         request = self.request
         request.response.setHeader('Content-Type','application/json;charset=utf-8')
-        search_query = request.get('searchQuery')
-        replace_query = request.get('replaceQuery')
+        search_query = request.get('searchQuery', '').decode('utf-8')
+        replace_query = request.get('replaceQuery', '').decode('utf-8')
         replace_type = request.get('replace_type')
         b_start = request.get('b_start', 0)
         b_size = request.get('b_size', 20)
@@ -303,8 +302,8 @@ class BulkModifyView(BrowserView):
                                    'application/json;charset=utf-8')
         # ids MUST be of the same objects
         paths_with_match_number = request.get('id')
-        search_query = request.get('searchQuery')
-        replace_query = request.get('replaceQuery')
+        search_query = request.get('searchQuery', '').decode('utf-8')
+        replace_query = request.get('replaceQuery', '').decode('utf-8')
         replace_type = request.get('replace_type')
         update_time = request.get('update_time', False)
         new_version = request.get('new_version', False)

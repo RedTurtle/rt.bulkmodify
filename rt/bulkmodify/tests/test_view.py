@@ -201,6 +201,8 @@ class TestViewReplaceText(BaseTestCase):
         self.ids6 = ["%s-0" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
                      "%s-1" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
                      "%s-2" % '/'.join(portal['page1'].getPhysicalPath()[2:])]
+        self.ids7 = ["%s-0" % '/'.join(portal['folder1'].getPhysicalPath()[2:]),
+                     "%s-1" % '/'.join(portal['folder1'].getPhysicalPath()[2:])]
 
     def test_missing_parameters(self):
         view = self.view
@@ -307,4 +309,22 @@ class TestViewReplaceText(BaseTestCase):
         <li>Duis aute irure dolor in NEW TEXT! esse cillum dolore eu fugiat nulla pariatur</li>
     </ul>\n</p>
 """)
+
+    def test_regression_inconsistent_unicode_length_comparisons(self):
+        """
+        In one unreleased version, there was a length comparison between
+        the unicode and the utf-8 encoded version of a string. This
+        will break things because strings basically wanting to represent
+        the same thing will have different lengths. This can break
+        multiple replacements. This test triggers that behavior.
+        """
+        view = self.view
+        view.request.set('id', self.ids7)
+        view.request.set('searchQuery', 'eee')
+        view.request.set('replaceQuery', 'xxx')
+        view.request.set('portlets', True)
+        self.layer['portlet1'].text = u'eeeøeeeø'
+        self.assertEqual([{"status": "OK"}, {"status": "OK"}], json.loads(view()))
+        self.assertEquals(u'xxxøxxxø', self.layer['portlet1'].text)
+
 

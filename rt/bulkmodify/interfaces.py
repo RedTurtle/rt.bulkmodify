@@ -11,7 +11,8 @@ class IBulkModifyLayer(Interface):
 class IBulkModifyContentChanger(Interface):
     """An object that is able to read and change text data inside a content's field"""
 
-    text = Attribute('''Text attribute getter & setter''')
+    text = Attribute('''Text attribute getter & setter for text as utf-8 encoded string''')
+    text = Attribute('''Text attribute getter & setter for text as unicode''')
 
 
 class IBulkModifyReplacementHandler(Interface):
