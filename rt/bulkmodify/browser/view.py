@@ -2,7 +2,6 @@
 
 import re
 import json
-from plone.portlet.static.static import Assignment as StaticAssignment
 from plone.portlets.interfaces import ILocalPortletAssignable, IPortletManager, \
     IPortletAssignmentMapping
 from rt.bulkmodify.utility import text_search
