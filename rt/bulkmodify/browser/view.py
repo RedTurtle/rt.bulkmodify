@@ -68,13 +68,14 @@ class Result(object):
                 mapping = getMultiAdapter((self.obj, manager),
                                           IPortletAssignmentMapping)
                 for ignored, assignment in mapping.items():
-                    if isinstance(assignment, StaticAssignment):
-                        yield assignment
+                    adapter = queryAdapter(assignment, IBulkModifyContentChanger)
+                    if adapter:
+                        yield adapter
 
     @property
     def text(self):
         if not hasattr(self, '_text'):
-            self._text = '\n'.join([x.text.decode('utf-8') for x in 
+            self._text = '\n'.join([x.text for x in
                                     self._get_text_adapters() if x.text])
         return self._text
 

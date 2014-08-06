@@ -89,7 +89,7 @@ class TestViewBatchSearch(BaseTestCase):
         view.request.set('searchQuery', "portlet")
         results = json.loads(view())
         self.assertEquals(2, len(results['results']))
-        self.assertEquals(u'...I am a <span class="mark">portlet</span>&lt;/p&gt;\n&lt;/p&gt;\n...',
+        self.assertEquals(u'...I am a <span class="mark">portlet</span>&lt;/p&gt;\n  ...',
                           results['results'][0]['text'])
         self.assertEqual(results['really_checked_docs'], 3)
 
@@ -244,7 +244,7 @@ class TestViewReplaceText(BaseTestCase):
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet2'].text)
         self.assertEqual([{"status": "OK"}, {"status": "OK"}, {"status": "OK"}], json.loads(view()))
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet2'].text)
-        self.assertEqual('<p>\n    <ul>\n        <li>Sed tristique accumsan arcu et congue. <a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>, dignissim imperdiet lectus</li>\n    </ul>\n    <p>Also, I am a portlet</p>\n</p>\n', self.layer['portlet2'].text)
+        self.assertEqual(u'<p>\n    <ul>\n        <li>Sed tristique accumsan arcu et congue. <a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>, dignissim imperdiet lectus</li>\n    </ul>\n    <p>Also, I am a portlet</p>\n    <p>Angeblich sind Kölner nicht Fussball, sondern 1. FC Köln Fans</p>\n</p>\n', self.layer['portlet2'].text)
 
     def test_multiple_subn(self):
         portal = self.layer['portal']
