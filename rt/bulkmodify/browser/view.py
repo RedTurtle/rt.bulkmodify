@@ -108,10 +108,10 @@ class Result(object):
             for diff in diffs:
                 offset = lambda x: diff[x]+multi_adapter_offset+multi_match_offset
                 text = adapter.text.decode('utf-8')
-                if offset('start') > 0 and offset('start') < len(text):
+                if offset('start') >= 0 and offset('start') < len(text):
                     adapter.text = (text[:offset('start')] + diff['new'] \
                                    + text[offset('end'):]).encode('utf-8')
-                    has_changed = adapter.text != text
+                    has_changed = adapter.text != text.encode('utf-8')
                     if has_changed:
                         multi_match_offset += len(adapter.text) - len(text)
                     changed.append(has_changed)

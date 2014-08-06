@@ -223,6 +223,13 @@ class TestViewReplaceText(BaseTestCase):
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
 
+    def test_subn_match_at_start_regression(self):
+        view = self.view
+        view.request.set('id', self.ids1)
+        view.request.set('searchQuery', '^.')
+        view.request.set('replaceQuery', 'x')
+        self.assertEqual([{"status": "OK"}], json.loads(view()))
+
     def test_portlet_subn_folder(self):
         portal = self.layer['portal']
         view = self.view
