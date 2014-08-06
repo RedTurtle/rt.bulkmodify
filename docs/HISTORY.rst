@@ -18,6 +18,15 @@ __ https://github.com/RedTurtle/rt.bulkmodify/issues/4
 - Find text language independent
   [do3cc]
 
+- Work with unicode everywhere
+  This should not be a bigger problem, but if you wrote custom
+  IBulkModifyContentChanger adapters please have a look at
+  the interface, you must provide another property.
+  You can have a look at the existing adapters on how to
+  extend your adapter.
+  The behavior of existing attributes did NOT change.
+  [do3cc]
+
 0.4.1 (2014-05-29)
 ------------------
 
