@@ -23,4 +23,10 @@
         factory=".at.TextContentAdapters"
         />
 
+  <adapter
+        for="plone.portlet.static.static.IStaticPortlet"
+        provides="..interfaces.IBulkModifyContentChanger"
+        factory=".portlets.StaticPortletAssignmentAdapter"
+        />
+
 </configure>

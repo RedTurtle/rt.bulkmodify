@@ -73,6 +73,26 @@ class TestViewBatchSearch(BaseTestCase):
         self.assertEqual(results['results'], [])
         self.assertEqual(results['really_checked_docs'], 2)
 
+    def test_discarded_types_with_portlets(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('portlets', 'true')
+        view.request.set('searchQuery', 'this text is not found inside the document HTML')
+        results = json.loads(view())
+        self.assertEqual(results['results'], [])
+        self.assertEqual(results['really_checked_docs'], 3)
+
+    def test_search_portlets(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('portlets', 'true')
+        view.request.set('searchQuery', "portlet")
+        results = json.loads(view())
+        self.assertEquals(2, len(results['results']))
+        self.assertEquals(u'...I am a <span class="mark">portlet</span>&lt;/p&gt;\n  ...',
+                          results['results'][0]['text'])
+        self.assertEqual(results['really_checked_docs'], 3)
+
 
 class TestViewBatchReplace(BaseTestCase):
 
@@ -128,6 +148,21 @@ class TestViewBatchReplace(BaseTestCase):
         self.assertEqual(results[2]['new'],
                          u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
 
+    def test_replace_portlets(self):
+        view = self.view
+        view.request.set('content_type', ['Document', 'Folder'])
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('portlets', True)
+        view.request.set('replaceQuery', re_subn_pattern)
+        results = json.loads(view())['results']
+
+        self.assertEqual(len(results), 6)
+        self.assertEqual(results[5]['title'], 'Folder 1')
+        self.assertEqual(results[5]['old'],
+                         u'<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>')
+        self.assertEqual(results[5]['new'],
+                         u'<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>')
+
     def test_futile_replacement(self):
         view = self.view
         view.request.set('content_type', ['Document', ])
@@ -149,7 +184,7 @@ class TestViewBatchReplace(BaseTestCase):
 class TestViewReplaceText(BaseTestCase):
 
     layer = BULK_MODIFY_INTEGRATION_TESTING
-    
+
     def setUp(self):
         BaseTestCase.setUp(self)
         portal = self.layer['portal']
@@ -162,6 +197,12 @@ class TestViewReplaceText(BaseTestCase):
         self.ids3 = ["%s-0" % '/'.join(portal['page2'].getPhysicalPath()[2:]),
                      "%s-1" % '/'.join(portal['page2'].getPhysicalPath()[2:])]
         self.ids4 = ["%s-0" % '/'.join(portal['link1'].getPhysicalPath()[2:])]
+        self.ids5 = ["%s-0" % '/'.join(portal['folder1'].getPhysicalPath()[2:])]
+        self.ids6 = ["%s-0" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
+                     "%s-1" % '/'.join(portal['page1'].getPhysicalPath()[2:]),
+                     "%s-2" % '/'.join(portal['page1'].getPhysicalPath()[2:])]
+        self.ids7 = ["%s-0" % '/'.join(portal['folder1'].getPhysicalPath()[2:]),
+                     "%s-1" % '/'.join(portal['folder1'].getPhysicalPath()[2:])]
 
     def test_missing_parameters(self):
         view = self.view
@@ -179,10 +220,40 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('replaceQuery', re_subn_pattern)
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
-        self.assertEqual(json.loads(view()), [{"status": "OK"}]) 
+        self.assertEqual(json.loads(view()), [{"status": "OK"}])
         self.assertFalse('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
+
+    def test_subn_match_at_start_regression(self):
+        view = self.view
+        view.request.set('id', self.ids1)
+        view.request.set('searchQuery', '^.')
+        view.request.set('replaceQuery', 'x')
+        self.assertEqual([{"status": "OK"}], json.loads(view()))
+
+    def test_portlet_subn_folder(self):
+        portal = self.layer['portal']
+        view = self.view
+        view.request.set('id', self.ids5)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        view.request.set('portlets', True)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet1'].text)
+        self.assertEqual([{"status": "OK"}], json.loads(view()))
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet1'].text)
+
+    def test_portlet_subn_document(self):
+        portal = self.layer['portal']
+        view = self.view
+        view.request.set('id', self.ids6)
+        view.request.set('searchQuery', re_pattern)
+        view.request.set('replaceQuery', re_subn_pattern)
+        view.request.set('portlets', True)
+        self.assertTrue('<a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>' in self.layer['portlet2'].text)
+        self.assertEqual([{"status": "OK"}, {"status": "OK"}, {"status": "OK"}], json.loads(view()))
+        self.assertTrue('<a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>' in self.layer['portlet2'].text)
+        self.assertEqual(u'<p>\n    <ul>\n        <li>Sed tristique accumsan arcu et congue. <a href="http://loripsum.net/" class="external-link">Duis ac augue diam</a>, dignissim imperdiet lectus</li>\n    </ul>\n    <p>Also, I am a portlet</p>\n    <p>Angeblich sind Kölner nicht Fussball, sondern 1. FC Köln Fans</p>\n</p>\n', self.layer['portlet2'].text)
 
     def test_multiple_subn(self):
         portal = self.layer['portal']
@@ -192,7 +263,7 @@ class TestViewReplaceText(BaseTestCase):
         view.request.set('replaceQuery', re_subn_pattern)
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertTrue('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
-        self.assertEqual(json.loads(view()), [{"status": "OK"}, {"status": "OK"}]) 
+        self.assertEqual(json.loads(view()), [{"status": "OK"}, {"status": "OK"}])
         self.assertFalse('<a target="_blank" href="http://loripsum.net/">reprehenderit in voluptate velit</a>' in portal.page1.getText())
         self.assertFalse('<a target="_blank" href="http://loripsum.net/">sit amet, consectetur adipisicing elit</a>' in portal.page1.getText())
         self.assertTrue('<a href="http://loripsum.net/" class="external-link">reprehenderit in voluptate velit</a>' in portal.page1.getText())
@@ -214,7 +285,7 @@ class TestViewReplaceText(BaseTestCase):
         # we are now applying 2 changes in the same document
         self.view()
         self.assertEqual(len(portal_repository.getHistoryMetadata(portal.page1)),
-                         2)        
+                         2)
 
     def test_unknow_type(self):
         view = self.view
@@ -238,4 +309,22 @@ class TestViewReplaceText(BaseTestCase):
         <li>Duis aute irure dolor in NEW TEXT! esse cillum dolore eu fugiat nulla pariatur</li>
     </ul>\n</p>
 """)
+
+    def test_regression_inconsistent_unicode_length_comparisons(self):
+        """
+        In one unreleased version, there was a length comparison between
+        the unicode and the utf-8 encoded version of a string. This
+        will break things because strings basically wanting to represent
+        the same thing will have different lengths. This can break
+        multiple replacements. This test triggers that behavior.
+        """
+        view = self.view
+        view.request.set('id', self.ids7)
+        view.request.set('searchQuery', 'eee')
+        view.request.set('replaceQuery', 'xxx')
+        view.request.set('portlets', True)
+        self.layer['portlet1'].text = u'eeeøeeeø'
+        self.assertEqual([{"status": "OK"}, {"status": "OK"}], json.loads(view()))
+        self.assertEquals(u'xxxøxxxø', self.layer['portlet1'].text)
+
 

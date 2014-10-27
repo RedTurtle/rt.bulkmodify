@@ -17,7 +17,8 @@ Introduction
 ============
 
 This product will give to your Plone site managers a tool for performing text search using `regular expressions`__
-query and optionally performing text substitutions on the main rich text field of your site's contents.
+query and optionally performing text substitutions on the main rich text field of your site's contents and
+static text portlets.
 
 __ http://en.wikipedia.org/wiki/Regular_expression
 
@@ -46,12 +47,14 @@ How to use
 This product is designed for performing the same text type of replacement operation on many documents without
 going to edit every ones.
 
-By default the product works with all know rich text fields of Plone contents, that are:
+By default the product works with all known rich text fields of Plone contents, that are:
 
 * text field from Page content type
 * text field from Event content type
 * text field from News Item content type
 * text field from Collection content type (old-style also)
+
+Also you can choose to modify rich text fields of static text porltlets.
 
 You can extending the set above providing 3rd party extensions (see below).
 
@@ -71,10 +74,12 @@ The upper section of the page is about searching contents.
    :target: http://blog.redturtle.it/pypi-images/rt.bulkmodify/rt.bulkmodify-0.1-01.png/
 
 You must select which content types you want to inspect by checking the "**Content types**" section.
+You can also check that you want to modify static text portlets.
 Although this selection display all content types, note that only a subset of them usable (for example: the Link
 content types is not using any text field right now).
 
-This selection will trigger a catalog search of all types in the selection (so keep this selection at minimum).
+This selection will trigger a catalog search of all types in the selection (so keep this selection at minimum
+and try to avoid the portlet replacement, as it has to retrieve every object)
 
 The most important field is the "**Search regex**", where you must write a regular expression.
 For every content type found, it's text field will be loaded and text inside wil be parsed for searching matches

@@ -81,6 +81,7 @@
             var submittedCount = 0;
             var update_time = $('#update_time').is(':checked') ? 'True' : 'False';
             var new_version = $('#new_version').is(':checked') ? 'True' : 'False';
+            var portlets = $("#portlets").val();
 
             if (allCheckbox.length > 0) {
                 var callServerSideChange = function () {
@@ -107,7 +108,7 @@
                         type: 'POST',
                         url: portal_url + '/@@replaceText',
                         traditional: true,
-                        data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceType, 'update_time:boolean': update_time, 'new_version:boolean': new_version},
+                        data: {'id:list': ids, searchQuery: lastSearchQuery, replaceQuery: lastReplaceQuery, 'flags:int': lastFlags, replace_type: lastReplaceType, 'update_time:boolean': update_time, 'new_version:boolean': new_version, 'portlets': portlets},
                         success: function (data) {
                             var done_elems = [], err_elems = [];
                             for (var j=0; j<data.length; j++) {
@@ -165,6 +166,7 @@
             var lastId = 0;
             var lastElement = null;
             var data = results.results;
+
 
             if (results.total_documents_count) {
                 really_checked_docs = results.really_checked_docs;

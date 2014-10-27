@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from plone.portlet.static.static import Assignment
+from plone.portlets.interfaces import IPortletManager, IPortletAssignmentMapping
 
 from zope.interface import implements
 from zope.interface import alsoProvides
-from zope.component import getGlobalSiteManager
+from zope.component import getGlobalSiteManager, getUtility, getMultiAdapter
 
 from plone.app.testing import login
 from plone.app.testing import setRoles
@@ -34,6 +36,15 @@ HTML3 = """<p>
     </ul>
 </p>
 """
+
+HTML4 = u"""<p>
+    <ul>
+        <li>Sed tristique accumsan arcu et congue. <a target="_blank" href="http://loripsum.net/">Duis ac augue diam</a>, dignissim imperdiet lectus</li>
+    </ul>
+    <p>Also, I am a portlet</p>
+    <p>Angeblich sind Kölner nicht Fussball, sondern 1. FC Köln Fans</p>
+</p>
+""".encode('utf-8')
 
 re_pattern = r'(?P<link><a target="_blank" href="(?P<url>.*?)">(?P<text>[^<]*)</a>)'
 re_subn_pattern = r'<a href="\g<url>" class="external-link">\g<text></a>'
@@ -76,3 +87,15 @@ class BaseTestCase(unittest.TestCase):
         portal.invokeFactory('Folder', 'folder1', title="Folder 1")        
         portal.folder1.invokeFactory('Event', 'event1', title="Event 1",
                                      text="foo, will not be used")
+        portlet_manager = getUtility(IPortletManager, name="plone.leftcolumn",
+                                     context=portal.folder1)
+        mapping = getMultiAdapter((portal.folder1, portlet_manager),
+                                  IPortletAssignmentMapping)
+        mapping['1'] = Assignment(text=HTML4.decode('utf-8'))
+        self.layer['portlet1'] = mapping['1']
+        portlet_manager = getUtility(IPortletManager, name="plone.leftcolumn",
+                                     context=portal.page1)
+        mapping = getMultiAdapter((portal.page1, portlet_manager),
+                                  IPortletAssignmentMapping)
+        mapping['1'] = Assignment(text=HTML4.decode('utf-8'))
+        self.layer['portlet2'] = mapping['1']

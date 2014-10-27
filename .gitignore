@@ -2,4 +2,5 @@ bin/
 include/
 lib/
 parts/
-
+*.mo
+var/
