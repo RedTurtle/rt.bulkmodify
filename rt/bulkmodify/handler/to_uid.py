@@ -30,7 +30,7 @@ class InternalLinkToUIDUtility(object):
                 portal_url = site.portal_url
                 site_url = site.absolute_url()
                 if portal_url.isURLInPortal(old_url, cls.context or None):
-                    path = old_url.replace('%s/' % site_url, '', 1)
+                    path = old_url.replace('%s/' % site_url, '', 1).encode('utf-8')
                     suffix = []
                     content = None
                     while path:

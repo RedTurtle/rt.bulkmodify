@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.4.2 (unreleased)
+0.5.0 (unreleased)
 ------------------
 
 - Version 0.4.1 was providing a bad setup handler target
@@ -9,23 +9,18 @@ Changelog
 - Fixed UnicodeDecodeError when the extracted text for preview contains
   non-ASCII chars. This close `#4`__.
   [keul]
-
-__ https://github.com/RedTurtle/rt.bulkmodify/issues/4
-
 - Add Portlet Replacement code
   [do3cc]
-
 - Find text language independent
   [do3cc]
-
-- Work with unicode everywhere
-  This should not be a bigger problem, but if you wrote custom
-  IBulkModifyContentChanger adapters please have a look at
-  the interface, you must provide another property.
-  You can have a look at the existing adapters on how to
-  extend your adapter.
+- Work with unicode everywhere. This should not be a bigger problem, but if you
+  wrote custom ``IBulkModifyContentChanger`` adapters please have a look at the
+  interface, you must provide another property.
+  You can have a look at the existing adapters on how to extend your adapter.
   The behavior of existing attributes did NOT change.
   [do3cc]
+
+__ https://github.com/RedTurtle/rt.bulkmodify/issues/4
 
 0.4.1 (2014-05-29)
 ------------------
