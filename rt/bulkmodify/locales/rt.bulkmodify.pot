@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-10-04 14:33+0000\n"
+"POT-Creation-Date: 2014-12-31 13:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,12 +33,12 @@ msgstr ""
 msgid "Bulk modify contents"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:173
+#: ../browser/bulk-modify.pt:181
 msgid "Bulk replace"
 msgstr ""
 
 #. Default: "rt.bulkmodify"
-#: ../browser/view.py:183
+#: ../browser/view.py:293
 msgid "Bulk text replacement"
 msgstr ""
 
@@ -46,27 +46,31 @@ msgstr ""
 msgid "Change done"
 msgstr ""
 
+#: ../browser/bulk-modify.pt:113
+msgid "Choose whether you also want to search for static content portlets"
+msgstr ""
+
 #: ../browser/bulk-modify.pt:84
 msgid "Content types"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:159
+#: ../browser/bulk-modify.pt:167
 msgid "Continue"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:182
+#: ../browser/bulk-modify.pt:195
 msgid "Create a new version (if possible)"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:178
+#: ../browser/bulk-modify.pt:187
 msgid "Do not update anything (silent change)"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:191
+#: ../browser/bulk-modify.pt:205
 msgid "Document"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:122
+#: ../browser/bulk-modify.pt:130
 msgid "Dot all"
 msgstr ""
 
@@ -74,7 +78,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:116
+#: ../browser/bulk-modify.pt:124
 msgid "Ignore case"
 msgstr ""
 
@@ -82,7 +86,7 @@ msgstr ""
 msgid "Modify selected"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:119
+#: ../browser/bulk-modify.pt:127
 msgid "Multiline"
 msgstr ""
 
@@ -90,7 +94,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:161
+#: ../browser/bulk-modify.pt:169
 msgid "Pause"
 msgstr ""
 
@@ -98,23 +102,27 @@ msgstr ""
 msgid "Please note!"
 msgstr ""
 
+#: ../browser/bulk-modify.pt:112
+msgid "Portlets"
+msgstr ""
+
 #: ../browser/bulk-modify.pt:57
 msgid "Read carefully notes below."
 msgstr ""
 
-#: ../browser/bulk-modify.pt:111
+#: ../browser/bulk-modify.pt:119
 msgid "Regex flags"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:139
+#: ../browser/bulk-modify.pt:147
 msgid "Replace text"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:163
+#: ../browser/bulk-modify.pt:171
 msgid "Search"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:131
+#: ../browser/bulk-modify.pt:139
 msgid "Search regex"
 msgstr ""
 
@@ -122,19 +130,19 @@ msgstr ""
 msgid "Select all"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:140
+#: ../browser/bulk-modify.pt:148
 msgid "Select the kind of text replace you want to perform (if any)"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:192
+#: ../browser/bulk-modify.pt:206
 msgid "Text found"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:180
+#: ../browser/bulk-modify.pt:191
 msgid "Update modification time"
 msgstr ""
 
-#: ../browser/bulk-modify.pt:125
+#: ../browser/bulk-modify.pt:133
 msgid "Verbose"
 msgstr ""
 
@@ -152,12 +160,12 @@ msgid "content_types_help"
 msgstr ""
 
 #. Default: "Default replacement method. Use the replacement string from the field below"
-#: ../browser/view.py:57
+#: ../browser/view.py:151
 msgid "default_replacement_type_help"
 msgstr ""
 
 #. Default: "Default replacement"
-#: ../browser/view.py:55
+#: ../browser/view.py:149
 msgid "default_replacement_type_label"
 msgstr ""
 
@@ -170,17 +178,17 @@ msgid "painfully slow"
 msgstr ""
 
 #. Default: "Regex options. See Python regex documentation."
-#: ../browser/bulk-modify.pt:112
+#: ../browser/bulk-modify.pt:120
 msgid "regex_flags_help"
 msgstr ""
 
 #. Default: "Type a regular expression for performing the search."
-#: ../browser/bulk-modify.pt:132
+#: ../browser/bulk-modify.pt:140
 msgid "search_regex_help"
 msgstr ""
 
 #. Default: "Use commands above if you want also to modify content modification time or create new version"
-#: ../browser/bulk-modify.pt:183
+#: ../browser/bulk-modify.pt:197
 msgid "update_method_help"
 msgstr ""
 
