@@ -74,7 +74,6 @@ The upper section of the page is about searching contents.
    :target: http://blog.redturtle.it/pypi-images/rt.bulkmodify/rt.bulkmodify-0.1-01.png/
 
 You must select which content types you want to inspect by checking the "**Content types**" section.
-You can also check that you want to modify static text portlets.
 Although this selection display all content types, note that only a subset of them usable (for example: the Link
 content types is not using any text field right now).
 
@@ -139,6 +138,15 @@ When changing text you are (obviously) changing a Plone content, so you have som
     Update also the last modification time of the document.
 *Create a new version (if possible)*
     Full modification. If the content type is versionable, a new version will be saved.
+
+Replace text inside portlets
+----------------------------
+
+You can also check the option "*Portlets*" to performing searches and replacements inside static text
+portlets.
+This will not scan the site for portlets themself (something that is not possibiel in Plone right now)
+but when searching for content types, portlets attached to those content types are also scanned.
+This mean that portlets in the site root are skipped (don't be lazy... fix them yourself).
 
 Advanced use
 ============
