@@ -23,6 +23,7 @@
         factory=".at.TextContentAdapters"
         />
 
+  <!-- portlets (that behave a "text" property) -->
   <adapter
         for="plone.portlet.static.static.IStaticPortlet"
         provides="..interfaces.IBulkModifyContentChanger"

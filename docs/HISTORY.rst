@@ -15,7 +15,7 @@ Changelog
   [do3cc]
 - Work with unicode everywhere. This should not be a bigger problem, but if you
   wrote custom ``IBulkModifyContentChanger`` adapters please have a look at the
-  interface, you must provide another property.
+  interface, you must provide the new ``utext`` property.
   You can have a look at the existing adapters on how to extend your adapter.
   The behavior of existing attributes did NOT change.
   [do3cc]
