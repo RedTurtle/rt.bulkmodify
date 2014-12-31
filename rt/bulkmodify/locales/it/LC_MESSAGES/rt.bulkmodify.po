@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-31 13:48+0000\n"
+"POT-Creation-Date: 2014-12-31 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Luca Fabbri <keul@redturtle.it>\n"
 "Language-Team: RedTurtle Technology <sviluppoplone@redturtle.it>\n"
@@ -192,10 +192,12 @@ msgstr "Inserisci un'espressione regolare per eseguire la ricerca."
 msgid "update_method_help"
 msgstr "Usa i controlli sopra se vuoi anche modificare la data di ultima modifica o creare una nuova versione"
 
-#. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid."
+#. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid.\nA good example: <a [^>]*href=\"(?P<url>[^\"]+)\"[^>]+>"
 #: ../handler/to_uid.py:19
 msgid "utility_internal_link_to_uid_description"
-msgstr "Se il risultato contiene un gruppo chiamato <url> e questo gruppo è un link ad un contenuto interno al sito, trasforma il link in una forma che usi resolveuid."
+msgstr ""
+"Se il risultato contiene un gruppo chiamato <url> e questo gruppo è un link ad un contenuto interno al sito, trasforma il link in una forma che usi resolveuid.\n"
+"Un buon esempio: <a [^>]*href=\"(?P<url>[^\"]+)\"[^>]+>"
 
 #. Default: "Convert internal links to resolveuid usage"
 #: ../handler/to_uid.py:17

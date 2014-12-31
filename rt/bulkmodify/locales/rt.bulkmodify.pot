@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-31 13:48+0000\n"
+"POT-Creation-Date: 2014-12-31 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -192,7 +192,7 @@ msgstr ""
 msgid "update_method_help"
 msgstr ""
 
-#. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid."
+#. Default: "If the match contains a group called <url> and this group is an internal link to a site content, let's transform it to a link using resolveuid.\nA good example: <a [^>]*href=\"(?P<url>[^\"]+)\"[^>]+>"
 #: ../handler/to_uid.py:19
 msgid "utility_internal_link_to_uid_description"
 msgstr ""
