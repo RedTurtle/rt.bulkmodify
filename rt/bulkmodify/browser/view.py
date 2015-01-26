@@ -102,7 +102,7 @@ class Result(object):
         changed = []
         multi_adapter_offset = 0
         for adapter in self._get_text_adapters():
-            next_adapter_offset = len(adapter.text) + 1
+            next_adapter_offset = len(adapter.utext) + 1
             multi_match_offset = 0
             for diff in diffs:
                 offset = lambda x: diff[x]+multi_adapter_offset+multi_match_offset
