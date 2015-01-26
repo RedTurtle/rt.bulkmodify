@@ -142,10 +142,10 @@ When changing text you are (obviously) changing a Plone content, so you have som
 Replace text inside portlets
 ----------------------------
 
-You can also check the option "*Portlets*" to performing searches and replacements inside static text
-portlets.
-This will not scan the site for portlets themself (something that is not possibiel in Plone right now)
-but when searching for content types, portlets attached to those content types are also scanned.
+You can also check the option "*Include portlets*" to performing searches and replacements inside
+static text portlets (in facts, whatever portlet with a ``text`` attribute is accessed).
+This will not scan the site for portlets themself (something that is not possible in Plone right now)
+but when searching for content types, portlets attached to those contents are also scanned.
 This mean that portlets in the site root are skipped (don't be lazy... fix them yourself).
 
 Advanced use
@@ -217,3 +217,6 @@ This product was developed by RedTurtle Technology team.
    :alt: RedTurtle Technology Site
    :target: http://www.redturtle.it/
 
+Special thanks to `Patrick Gerken`__ for providing portlet support.
+
+__ https://github.com/do3cc

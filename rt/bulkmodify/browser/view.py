@@ -75,7 +75,7 @@ class Result(object):
     def text(self):
         if not hasattr(self, '_text'):
             self._text = u'\n'.join([x.utext for x in
-                                      self._get_text_adapters() if x.text])
+                                      self._get_text_adapters() if x.utext])
         return self._text
 
     def get_possible_replacements(self, regex, repl, flags):
@@ -95,7 +95,7 @@ class Result(object):
                     result['pre_text'] = match['pre_text']
                     result['post_text'] = match['post_text']
                     retval.append(result)
-            offset_number += len(adapter.text) + 1
+            offset_number += len(adapter.utext) + 1
         return retval
 
     def replace(self, diffs):

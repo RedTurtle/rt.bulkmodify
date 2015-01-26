@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from zope.interface import implements
-
 from ..interfaces import IBulkModifyContentChanger
+from zope.interface import implements
 
 
 class TextContentAdapters(object):
@@ -26,6 +25,4 @@ class TextContentAdapters(object):
         self.text = text.encode('utf-8')
 
     text = property(_get_text, _set_text)
-
     utext = property(_get_utext, _set_utext)
-
