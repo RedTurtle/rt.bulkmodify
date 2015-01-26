@@ -109,7 +109,7 @@
 
                     <div class="field">
                         <input type="checkbox" name="portlets" id="portlets" />
-                        <label for="portlets" i18n:translate="">Portlets</label>
+                        <label for="portlets" i18n:translate="">Include portlets</label>
                         <div class="formHelp" i18n:translate="">
                             Choose whether you also want to search for static content portlets
                         </div>

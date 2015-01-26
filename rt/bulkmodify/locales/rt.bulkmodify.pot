@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-31 14:05+0000\n"
+"POT-Creation-Date: 2015-01-26 10:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,6 +82,10 @@ msgstr ""
 msgid "Ignore case"
 msgstr ""
 
+#: ../browser/bulk-modify.pt:112
+msgid "Include portlets"
+msgstr ""
+
 #: ../browser/bulk-modify.pt:14
 msgid "Modify selected"
 msgstr ""
@@ -100,10 +104,6 @@ msgstr ""
 
 #: ../browser/bulk-modify.pt:56
 msgid "Please note!"
-msgstr ""
-
-#: ../browser/bulk-modify.pt:112
-msgid "Portlets"
 msgstr ""
 
 #: ../browser/bulk-modify.pt:57

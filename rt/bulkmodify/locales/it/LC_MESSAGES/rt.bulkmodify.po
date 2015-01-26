@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-12-31 14:05+0000\n"
+"POT-Creation-Date: 2015-01-26 10:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Luca Fabbri <keul@redturtle.it>\n"
 "Language-Team: RedTurtle Technology <sviluppoplone@redturtle.it>\n"
@@ -82,6 +82,10 @@ msgstr "Errore"
 msgid "Ignore case"
 msgstr "Ignora maiuscole/minuscole"
 
+#: ../browser/bulk-modify.pt:112
+msgid "Include portlets"
+msgstr "Includi riquadri"
+
 #: ../browser/bulk-modify.pt:14
 msgid "Modify selected"
 msgstr "Modifica selezionati"
@@ -101,10 +105,6 @@ msgstr "Pausa"
 #: ../browser/bulk-modify.pt:56
 msgid "Please note!"
 msgstr "Attenzione!"
-
-#: ../browser/bulk-modify.pt:112
-msgid "Portlets"
-msgstr "Portlet"
 
 #: ../browser/bulk-modify.pt:57
 msgid "Read carefully notes below."
